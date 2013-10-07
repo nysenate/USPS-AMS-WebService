@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents the return codes returned by the AMS API.
+ * Represents the return codes returned by the AmsNativeProvider API.
  */
 public enum ReturnCode
 {

@@ -8,13 +8,15 @@
 #include <string.h>
 #include <stdlib.h>	/* exit() */
 #include <zip4.h>	/* z4opencfg() */
+#include <time.h> /* timing */
+#include <sys/time.h>
 #include "config.h"	/* set_config_from_file() */
 #include "tcp.h"	/* do_main_loop() */
 
 #define DEFAULT_CONFIG_FNAME "ams.cfg"
 
 static void usage(char* prog, char* arg);
-
+static void print_elapsed_time(struct timeval start, struct timeval end);
 
 int
 main(int argc, char** argv)
@@ -28,28 +30,9 @@ main(int argc, char** argv)
   char* in_csz = NULL;
   char* cfg_fname = DEFAULT_CONFIG_FNAME;
 
-  for (i = 1; i < argc; i++) {
-    if (*argv[i] != '-' || strlen(argv[i]) < 2) {
-      usage(argv[0], argv[i]);
-    }
-    switch (argv[i][1]) {
-      case 's':
-        if (i + 1 < argc) in_street = argv[++i];
-        break;
-      case 'c':
-        if (i + 1 < argc) in_csz = argv[++i];
-        break;
-      case 'f':
-        if (i + 1 < argc) cfg_fname = argv[++i];
-        break;
-      default:
-        usage(argv[0], argv[i]);
-    }
-  }
-
-  if (!in_street || !in_csz) {
-    usage(argv[0], NULL);
-  }
+  struct timeval start, end;
+   
+  gettimeofday(&start, NULL);
 
   rc = set_config_from_file(cfg_fname, op);
   if (rc) {
@@ -57,7 +40,7 @@ main(int argc, char** argv)
     return 1;
   }
 
-  display_config(op);
+  //display_config(op);
 
   rc = z4opencfg(op);
   char* msg;
@@ -83,57 +66,91 @@ main(int argc, char** argv)
     return 1;
   }
 
-  z4date(release_date);
-  z4ver(ams_version);
-  printf("Release date: %s\n", release_date);
-  printf("Days to expiration of data license: %d\n", z4GetDataExpireDays());
-  printf("Days to expiration of code license: %d\n", z4GetCodeExpireDays());
-  printf("Code version: %s\n", ams_version);
+  gettimeofday(&end, NULL);
+  print_elapsed_time(start, end);
+  //z4date(release_date);
+  //z4ver(ams_version);
+  //printf("Release date: %s\n", release_date);
+  //printf("Days to expiration of data license: %d\n", z4GetDataExpireDays());
+  //printf("Days to expiration of code license: %d\n", z4GetCodeExpireDays());
+  //printf("Code version: %s\n", ams_version);
 
   ZIP4_PARM parm;
-  CITY_REC city;
+  
 
-  bzero(&parm, sizeof(ZIP4_PARM));
-  strcpy(parm.iadl1, in_street);
-  strcpy(parm.ictyi, in_csz);
-  z4adrinq(&parm);
-  if (parm.retcc == Z4_SINGLE || parm.retcc == Z4_DEFAULT) {
-    printf("ZIP4 RESPONSE:\n"
-           "Addr1: %s\n"
-           "Addr2: %s\n"
-           "Addr3: %s\n"
-           "C/S/Z: %s\n"
-           "City: %s\n"
-           "City (abbr): %s\n"
-           "State: %s\n"
-           "ZIP5: %s\n"
-           "ZIP4: %s\n",
-           parm.dadl1, parm.dadl2, parm.dadl3, parm.dlast,
-           parm.dctya, parm.abcty, parm.dstaa, parm.zipc, parm.addon);
-  }
+  while (1) {
+    char street[51];
+    char cty[51];
+    int i;
+    printf("Enter Street: ");
+    fgets(street, 51, stdin);
+    printf("Enter City: ");
+    fgets(cty, 51, stdin);
+    
+    gettimeofday(&start, NULL);
 
-  z4ctyget(&city, parm.zipc);
+	bzero(&parm, sizeof(ZIP4_PARM));
+  	strcpy(parm.iadl1, street);
+  	strcpy(parm.ictyi, cty);
 
-  printf("CITY RESPONSE:\n"
-         "Zip: %s\n"
-         "City: %s\n"
-         "City (abbr): %s\n"
-         "State: %s\n"
-         "County#: %s\n"
-         "County: %s\n",
-         city.zip_code, city.city_name, city.city_abbrev, city.state_abbrev,
-         city.county_no, city.county_name);
+  	z4adrinq(&parm);
+  	z4adrstd(&parm, 1);
+
+    printf("Performed USPS Lookup.\n");
+
+  	if (parm.retcc == Z4_SINGLE || parm.retcc == Z4_DEFAULT) {
+	    printf("ZIP4 RESPONSE:\n"
+	           "County: %s\n"
+	           "Addr1: %s\n"
+	           "Addr2: %s\n"
+	           "Addr3: %s\n"
+	           "C/S/Z: %s\n"
+	           "City: %s\n"
+	           "City (abbr): %s\n"
+	           "State: %s\n"
+	           "ZIP5: %s\n"
+	           "ZIP4: %s\n"
+	           "Address Record\n\n"
+	           "Street Name: %s\n"  
+	           "Suffix: %s\n"
+	           "Prim Low: %s\n"
+	           "Prim High: %s\n"
+	           "Prim Code: %d\n"
+	           "Sec Name: %s\n"
+	           "Footnotes: %s\n",
+	           parm.county, parm.dadl1, parm.dadl2, parm.dadl3, parm.dlast,
+	           parm.dctya, parm.abcty, parm.dstaa, parm.zipc, parm.addon, 
+	           parm.stack[0].str_name, 
+	           parm.stack[0].suffix,
+	           parm.stack[0].prim_low,
+	           parm.stack[0].prim_high,
+	           parm.stack[0].prim_code,
+	           parm.stack[0].sec_name,
+	           parm.footnotes);
+	     
+    }
+      
+      gettimeofday(&end, NULL);
+      print_elapsed_time(start, end);      
+  }  
+
+  
   z4close();
   return 0;
+}
+
+static void 
+print_elapsed_time(struct timeval start, struct timeval end) 
+{
+	long mtime, secs, usecs;
+	secs  = end.tv_sec  - start.tv_sec;
+	usecs = end.tv_usec - start.tv_usec;
+    mtime = ((secs) * 1000 + usecs/1000.0) + 0.5;
+    printf("Elapsed time: %ld millisecs\n", mtime);
 }
 
 
 static void
 usage(char* prog, char* arg)
 {
-  if (arg) {
-    fprintf(stderr, "%s: %s: Invalid option\n", prog, arg);
-  }
-  fprintf(stderr, "Usage: %s [-f config-file] [-s street] [-c city/state/zip]\n", prog);
-  exit(1);
 } /* usage() */
