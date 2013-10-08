@@ -8,6 +8,32 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/* JNI Type mappings */
+
+#define STRING_TYPE "Ljava/lang/String;"
+#define BOOLEAN_TYPE "Z"
+#define BYTE_TYPE "B"
+#define CHAR_TYPE "C"
+#define SHORT_TYPE "S"
+#define INT_TYPE "I"
+#define LONG_TYPE "J"
+#define FLOAT_TYPE "F"
+#define DOUBLE_TYPE "D"
+#define ARRAY_TYPE "["
+#define NO_ARGS "()"
+
+/* Method callers */
+
+jobject getObjectFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName, const char * returnType);
+jboolean getBooleanFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName);
+jint getIntFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName);
+
+char * getC_String(JNIEnv * env, const jstring javaString);
+void releaseC_String(JNIEnv * env, const char * cString, const jstring javaString);
+
+void printJString(JNIEnv * env, const jstring string);
+
 /*
  * Class:     gov_nysenate_ams_dao_AmsNativeDao
  * Method:    setupAmsLibrary
