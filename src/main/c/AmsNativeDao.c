@@ -22,18 +22,18 @@ JNIEXPORT jboolean JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_setupAmsLibrar
 
     /* Retrieve the paths to the data components stored in the java AmsSettings object. */
     jclass AmsSettingsCls = (*env)->GetObjectClass(env, jAmsSettings);
-    jstring systemPath = (jstring) getObjectFromMethod(env, AmsSettingsCls, jAmsSettings, "getSystemPath", NO_ARGS STRING_TYPE);
-    jstring addr1Path = (jstring) getObjectFromMethod(env, AmsSettingsCls, jAmsSettings, "getAddress1Path", NO_ARGS STRING_TYPE);
-    jstring addrIndexPath = (jstring) getObjectFromMethod(env, AmsSettingsCls, jAmsSettings, "getAddrIndexPath", NO_ARGS STRING_TYPE);
-    jstring cityStatePath = (jstring) getObjectFromMethod(env, AmsSettingsCls, jAmsSettings, "getCityStatePath", NO_ARGS STRING_TYPE);
-    jstring crossRefPath = (jstring) getObjectFromMethod(env, AmsSettingsCls, jAmsSettings, "getCrossRefPath", NO_ARGS STRING_TYPE);
-    jstring elotPath = (jstring) getObjectFromMethod(env, AmsSettingsCls, jAmsSettings, "getElotPath", NO_ARGS STRING_TYPE);
-    jstring elotIndexPath = (jstring) getObjectFromMethod(env, AmsSettingsCls, jAmsSettings, "getElotIndexPath", NO_ARGS STRING_TYPE);
-    jstring lacsLinkPath = (jstring) getObjectFromMethod(env, AmsSettingsCls, jAmsSettings, "getLacslinkPath", NO_ARGS STRING_TYPE);
-    jstring dpvPath = (jstring) getObjectFromMethod(env, AmsSettingsCls, jAmsSettings, "getDpvPath", NO_ARGS STRING_TYPE);
-    jstring fnsPath = (jstring) getObjectFromMethod(env, AmsSettingsCls, jAmsSettings, "getFnsPath", NO_ARGS STRING_TYPE);
-    jstring suitelinkPath = (jstring) getObjectFromMethod(env, AmsSettingsCls, jAmsSettings, "getSuitelinkPath", NO_ARGS STRING_TYPE);
-    jstring abrstPath = (jstring) getObjectFromMethod(env, AmsSettingsCls, jAmsSettings, "getAbrstPath", NO_ARGS STRING_TYPE);
+    jstring systemPath = getStringFromMethod(env, AmsSettingsCls, jAmsSettings, "getSystemPath");
+    jstring addr1Path = getStringFromMethod(env, AmsSettingsCls, jAmsSettings, "getAddress1Path");
+    jstring addrIndexPath = getStringFromMethod(env, AmsSettingsCls, jAmsSettings, "getAddrIndexPath");
+    jstring cityStatePath = getStringFromMethod(env, AmsSettingsCls, jAmsSettings, "getCityStatePath");
+    jstring crossRefPath = getStringFromMethod(env, AmsSettingsCls, jAmsSettings, "getCrossRefPath");
+    jstring elotPath = getStringFromMethod(env, AmsSettingsCls, jAmsSettings, "getElotPath");
+    jstring elotIndexPath = getStringFromMethod(env, AmsSettingsCls, jAmsSettings, "getElotIndexPath");
+    jstring lacsLinkPath = getStringFromMethod(env, AmsSettingsCls, jAmsSettings, "getLacslinkPath");
+    jstring dpvPath = getStringFromMethod(env, AmsSettingsCls, jAmsSettings, "getDpvPath");
+    jstring fnsPath = getStringFromMethod(env, AmsSettingsCls, jAmsSettings, "getFnsPath");
+    jstring suitelinkPath = getStringFromMethod(env, AmsSettingsCls, jAmsSettings, "getSuitelinkPath");
+    jstring abrstPath = getStringFromMethod(env, AmsSettingsCls, jAmsSettings, "getAbrstPath");
 
     /* Read the flags set in jAmsSettings that indicate which services to enable/disable */
     jboolean elotEnabled = getBooleanFromMethod(env, AmsSettingsCls, jAmsSettings, "isElotEnabled");
@@ -82,7 +82,13 @@ JNIEXPORT jboolean JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_setupAmsLibrar
 JNIEXPORT jboolean JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_closeAmsLibrary
   (JNIEnv * env, jobject jThis)
 {
-
+    /* Close The USPS Address Matching System */
+    int ret = z4close();
+    if (ret == 0) {
+        return JNI_TRUE;
+    }
+    printf("Failed to close the Address Matching System. Return code: %d\n", ret);
+    return JNI_FALSE;
 }
 
 /*
@@ -93,21 +99,140 @@ JNIEXPORT jboolean JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_closeAmsLibrar
 JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_addressInquiry
   (JNIEnv * env, jobject jThis, jobject jAddress)
 {
-    jclass thisClass = (*env)->GetObjectClass(env, jThis);
-    jclass addressClass = (*env)->GetObjectClass(env, jAddress);
-    jmethodID mid;
-    jfieldID fid;
-    jstring addr1, city;
-    mid = (*env)->GetMethodID(env, addressClass, "getAddr1", "()Ljava/lang/String;");
-    addr1 = (jstring)(*env)->CallObjectMethod(env, jAddress, mid);
-    mid = (*env)->GetMethodID(env, addressClass, "getCity", "()Ljava/lang/String;");
-    city = (jstring)(*env)->CallObjectMethod(env, jAddress, mid);
+    jclass thisCls = (*env)->GetObjectClass(env, jThis);
+    jclass AddressCls = (*env)->FindClass(env, "gov/nysenate/ams/model/Address");
+    jclass ParsedAddressCls = (*env)->FindClass(env, "gov/nysenate/ams/model/ParsedAddress");
+    jclass USPSAddressCls = (*env)->FindClass(env, "gov/nysenate/ams/model/USPSAddress");
+    jclass ReturnCodeCls = (*env)->FindClass(env, "gov/nysenate/ams/model/RecordType");
+    jclass AddressInquiryResultCls = (*env)->FindClass(env, "gov/nysenate/ams/model/AddressInquiryResult");
 
-    printJString(env, addr1);
-    printJString(env, city);
+    ZIP4_PARM parm;
+    memset(&parm, 0, sizeof(ZIP4_PARM));
 
-    printf("[C] Got to the end of this function!\n");
-    return jAddress;
+    /* Retrieve fields from input address. */
+    jstring firmName, addr1, addr2, city, state, zip5;
+    firmName = getStringFromMethod(env, AddressCls, jAddress, "getFirmName");
+    addr1 = getStringFromMethod(env, AddressCls, jAddress, "getAddr1");
+    addr2 = getStringFromMethod(env, AddressCls, jAddress, "getAddr2");
+    city = getStringFromMethod(env, AddressCls, jAddress, "getCity");
+    state = getStringFromMethod(env, AddressCls, jAddress, "getState");
+    zip5 = getStringFromMethod(env, AddressCls, jAddress, "getZip5");
+
+    /* Convert jstrings to c style strings */
+    char * cFirmName, * cAddr1, * cAddr2, * cCity, * cState, * cZip5;
+    cFirmName = getC_String(env, firmName);
+    cAddr1 = getC_String(env, addr1);
+    cAddr2 = getC_String(env, addr2);
+    cCity = getC_String(env, city);
+    cState = getC_String(env, state);
+    cZip5 = getC_String(env, zip5);
+
+    /* Construct the input address struct to pass into the inquiry method. */
+    strcpy(parm.iadl1, cAddr1);
+    strcpy(parm.iadl2, cFirmName);
+    strcpy(parm.iadl3, cAddr2);
+    strcpy(parm.iprurb, "");
+    strcpy(parm.ictyi, cCity);
+    strcpy(parm.istai, cState);
+    strcpy(parm.izipc, cZip5);
+
+    /* Release the strings */
+    releaseC_String(env, cFirmName, firmName);
+    releaseC_String(env, cAddr1, addr1);
+    releaseC_String(env, cAddr2, addr2);
+    releaseC_String(env, cCity, city);
+    releaseC_String(env, cState, state);
+    releaseC_String(env, cZip5, zip5);
+
+    /* Call the AMS address inquiry and standardization methods */
+    z4adrinq(&parm);
+    z4adrstd(&parm, 1);
+
+    /*printf("Response Code: %d\n", parm.retcc);
+    printf("Footnote: %s\n", parm.footnotes);
+    printf("Num Responses: %d\n", parm.respn);
+    printf("Output Line 1: %s\n", parm.dadl1);
+    printf("Output Firm Name: %s\n", parm.dadl2);
+    printf("Output Line 2: %s\n", parm.dadl3);
+    printf("PR Code: %s\n", parm.dprurb);
+    printf("Output City: %s\n", parm.dctya);
+    printf("Output State: %s\n", parm.dstaa);
+    printf("Output CSZ: %s\n", parm.dlast);
+    printf("Main PO City: %s\n", parm.dctys);
+    printf("Main PO State: %s\n", parm.dstas);
+    printf("Abbrev Output City: %s\n", parm.abcty);
+    printf("5 Digit Zip: %s\n", parm.zipc);
+    printf("4 Digit Addon: %s\n", parm.addon);
+    printf("4 Digit Carrier: %s\n", parm.cris);
+    printf("3 Digit County Code: %s\n", parm.county);
+    printf("Delivery Point: %s\n", parm.dpbc);
+    printf("Matched Primary Num: %s\n", parm.mpnum);
+    printf("Matched Secondary Num: %s\n", parm.msnum);
+    printf("ELOT Num: %s\n", parm.elot_num);
+    printf("ELOT Code: %c\n", parm.elot_code);
+    printf("LACS Return Code: %s\n", parm.llk_rc);
+    printf("LACS Indicator: %c\n", parm.llk_ind);
+    printf("Address Database Key: %s\n", parm.adrkey);
+
+    printf("Parsed Input -----------------\n");
+    printf("Primary Number: %s\n", parm.ppnum);
+    printf("Secondary Number: %s\n", parm.psnum);
+    printf("Second or Right Secondary Number: %s\n", parm.psnum2);
+    printf("Rural Route Number: %s\n", parm.prote);
+    printf("Secondary Number Unit: %s\n", parm.punit);
+    printf("Secondary or Right Secondary Number Unit: %s\n", parm.punit2);
+    printf("First or Left Pre: %s\n", parm.ppre1);
+    printf("Second or Right Pre: %s\n", parm.ppre2);
+    printf("First Suffix: %s\n", parm.psuf1);
+    printf("Second Suffix: %s\n", parm.psuf2);
+    printf("First or Left Post: %s\n", parm.ppst1);
+    printf("Second or Right Post: %s\n", parm.ppst2);
+    printf("Primary Name: %s\n", parm.ppnam);
+    printf("Matched Primary Number: %s\n", parm.mpnum);
+    printf("Matched Secondary Number: %s\n", parm.msnum);
+    printf("PMB Unit Designator: %s\n", parm.pmb);
+    printf("PMB Number: %s\n", parm.pmbnum);
+
+    int stackSize = sizeof(parm.stack) / sizeof(ADDR_REC);
+    printf("Stack size: %d\n", stackSize);
+    int i;
+    for (i = 0; i < parm.respn && i < stackSize; i++) {
+        printf("Record %d: ---------------\n", i);
+        printf("Zip Code: %s\n", parm.stack[i].zip_code);
+        printf("Update Key Num: %s\n", parm.stack[i].update_key);
+        printf("Action Code: %c\n", parm.stack[i].action_code);
+        printf("Record Type: %c\n", parm.stack[i].rec_type);
+        printf("Pre Dir: %s\n", parm.stack[i].pre_dir);
+        printf("Street Name: %s\n", parm.stack[i].str_name);
+        printf("Suffix: %s\n", parm.stack[i].suffix);
+        printf("Post Dir: %s\n", parm.stack[i].post_dir);
+        printf("Primary Low: %s\n", parm.stack[i].prim_low);
+        printf("Primary High: %s\n", parm.stack[i].prim_high);
+        printf("Primary E/O: %c\n", parm.stack[i].prim_code);
+        printf("Bldg Firm Name: %s\n", parm.stack[i].sec_name);
+        printf("Unit: %s\n", parm.stack[i].unit);
+        printf("Sec Low: %s\n", parm.stack[i].sec_low);
+        printf("Sec High: %s\n", parm.stack[i].sec_high);
+        printf("Sec Code: %c\n", parm.stack[i].sec_code);
+        printf("Addon Low: %s\n", parm.stack[i].addon_low);
+        printf("Addon High: %s\n", parm.stack[i].addon_high);
+        printf("Base Alternate Code: %c\n", parm.stack[i].base_alt_code);
+        printf("Lacs Status: %c\n", parm.stack[i].lacs_status);
+        printf("Finance Code: %s\n", parm.stack[i].finance);
+        printf("State Abbrev: %s\n", parm.stack[i].state_abbrev);
+        printf("County Num: %s\n", parm.stack[i].county_no);
+        printf("Congress Dist: %s\n", parm.stack[i].congress_dist);
+        printf("Municipality: %s\n", parm.stack[i].municipality);
+        printf("Urbanization: %s\n", parm.stack[i].urbanization);
+        printf("Last line: %s\n", parm.stack[i].last_line);
+    }
+    printf("[C] Got to the end of this function!\n");     */
+
+    jmethodID constructor = (*env)->GetMethodID(env, AddressCls, "<init>", "(" STRING_TYPE STRING_TYPE STRING_TYPE STRING_TYPE STRING_TYPE STRING_TYPE STRING_TYPE")V");
+    printf("%d", (int)constructor);
+    //jobject addressObj = (*env)->NewObject(env, AddressCls, constructor, parm.dadl2, parm.dadl1, parm.dadl3, parm.dctya, parm.dstaa, parm.zipc, parm.addon);
+
+    //return addressObj;
     //const char * addr1Str = (*env)->GetStringUTFChars(env, addr1)
 }
 
@@ -134,6 +259,12 @@ jobject getObjectFromMethod(JNIEnv * env, jclass cls, jobject instance, const ch
 {
     jmethodID methodID = (*env)->GetMethodID(env, cls, methodName, returnType);
     return (*env)->CallObjectMethod(env, instance, methodID);
+}
+
+jstring getStringFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName)
+{
+    jmethodID methodID = (*env)->GetMethodID(env, cls, methodName, NO_ARGS STRING_TYPE);
+    return (jstring)(*env)->CallObjectMethod(env, instance, methodID);
 }
 
 jboolean getBooleanFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName)
@@ -175,7 +306,7 @@ void releaseC_String(JNIEnv * env, const char * cString, const jstring javaStrin
 */
 void printJString(JNIEnv * env, const jstring string)
 {
-    const char *nativeString = (*env)->GetStringUTFChars(env, string, 0);
+    const char * nativeString = getC_String(env, string);
     printf("%s\n", nativeString);
-    (*env)->ReleaseStringUTFChars(env, string, nativeString);
+    releaseC_String(env, nativeString, string);
 }

@@ -45,7 +45,12 @@ public enum ReturnCode
         "a secondary number (i.e., apartment, suite, etc.) exists.");
 
     /** Used for lookups by code. */
-    private Map<Integer, String> codeMap = new HashMap<>();
+    private static final Map<Integer, String> codeMap = new HashMap<>();
+    static {
+        for (ReturnCode rc : ReturnCode.values()) {
+            codeMap.put(rc.code, rc.name());
+        }
+    }
 
     /** Numerical return code. */
     private int code = 0;
@@ -56,7 +61,6 @@ public enum ReturnCode
     ReturnCode(int code, String message) {
         this.code = code;
         this.message = message;
-        this.codeMap.put(code, this.name());
     }
 
     public int getCode() {
@@ -72,7 +76,7 @@ public enum ReturnCode
      * @param code int
      * @return ReturnCode if code matches, null otherwise.
      */
-    public ReturnCode getByCode(int code) {
+    public static ReturnCode getByCode(int code) {
         if (codeMap.containsKey(code)) {
             return ReturnCode.valueOf(codeMap.get(code));
         }

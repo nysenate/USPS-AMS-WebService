@@ -11,22 +11,22 @@ import gov.nysenate.ams.model.CityStateResult;
 public interface AddressService
 {
     /**
-     * Performs a standardized address inquiry using an address and city/state/zip information.
+     * Performs a standardized address inquiry using an address and city/state/zip5 information.
      * @param address Address to addressInquiry.
      * @return AddressInquiryResult.
      */
     public AddressInquiryResult addressInquiry(Address address);
 
     /**
-     * Performs city/state lookup using a zip code as the search key.
-     * @param zip Zip code string. Can be either a 5 or 9 digit zip. Any hyphens will be removed.
+     * Performs city/state lookup using a zip5 code as the search key.
+     * @param zip Zip code string. Can be either a 5 or 9 digit zip5. Any hyphens will be removed.
      * @return CityStateResult.
      */
     public CityStateResult cityStateLookup(String zip);
 
     /**
-     * Performs a standardized address inquiry using a 9 digit zip.
-     * @param zip9 9 digit zip code string. Any hyphens will be removed.
+     * Performs a standardized address inquiry using a 9 digit zip5.
+     * @param zip9 9 digit zip5 code string. Any hyphens will be removed.
      * @return AddressInquiryResult.
      */
     public AddressInquiryResult zip9Inquiry(String zip9);

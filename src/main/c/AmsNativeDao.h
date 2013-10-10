@@ -26,6 +26,7 @@ extern "C" {
 /* Method callers */
 
 jobject getObjectFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName, const char * returnType);
+jstring getStringFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName);
 jboolean getBooleanFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName);
 jint getIntFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName);
 

@@ -10,21 +10,23 @@ public class Address
     protected final String addr2;            // Secondary Address
     protected final String city;             // City
     protected final String state;            // State
-    protected final String zip;              // Zip
+    protected final String zip5;             // Zip 5
+    protected final String zip4;             // Zip 4
 
-    public Address(String firmName, String addr1, String addr2, String city, String state, String zip)
+    public Address(String firmName, String addr1, String addr2, String city, String state, String zip5, String zip4)
     {
         this.firmName = firmName;
         this.addr1 = addr1;
         this.addr2 = addr2;
         this.city = city;
         this.state = state;
-        this.zip = zip;
+        this.zip5 = zip5;
+        this.zip4 = zip4;
     }
 
-    public Address(String addr1, String addr2, String city, String state, String zip)
+    public Address(String addr1, String addr2, String city, String state, String zip5)
     {
-        this("", addr1, addr2, city, state, zip);
+        this("", addr1, addr2, city, state, zip5, "");
     }
 
     /**
@@ -43,7 +45,7 @@ public class Address
     public boolean isParsed()
     {
         return !(addr2.trim().isEmpty() && city.trim().isEmpty() &&
-                state.trim().isEmpty() && zip.trim().isEmpty());
+                state.trim().isEmpty() && zip5.trim().isEmpty());
     }
 
     public String getFirmName() {
@@ -66,7 +68,11 @@ public class Address
         return state;
     }
 
-    public String getZip() {
-        return zip;
+    public String getZip5() {
+        return zip5;
+    }
+
+    public String getZip4() {
+        return zip4;
     }
 }

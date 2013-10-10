@@ -9,10 +9,10 @@ public class CityRecord
     protected final String zipCode;       // Zip code
     protected final String cityKey;       // City/state key
     protected final char zipClassCode;    // Zip classification code:
-                                          //    blank = non-unique zip
-                                          //    M = APO/FPO military zip
-                                          //    P = PO BOX zip
-                                          //    U = Unique zip
+                                          //    blank = non-unique zip5
+                                          //    M = APO/FPO military zip5
+                                          //    P = PO BOX zip5
+                                          //    U = Unique zip5
 
     protected final String cityName;      // City/state name
     protected final String cityAbbrev;    // City/state name abbrev
