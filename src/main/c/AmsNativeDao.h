@@ -23,6 +23,26 @@ extern "C" {
 #define ARRAY_TYPE "["
 #define NO_ARGS "()"
 
+/* Java Client Specific mappings */
+
+#define ADDRESS_TYPE "Lgov/nysenate/ams/model/Address;"
+#define PARSED_ADDRESS_TYPE "Lgov/nysenate/ams/model/ParsedAddress;"
+
+/* Macro repeaters for convenience */
+
+#define REP1(X) X
+#define REP2(X) REP1(X) REP1(X)
+#define REP3(X) REP2(X) REP1(X)
+#define REP4(X) REP2(X) REP2(X)
+#define REP5(X) REP3(X) REP2(X)
+#define REP6(X) REP3(X) REP3(X)
+#define REP7(X) REP4(X) REP3(X)
+#define REP8(X) REP4(X) REP4(X)
+#define REP9(X) REP5(X) REP4(X)
+#define REP10(X) REP5(X) REP5(X)
+#define REP11(X) REP6(X) REP5(X)
+#define REP12(X) REP6(X) REP6(X)
+
 /* Method callers */
 
 jobject getObjectFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName, const char * returnType);

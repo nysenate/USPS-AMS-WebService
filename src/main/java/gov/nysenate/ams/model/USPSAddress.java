@@ -14,12 +14,12 @@ public class USPSAddress
     protected final String standardState;              // Standardized state
     protected final String deliveryBarCode;            // Delivery point bar code
     protected final String carrierRoute;               // Carrier route
-    protected final char fipsCounty;                   // FIPS county code
     protected final String addressKey;                 // Address key used for indexing purposes
+    protected final char fipsCounty;                   // FIPS county code
 
     public USPSAddress(Address validatedAddress, ParsedAddress parsedInputAddress, String postOfficeCity,
                        String postOfficeState, String standardCity, String standardCityAbbr, String standardState,
-                       String deliveryBarCode, String carrierRoute, char fipsCounty, String addressKey)
+                       String deliveryBarCode, String carrierRoute, String addressKey, char fipsCounty)
     {
         this.validatedAddress = validatedAddress;
         this.parsedInputAddress = parsedInputAddress;

@@ -110,7 +110,7 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_addressInquiry
     memset(&parm, 0, sizeof(ZIP4_PARM));
 
     /* Retrieve fields from input address. */
-    jstring firmName, addr1, addr2, city, state, zip5;
+    jstring firmName, addr1, addr2, city, state, zip5, zip4;
     firmName = getStringFromMethod(env, AddressCls, jAddress, "getFirmName");
     addr1 = getStringFromMethod(env, AddressCls, jAddress, "getAddr1");
     addr2 = getStringFromMethod(env, AddressCls, jAddress, "getAddr2");
@@ -147,6 +147,47 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_addressInquiry
     /* Call the AMS address inquiry and standardization methods */
     z4adrinq(&parm);
     z4adrstd(&parm, 1);
+
+    /* Get the validated address data */
+    firmName = (*env)->NewStringUTF(env, parm.dadl2);
+    addr1 = (*env)->NewStringUTF(env, parm.dadl1);
+    addr2 = (*env)->NewStringUTF(env, parm.dadl3);
+    city = (*env)->NewStringUTF(env, parm.dctya);
+    state = (*env)->NewStringUTF(env, parm.dstaa);
+    zip5 = (*env)->NewStringUTF(env, parm.zipc);
+    zip4 = (*env)->NewStringUTF(env, parm.addon);
+
+    /* Get the parsed input data */
+    jstring primaryNum, secondaryNum, rightSecondaryNum, ruralRouteNum, secondaryNumUnit, rightSecondaryNumUnit,
+            leftPre, rightPre, firstSuffix, secondSuffix, leftPost, rightPost, primaryName;
+
+    primaryNum = (*env)->NewStringUTF(env, parm.ppnum);
+    secondaryNum = (*env)->NewStringUTF(env, parm.psnum);
+    rightSecondaryNum = (*env)->NewStringUTF(env, parm.psnum2);
+    ruralRouteNum = (*env)->NewStringUTF(env, parm.prote);
+    secondaryNumUnit = (*env)->NewStringUTF(env, parm.punit);
+    rightSecondaryNumUnit = (*env)->NewStringUTF(env, parm.punit2);
+    leftPre = (*env)->NewStringUTF(env, parm.ppre1);
+    rightPre = (*env)->NewStringUTF(env, parm.ppre2);
+    firstSuffix = (*env)->NewStringUTF(env, parm.psuf1);
+    secondSuffix = (*env)->NewStringUTF(env, parm.psuf2);
+    leftPost = (*env)->NewStringUTF(env, parm.ppst1);
+    rightPost = (*env)->NewStringUTF(env, parm.ppst2);
+    primaryName = (*env)->NewStringUTF(env, parm.ppnam);
+
+    /* Create the Address object */
+    jmethodID constructor = (*env)->GetMethodID(env, AddressCls, "<init>", "(" REP7(STRING_TYPE) ")V");
+    jobject addressObj = (*env)->NewObject(env, AddressCls, constructor, firmName, addr1, addr2, city, state, zip5, zip4);
+
+    /* Create the ParsedAddress object */
+    constructor = (*env)->GetMethodID(env, ParsedAddressCls, "<init>", "(" REP11(STRING_TYPE) ")V");
+    jobject parsedAddressObj = (*env)->NewObject(env, ParsedAddressCls, constructor,
+        primaryNum, secondaryNum, ruralRouteNum, secondaryNumUnit, leftPre, rightPre, firstSuffix,
+        secondSuffix, leftPost, rightPost, primaryName);
+
+    /* Create the USPSAddress object */
+    constructor = (*env)->GetMethodID(env, USPSAddressCls, "<init>", "(" ADDRESS_TYPE PARSED_ADDRESS_TYPE REP8(STRING_TYPE) CHAR_TYPE ")V");
+    jobject uspsAddressObj = (*env)->NewObject(env, USPSAddressCls, constructor, )
 
     /*printf("Response Code: %d\n", parm.retcc);
     printf("Footnote: %s\n", parm.footnotes);
@@ -228,12 +269,7 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_addressInquiry
     }
     printf("[C] Got to the end of this function!\n");     */
 
-    jmethodID constructor = (*env)->GetMethodID(env, AddressCls, "<init>", "(" STRING_TYPE STRING_TYPE STRING_TYPE STRING_TYPE STRING_TYPE STRING_TYPE STRING_TYPE")V");
-    printf("%d", (int)constructor);
-    //jobject addressObj = (*env)->NewObject(env, AddressCls, constructor, parm.dadl2, parm.dadl1, parm.dadl3, parm.dctya, parm.dstaa, parm.zipc, parm.addon);
-
-    //return addressObj;
-    //const char * addr1Str = (*env)->GetStringUTFChars(env, addr1)
+    return addressObj;
 }
 
 /*

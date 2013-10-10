@@ -16,16 +16,14 @@ public class ParsedAddress
     protected String firstPostDir;
     protected String secondPostDir;
     protected String primaryName;
-    protected int suffix;
-    protected String postDir;
 
-    public ParsedAddress(int primaryNum, int secondaryNum, int ruralRouteNum, String secondaryUnit,
+    public ParsedAddress(String primaryNum, String secondaryNum, String ruralRouteNum, String secondaryUnit,
                          String firstPreDir, String secondPreDir, String firstSuffix, String secondSuffix,
-                         String firstPostDir, String secondPostDir, String primaryName, int suffix, String postDir)
+                         String firstPostDir, String secondPostDir, String primaryName)
     {
-        this.primaryNum = primaryNum;
-        this.secondaryNum = secondaryNum;
-        this.ruralRouteNum = ruralRouteNum;
+        //this.primaryNum = primaryNum;
+        //this.secondaryNum = secondaryNum;
+        //this.ruralRouteNum = ruralRouteNum;
         this.secondaryUnit = secondaryUnit;
         this.firstPreDir = firstPreDir;
         this.secondPreDir = secondPreDir;
@@ -34,8 +32,6 @@ public class ParsedAddress
         this.firstPostDir = firstPostDir;
         this.secondPostDir = secondPostDir;
         this.primaryName = primaryName;
-        this.suffix = suffix;
-        this.postDir = postDir;
     }
 
     public int getPrimaryNum() {
@@ -80,13 +76,5 @@ public class ParsedAddress
 
     public String getPrimaryName() {
         return primaryName;
-    }
-
-    public int getSuffix() {
-        return suffix;
-    }
-
-    public String getPostDir() {
-        return postDir;
     }
 }
