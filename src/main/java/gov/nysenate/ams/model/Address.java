@@ -13,20 +13,25 @@ public class Address
     protected final String zip5;             // Zip 5
     protected final String zip4;             // Zip 4
 
-    public Address(String firmName, String addr1, String addr2, String city, String state, String zip5, String zip4)
+    public Address(String address)
     {
-        this.firmName = firmName;
-        this.addr1 = addr1;
-        this.addr2 = addr2;
-        this.city = city;
-        this.state = state;
-        this.zip5 = zip5;
-        this.zip4 = zip4;
+        this("", address, "", "", "", "", "");
     }
 
     public Address(String addr1, String addr2, String city, String state, String zip5)
     {
         this("", addr1, addr2, city, state, zip5, "");
+    }
+
+    public Address(String firmName, String addr1, String addr2, String city, String state, String zip5, String zip4)
+    {
+        this.firmName = (firmName != null) ? firmName : "";
+        this.addr1 = (addr1 != null) ? addr1 : "";
+        this.addr2 = (addr2 != null) ? addr2 : "";
+        this.city = (city != null) ? city : "";
+        this.state = (state != null) ? state : "";
+        this.zip5 = (zip5 != null) ? zip5 : "";
+        this.zip4 = (zip4 != null) ? zip4 : "";
     }
 
     /**

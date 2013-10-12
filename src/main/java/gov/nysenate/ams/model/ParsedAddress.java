@@ -5,9 +5,9 @@ package gov.nysenate.ams.model;
  */
 public class ParsedAddress
 {
-    protected int primaryNum;
-    protected int secondaryNum;
-    protected int ruralRouteNum;
+    protected String primaryNum;
+    protected String secondaryNum;
+    protected String ruralRouteNum;
     protected String secondaryUnit;
     protected String firstPreDir;
     protected String secondPreDir;
@@ -21,9 +21,9 @@ public class ParsedAddress
                          String firstPreDir, String secondPreDir, String firstSuffix, String secondSuffix,
                          String firstPostDir, String secondPostDir, String primaryName)
     {
-        //this.primaryNum = primaryNum;
-        //this.secondaryNum = secondaryNum;
-        //this.ruralRouteNum = ruralRouteNum;
+        this.primaryNum = primaryNum;
+        this.secondaryNum = secondaryNum;
+        this.ruralRouteNum = ruralRouteNum;
         this.secondaryUnit = secondaryUnit;
         this.firstPreDir = firstPreDir;
         this.secondPreDir = secondPreDir;
@@ -34,15 +34,15 @@ public class ParsedAddress
         this.primaryName = primaryName;
     }
 
-    public int getPrimaryNum() {
+    public String getPrimaryNum() {
         return primaryNum;
     }
 
-    public int getSecondaryNum() {
+    public String getSecondaryNum() {
         return secondaryNum;
     }
 
-    public int getRuralRouteNum() {
+    public String getRuralRouteNum() {
         return ruralRouteNum;
     }
 

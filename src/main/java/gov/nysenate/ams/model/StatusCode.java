@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Represents the return codes returned by the AmsNativeProvider API.
  */
-public enum ReturnCode
+public enum StatusCode
 {
     INVALID_DUAL_ADDRESS (10,
         "Information presented could not be processed in current format. Corrective action is needed. Be sure that " +
@@ -47,7 +47,7 @@ public enum ReturnCode
     /** Used for lookups by code. */
     private static final Map<Integer, String> codeMap = new HashMap<>();
     static {
-        for (ReturnCode rc : ReturnCode.values()) {
+        for (StatusCode rc : StatusCode.values()) {
             codeMap.put(rc.code, rc.name());
         }
     }
@@ -58,7 +58,7 @@ public enum ReturnCode
     /** Description of return code and possible corrective actions. */
     private String message = "";
 
-    ReturnCode(int code, String message) {
+    StatusCode(int code, String message) {
         this.code = code;
         this.message = message;
     }
@@ -72,13 +72,13 @@ public enum ReturnCode
     }
 
     /**
-     * Returns the ReturnCode using the numerical code.
+     * Returns the StatusCode using the numerical code.
      * @param code int
-     * @return ReturnCode if code matches, null otherwise.
+     * @return StatusCode if code matches, null otherwise.
      */
-    public static ReturnCode getByCode(int code) {
+    public static StatusCode getByCode(int code) {
         if (codeMap.containsKey(code)) {
-            return ReturnCode.valueOf(codeMap.get(code));
+            return StatusCode.valueOf(codeMap.get(code));
         }
         return null;
     }

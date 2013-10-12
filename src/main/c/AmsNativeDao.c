@@ -8,6 +8,30 @@
 
 #include "AmsNativeDao.h"
 
+/* Cached class ids */
+static jclass AmsSettingsCls;
+static jclass AddressCls;
+static jclass AddressRecordCls;
+static jclass ParsedAddressCls;
+static jclass USPSAddressCls;
+static jclass ReturnCodeCls;
+static jclass AddressInquiryResultCls;
+
+/* Cached constructors */
+static jmethodID AddressConstr;
+static jmethodID ParsedAddressConstr;
+static jmethodID AddressRecordConstr;
+static jmethodID USPSAddressConstr;
+static jmethodID AddressInquiryResultConstr;
+
+/* Cached methods */
+static jmethodID Address_getFirmName;
+static jmethodID Address_getAddr1;
+static jmethodID Address_getAddr2;
+static jmethodID Address_getCity;
+static jmethodID Address_getState;
+static jmethodID Address_getZip5;
+
 /*
  * Class:     gov_nysenate_ams_dao_AmsNativeDao
  * Method:    setupAmsLibrary
@@ -16,12 +40,14 @@
 JNIEXPORT jboolean JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_setupAmsLibrary
   (JNIEnv * env, jobject jThis, jobject jAmsSettings)
 {
+    /* Cache all method/constructor ids */
+    cacheIDs(env);
+
     /* Initialize the config param struct */
     Z4OPEN_PARM openparm;
     memset(&openparm, 0, sizeof(openparm));
 
     /* Retrieve the paths to the data components stored in the java AmsSettings object. */
-    jclass AmsSettingsCls = (*env)->GetObjectClass(env, jAmsSettings);
     jstring systemPath = getStringFromMethod(env, AmsSettingsCls, jAmsSettings, "getSystemPath");
     jstring addr1Path = getStringFromMethod(env, AmsSettingsCls, jAmsSettings, "getAddress1Path");
     jstring addrIndexPath = getStringFromMethod(env, AmsSettingsCls, jAmsSettings, "getAddrIndexPath");
@@ -100,23 +126,21 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_addressInquiry
   (JNIEnv * env, jobject jThis, jobject jAddress)
 {
     jclass thisCls = (*env)->GetObjectClass(env, jThis);
-    jclass AddressCls = (*env)->FindClass(env, "gov/nysenate/ams/model/Address");
-    jclass ParsedAddressCls = (*env)->FindClass(env, "gov/nysenate/ams/model/ParsedAddress");
-    jclass USPSAddressCls = (*env)->FindClass(env, "gov/nysenate/ams/model/USPSAddress");
-    jclass ReturnCodeCls = (*env)->FindClass(env, "gov/nysenate/ams/model/RecordType");
-    jclass AddressInquiryResultCls = (*env)->FindClass(env, "gov/nysenate/ams/model/AddressInquiryResult");
+
+    jmethodID constructor;
+    jobject inquiryResult;
 
     ZIP4_PARM parm;
     memset(&parm, 0, sizeof(ZIP4_PARM));
 
     /* Retrieve fields from input address. */
     jstring firmName, addr1, addr2, city, state, zip5, zip4;
-    firmName = getStringFromMethod(env, AddressCls, jAddress, "getFirmName");
-    addr1 = getStringFromMethod(env, AddressCls, jAddress, "getAddr1");
-    addr2 = getStringFromMethod(env, AddressCls, jAddress, "getAddr2");
-    city = getStringFromMethod(env, AddressCls, jAddress, "getCity");
-    state = getStringFromMethod(env, AddressCls, jAddress, "getState");
-    zip5 = getStringFromMethod(env, AddressCls, jAddress, "getZip5");
+    firmName = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_getFirmName);
+    addr1 = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_getAddr1);
+    addr2 = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_getAddr2);
+    city = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_getCity);
+    state = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_getState);
+    zip5 = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_getZip5);
 
     /* Convert jstrings to c style strings */
     char * cFirmName, * cAddr1, * cAddr2, * cCity, * cState, * cZip5;
@@ -136,7 +160,7 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_addressInquiry
     strcpy(parm.istai, cState);
     strcpy(parm.izipc, cZip5);
 
-    /* Release the strings */
+    /* Free the c strings */
     releaseC_String(env, cFirmName, firmName);
     releaseC_String(env, cAddr1, addr1);
     releaseC_String(env, cAddr2, addr2);
@@ -145,131 +169,125 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_addressInquiry
     releaseC_String(env, cZip5, zip5);
 
     /* Call the AMS address inquiry and standardization methods */
-    z4adrinq(&parm);
-    z4adrstd(&parm, 1);
+    int responseCode, statusCode;
+    responseCode = z4adrinq(&parm);
 
-    /* Get the validated address data */
-    firmName = (*env)->NewStringUTF(env, parm.dadl2);
-    addr1 = (*env)->NewStringUTF(env, parm.dadl1);
-    addr2 = (*env)->NewStringUTF(env, parm.dadl3);
-    city = (*env)->NewStringUTF(env, parm.dctya);
-    state = (*env)->NewStringUTF(env, parm.dstaa);
-    zip5 = (*env)->NewStringUTF(env, parm.zipc);
-    zip4 = (*env)->NewStringUTF(env, parm.addon);
+    /* Handle successful response */
+    if (responseCode == 0) {
+        statusCode = parm.retcc;
 
-    /* Get the parsed input data */
-    jstring primaryNum, secondaryNum, rightSecondaryNum, ruralRouteNum, secondaryNumUnit, rightSecondaryNumUnit,
+        /* In the event of multiple matches,standardize on the first result */
+        if (statusCode != Z4_SINGLE && statusCode != Z4_DEFAULT && parm.respn > 0) {
+            z4adrstd(&parm, 1);
+        }
+
+        /* Get the validated address data */
+        firmName = (*env)->NewStringUTF(env, parm.dadl2);
+        addr1 = (*env)->NewStringUTF(env, parm.dadl1);
+        addr2 = (*env)->NewStringUTF(env, parm.dadl3);
+        city = (*env)->NewStringUTF(env, parm.dctya);
+        state = (*env)->NewStringUTF(env, parm.dstaa);
+        zip5 = (*env)->NewStringUTF(env, parm.zipc);
+        zip4 = (*env)->NewStringUTF(env, parm.addon);
+
+        /* Get the parsed input data */
+        jstring primaryNum, secondaryNum, rightSecondaryNum, ruralRouteNum, secondaryNumUnit, rightSecondaryNumUnit,
             leftPre, rightPre, firstSuffix, secondSuffix, leftPost, rightPost, primaryName;
 
-    primaryNum = (*env)->NewStringUTF(env, parm.ppnum);
-    secondaryNum = (*env)->NewStringUTF(env, parm.psnum);
-    rightSecondaryNum = (*env)->NewStringUTF(env, parm.psnum2);
-    ruralRouteNum = (*env)->NewStringUTF(env, parm.prote);
-    secondaryNumUnit = (*env)->NewStringUTF(env, parm.punit);
-    rightSecondaryNumUnit = (*env)->NewStringUTF(env, parm.punit2);
-    leftPre = (*env)->NewStringUTF(env, parm.ppre1);
-    rightPre = (*env)->NewStringUTF(env, parm.ppre2);
-    firstSuffix = (*env)->NewStringUTF(env, parm.psuf1);
-    secondSuffix = (*env)->NewStringUTF(env, parm.psuf2);
-    leftPost = (*env)->NewStringUTF(env, parm.ppst1);
-    rightPost = (*env)->NewStringUTF(env, parm.ppst2);
-    primaryName = (*env)->NewStringUTF(env, parm.ppnam);
+        primaryNum = (*env)->NewStringUTF(env, parm.ppnum);
+        secondaryNum = (*env)->NewStringUTF(env, parm.psnum);
+        rightSecondaryNum = (*env)->NewStringUTF(env, parm.psnum2);
+        ruralRouteNum = (*env)->NewStringUTF(env, parm.prote);
+        secondaryNumUnit = (*env)->NewStringUTF(env, parm.punit);
+        rightSecondaryNumUnit = (*env)->NewStringUTF(env, parm.punit2);
+        leftPre = (*env)->NewStringUTF(env, parm.ppre1);
+        rightPre = (*env)->NewStringUTF(env, parm.ppre2);
+        firstSuffix = (*env)->NewStringUTF(env, parm.psuf1);
+        secondSuffix = (*env)->NewStringUTF(env, parm.psuf2);
+        leftPost = (*env)->NewStringUTF(env, parm.ppst1);
+        rightPost = (*env)->NewStringUTF(env, parm.ppst2);
+        primaryName = (*env)->NewStringUTF(env, parm.ppnam);
 
-    /* Create the Address object */
-    jmethodID constructor = (*env)->GetMethodID(env, AddressCls, "<init>", "(" REP7(STRING_TYPE) ")V");
-    jobject addressObj = (*env)->NewObject(env, AddressCls, constructor, firmName, addr1, addr2, city, state, zip5, zip4);
+        /* Get additional address data */
+        jstring poCity, poState, abbrCity, deliveryPoint, carrierRoute, addressKey, footnotes, fipsCounty;
+        poCity = (*env)->NewStringUTF(env, parm.dctys);
+        poState = (*env)->NewStringUTF(env, parm.dstas);
+        abbrCity = (*env)->NewStringUTF(env, parm.abcty);
+        deliveryPoint = (*env)->NewStringUTF(env, parm.dpbc);
+        carrierRoute = (*env)->NewStringUTF(env, parm.cris);
+        addressKey = (*env)->NewStringUTF(env, parm.adrkey);
+        footnotes = (*env)->NewStringUTF(env, parm.footnotes);
+        fipsCounty = (*env)->NewStringUTF(env, parm.county);
 
-    /* Create the ParsedAddress object */
-    constructor = (*env)->GetMethodID(env, ParsedAddressCls, "<init>", "(" REP11(STRING_TYPE) ")V");
-    jobject parsedAddressObj = (*env)->NewObject(env, ParsedAddressCls, constructor,
-        primaryNum, secondaryNum, ruralRouteNum, secondaryNumUnit, leftPre, rightPre, firstSuffix,
-        secondSuffix, leftPost, rightPost, primaryName);
+        /* Create the Address object */
+        jobject addressObj = (*env)->NewObject(env, AddressCls, AddressConstr, firmName, addr1, addr2, city, state, zip5, zip4);
 
-    /* Create the USPSAddress object */
-    constructor = (*env)->GetMethodID(env, USPSAddressCls, "<init>", "(" ADDRESS_TYPE PARSED_ADDRESS_TYPE REP8(STRING_TYPE) CHAR_TYPE ")V");
-    jobject uspsAddressObj = (*env)->NewObject(env, USPSAddressCls, constructor, )
+        /* Create the ParsedAddress object */
+        jobject parsedAddressObj = (*env)->NewObject(env, ParsedAddressCls, ParsedAddressConstr,
+            primaryNum, secondaryNum, ruralRouteNum, secondaryNumUnit, leftPre, rightPre, firstSuffix,
+            secondSuffix, leftPost, rightPost, primaryName);
 
-    /*printf("Response Code: %d\n", parm.retcc);
-    printf("Footnote: %s\n", parm.footnotes);
-    printf("Num Responses: %d\n", parm.respn);
-    printf("Output Line 1: %s\n", parm.dadl1);
-    printf("Output Firm Name: %s\n", parm.dadl2);
-    printf("Output Line 2: %s\n", parm.dadl3);
-    printf("PR Code: %s\n", parm.dprurb);
-    printf("Output City: %s\n", parm.dctya);
-    printf("Output State: %s\n", parm.dstaa);
-    printf("Output CSZ: %s\n", parm.dlast);
-    printf("Main PO City: %s\n", parm.dctys);
-    printf("Main PO State: %s\n", parm.dstas);
-    printf("Abbrev Output City: %s\n", parm.abcty);
-    printf("5 Digit Zip: %s\n", parm.zipc);
-    printf("4 Digit Addon: %s\n", parm.addon);
-    printf("4 Digit Carrier: %s\n", parm.cris);
-    printf("3 Digit County Code: %s\n", parm.county);
-    printf("Delivery Point: %s\n", parm.dpbc);
-    printf("Matched Primary Num: %s\n", parm.mpnum);
-    printf("Matched Secondary Num: %s\n", parm.msnum);
-    printf("ELOT Num: %s\n", parm.elot_num);
-    printf("ELOT Code: %c\n", parm.elot_code);
-    printf("LACS Return Code: %s\n", parm.llk_rc);
-    printf("LACS Indicator: %c\n", parm.llk_ind);
-    printf("Address Database Key: %s\n", parm.adrkey);
+        /* Create the USPSAddress object */
+        jobject uspsAddressObj = (*env)->NewObject(env, USPSAddressCls, USPSAddressConstr,
+            addressObj, parsedAddressObj, poCity, poState, abbrCity, deliveryPoint, carrierRoute, addressKey, fipsCounty);
 
-    printf("Parsed Input -----------------\n");
-    printf("Primary Number: %s\n", parm.ppnum);
-    printf("Secondary Number: %s\n", parm.psnum);
-    printf("Second or Right Secondary Number: %s\n", parm.psnum2);
-    printf("Rural Route Number: %s\n", parm.prote);
-    printf("Secondary Number Unit: %s\n", parm.punit);
-    printf("Secondary or Right Secondary Number Unit: %s\n", parm.punit2);
-    printf("First or Left Pre: %s\n", parm.ppre1);
-    printf("Second or Right Pre: %s\n", parm.ppre2);
-    printf("First Suffix: %s\n", parm.psuf1);
-    printf("Second Suffix: %s\n", parm.psuf2);
-    printf("First or Left Post: %s\n", parm.ppst1);
-    printf("Second or Right Post: %s\n", parm.ppst2);
-    printf("Primary Name: %s\n", parm.ppnam);
-    printf("Matched Primary Number: %s\n", parm.mpnum);
-    printf("Matched Secondary Number: %s\n", parm.msnum);
-    printf("PMB Unit Designator: %s\n", parm.pmb);
-    printf("PMB Number: %s\n", parm.pmbnum);
+        /* Create an array of the address records in the stack */
+        jobjectArray addressRecordArray = NULL;
+        if (parm.respn > 0) {
+            int recordID;
+            int recordCount = (parm.respn > ADDRESS_REC_STACK_SIZE) ? ADDRESS_REC_STACK_SIZE : parm.respn;
+            addressRecordArray = (*env)->NewObjectArray(env, recordCount, AddressRecordCls, NULL);
+            for (recordID = 0; recordID < parm.respn && recordID < ADDRESS_REC_STACK_SIZE; recordID++) {
+                jint recordNum = (jint) recordID;
+                jstring zipCode = (*env)->NewStringUTF(env, parm.stack[recordID].zip_code);
+                jstring updateKeyNum = (*env)->NewStringUTF(env, parm.stack[recordID].update_key);
+                jchar actionCode = (jchar) parm.stack[recordID].action_code;
+                jchar recordType = (jchar) parm.stack[recordID].rec_type;
+                jstring preDir = (*env)->NewStringUTF(env, parm.stack[recordID].pre_dir);
+                jstring streetName = (*env)->NewStringUTF(env, parm.stack[recordID].str_name);
+                jstring suffix = (*env)->NewStringUTF(env, parm.stack[recordID].suffix);
+                jstring postDir = (*env)->NewStringUTF(env, parm.stack[recordID].post_dir);
+                jstring primaryLow = (*env)->NewStringUTF(env, parm.stack[recordID].prim_low);
+                jstring primaryHigh = (*env)->NewStringUTF(env, parm.stack[recordID].prim_high);
+                jchar primaryEO = (jchar) parm.stack[recordID].prim_code;
+                jstring bldgFirmName = (*env)->NewStringUTF(env, parm.stack[recordID].sec_name);
+                jstring unit = (*env)->NewStringUTF(env, parm.stack[recordID].unit);
+                jstring secLow = (*env)->NewStringUTF(env, parm.stack[recordID].sec_low);
+                jstring secHigh = (*env)->NewStringUTF(env, parm.stack[recordID].sec_high);
+                jchar secCode = parm.stack[recordID].sec_code;
+                jstring addonLow = (*env)->NewStringUTF(env, parm.stack[recordID].addon_low);
+                jstring addonHigh = (*env)->NewStringUTF(env, parm.stack[recordID].addon_high);
+                jchar lacsStatus = (jchar) parm.stack[recordID].lacs_status;
+                jstring financeCode = (*env)->NewStringUTF(env, parm.stack[recordID].finance);
+                jstring stateAbbr = (*env)->NewStringUTF(env, parm.stack[recordID].state_abbrev);
+                jstring countyNum = (*env)->NewStringUTF(env, parm.stack[recordID].county_no);
+                jstring congressDist = (*env)->NewStringUTF(env, parm.stack[recordID].congress_dist);
+                jstring municipality = (*env)->NewStringUTF(env, parm.stack[recordID].municipality);
+                jstring urbanization = (*env)->NewStringUTF(env, parm.stack[recordID].urbanization);
+                jstring lastline = (*env)->NewStringUTF(env, parm.stack[recordID].last_line);
 
-    int stackSize = sizeof(parm.stack) / sizeof(ADDR_REC);
-    printf("Stack size: %d\n", stackSize);
-    int i;
-    for (i = 0; i < parm.respn && i < stackSize; i++) {
-        printf("Record %d: ---------------\n", i);
-        printf("Zip Code: %s\n", parm.stack[i].zip_code);
-        printf("Update Key Num: %s\n", parm.stack[i].update_key);
-        printf("Action Code: %c\n", parm.stack[i].action_code);
-        printf("Record Type: %c\n", parm.stack[i].rec_type);
-        printf("Pre Dir: %s\n", parm.stack[i].pre_dir);
-        printf("Street Name: %s\n", parm.stack[i].str_name);
-        printf("Suffix: %s\n", parm.stack[i].suffix);
-        printf("Post Dir: %s\n", parm.stack[i].post_dir);
-        printf("Primary Low: %s\n", parm.stack[i].prim_low);
-        printf("Primary High: %s\n", parm.stack[i].prim_high);
-        printf("Primary E/O: %c\n", parm.stack[i].prim_code);
-        printf("Bldg Firm Name: %s\n", parm.stack[i].sec_name);
-        printf("Unit: %s\n", parm.stack[i].unit);
-        printf("Sec Low: %s\n", parm.stack[i].sec_low);
-        printf("Sec High: %s\n", parm.stack[i].sec_high);
-        printf("Sec Code: %c\n", parm.stack[i].sec_code);
-        printf("Addon Low: %s\n", parm.stack[i].addon_low);
-        printf("Addon High: %s\n", parm.stack[i].addon_high);
-        printf("Base Alternate Code: %c\n", parm.stack[i].base_alt_code);
-        printf("Lacs Status: %c\n", parm.stack[i].lacs_status);
-        printf("Finance Code: %s\n", parm.stack[i].finance);
-        printf("State Abbrev: %s\n", parm.stack[i].state_abbrev);
-        printf("County Num: %s\n", parm.stack[i].county_no);
-        printf("Congress Dist: %s\n", parm.stack[i].congress_dist);
-        printf("Municipality: %s\n", parm.stack[i].municipality);
-        printf("Urbanization: %s\n", parm.stack[i].urbanization);
-        printf("Last line: %s\n", parm.stack[i].last_line);
+                /* Construct an AddressRecord */
+                jobject addressRecord = (*env)->NewObject(env, AddressRecordCls, AddressRecordConstr,
+                    recordNum, zipCode, preDir, streetName, suffix, postDir, primaryLow, primaryHigh, bldgFirmName, unit,
+                    secLow, secHigh, addonLow, addonHigh, financeCode, stateAbbr, countyNum, congressDist, municipality,
+                    urbanization, lastline, primaryEO, secCode, recordType);
+
+                /* Append to address record array object */
+                (*env)->SetObjectArrayElement(env, addressRecordArray, recordID, addressRecord);
+            }
+        }
+
+        /* Create the AddressInquiryResult object */
+        inquiryResult = (*env)->NewObject(env, AddressInquiryResultCls, AddressInquiryResultConstr,
+            (jint) responseCode, uspsAddressObj, (jint) statusCode, footnotes, addressRecordArray);
     }
-    printf("[C] Got to the end of this function!\n");     */
+    /* Handle error response, typically due to a system level error */
+    else {
+        inquiryResult = (*env)->NewObject(env, AddressInquiryResultCls, AddressInquiryResultConstr,
+            (jint) responseCode, NULL, (jint) parm.retcc, NULL, NULL); // ? parm.retcc
+    }
 
-    return addressObj;
+    return inquiryResult;
 }
 
 /*
@@ -289,6 +307,53 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_zip9Inquiry
   (JNIEnv * env, jobject jThis, jstring jZip9)
 {
 
+}
+
+void cacheIDs(JNIEnv * env) 
+{
+    /* Cached class ids */
+    jclass tempClassRef = (*env)->FindClass(env, "gov/nysenate/ams/model/AmsSettings");
+    AmsSettingsCls = (jclass) (*env)->NewGlobalRef(env, tempClassRef);
+    (*env)->DeleteLocalRef(env, tempClassRef);
+
+    tempClassRef = (*env)->FindClass(env, "gov/nysenate/ams/model/Address");
+    AddressCls = (jclass) (*env)->NewGlobalRef(env, tempClassRef);
+    (*env)->DeleteLocalRef(env, tempClassRef);
+
+    tempClassRef = (*env)->FindClass(env, "gov/nysenate/ams/model/AddressRecord");
+    AddressRecordCls = (jclass) (*env)->NewGlobalRef(env, tempClassRef);
+    (*env)->DeleteLocalRef(env, tempClassRef);
+
+    tempClassRef = (*env)->FindClass(env, "gov/nysenate/ams/model/ParsedAddress");
+    ParsedAddressCls = (jclass) (*env)->NewGlobalRef(env, tempClassRef);
+    (*env)->DeleteLocalRef(env, tempClassRef);
+
+    tempClassRef = (*env)->FindClass(env, "gov/nysenate/ams/model/USPSAddress");
+    USPSAddressCls = (jclass) (*env)->NewGlobalRef(env, tempClassRef);
+    (*env)->DeleteLocalRef(env, tempClassRef);
+
+    tempClassRef = (*env)->FindClass(env, "gov/nysenate/ams/model/RecordType");
+    ReturnCodeCls = (jclass) (*env)->NewGlobalRef(env, tempClassRef);
+    (*env)->DeleteLocalRef(env, tempClassRef);
+
+    tempClassRef = (*env)->FindClass(env, "gov/nysenate/ams/model/AddressInquiryResult");
+    AddressInquiryResultCls = (jclass) (*env)->NewGlobalRef(env, tempClassRef);
+    (*env)->DeleteLocalRef(env, tempClassRef);
+
+    /* Cached constructors */
+    AddressConstr = (*env)->GetMethodID(env, AddressCls, "<init>", "(" REP7(STRING_TYPE) ")V");
+    ParsedAddressConstr = (*env)->GetMethodID(env, ParsedAddressCls, "<init>", "(" REP11(STRING_TYPE) ")V");
+    AddressRecordConstr = (*env)->GetMethodID(env, AddressRecordCls, "<init>", "(" INT_TYPE REP10(STRING_TYPE) REP10(STRING_TYPE) REP3(CHAR_TYPE) ")V");
+    USPSAddressConstr = (*env)->GetMethodID(env, USPSAddressCls, "<init>", "(" ADDRESS_TYPE PARSED_ADDRESS_TYPE REP7(STRING_TYPE) ")V");
+    AddressInquiryResultConstr = (*env)->GetMethodID(env, AddressInquiryResultCls, "<init>", "(" INT_TYPE USPS_ADDRESS_TYPE INT_TYPE STRING_TYPE ARRAY_TYPE ADDRESS_RECORD_TYPE")V");
+
+    /* Cached Methods */
+    Address_getFirmName = (*env)->GetMethodID(env, AddressConstr, "getFirmName", NO_ARGS STRING_TYPE);
+    Address_getAddr1 = (*env)->GetMethodID(env, AddressConstr, "getAddr1", NO_ARGS STRING_TYPE);
+    Address_getAddr2 = (*env)->GetMethodID(env, AddressConstr, "getAddr2", NO_ARGS STRING_TYPE);
+    Address_getCity = (*env)->GetMethodID(env, AddressConstr, "getCity", NO_ARGS STRING_TYPE);
+    Address_getState = (*env)->GetMethodID(env, AddressConstr, "getState", NO_ARGS STRING_TYPE);
+    Address_getZip5 = (*env)->GetMethodID(env, AddressConstr, "getZip5", NO_ARGS STRING_TYPE);
 }
 
 jobject getObjectFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName, const char * returnType)
@@ -321,25 +386,25 @@ jchar getCharFromMethod(JNIEnv * env, jclass cls, jobject instance, const char *
     return (*env)->CallCharMethod(env, instance, methodID);
 }
 
-/**
-*
-*/
+/*
+ *
+ */
 char * getC_String(JNIEnv * env, const jstring javaString)
 {
     return (*env)->GetStringUTFChars(env, javaString, 0);
 }
 
-/**
-*
-*/
+/*
+ *
+ */
 void releaseC_String(JNIEnv * env, const char * cString, const jstring javaString)
 {
     (*env)->ReleaseStringUTFChars(env, javaString, cString);
 }
 
-/**
-*
-*/
+/*
+ *
+ */
 void printJString(JNIEnv * env, const jstring string)
 {
     const char * nativeString = getC_String(env, string);

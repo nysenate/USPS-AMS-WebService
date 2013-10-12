@@ -9,10 +9,12 @@ import gov.nysenate.ams.service.AddressService;
 import gov.nysenate.ams.service.LibraryService;
 import gov.nysenate.ams.service.LicensingService;
 import gov.nysenate.ams.util.Application;
+import org.apache.log4j.Logger;
 
 public class AmsNativeProvider implements AddressService, LicensingService, LibraryService
 {
     private static String SHARED_LIBRARY_NAME = "amsnative";
+    private static Logger logger = Logger.getLogger(AmsNativeDao.class);
 
     private final AmsNativeDao amsNativeDao;
 
@@ -42,8 +44,15 @@ public class AmsNativeProvider implements AddressService, LicensingService, Libr
     @Override
     public boolean setup()
     {
-        AmsSettings amsSettings = new AmsSettings(Application.getConfig());
-        return amsNativeDao.setupAmsLibrary(amsSettings);
+        boolean success = false;
+        try {
+            AmsSettings amsSettings = new AmsSettings(Application.getConfig());
+            success = amsNativeDao.setupAmsLibrary(amsSettings);
+        }
+        catch (Exception ex) {
+            logger.debug("Failed to setup AMS using the supplied configuration settings!", ex);
+        }
+        return success;
     }
 
     @Override

@@ -1,5 +1,8 @@
 package gov.nysenate.ams.model;
 
+/**
+ * Represents the type of record associated with an entry in an address record stack.
+ */
 public enum RecordType
 {
     F ("Firm",

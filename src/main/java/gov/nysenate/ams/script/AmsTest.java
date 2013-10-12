@@ -1,7 +1,9 @@
 package gov.nysenate.ams.script;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.nysenate.ams.dao.AmsNativeDao;
 import gov.nysenate.ams.model.Address;
+import gov.nysenate.ams.model.AddressInquiryResult;
 import gov.nysenate.ams.model.AmsSettings;
 import gov.nysenate.ams.util.Application;
 import gov.nysenate.ams.util.OutputUtil;
@@ -25,8 +27,9 @@ public class AmsTest
             logger.info("Setup AMS successfully!");
         }
 
-        Address inputAddress = new Address("Clarence Center Rd ", "", "Clarence Center", "NY", "");
-        OutputUtil.printObject(amsNativeDao.addressInquiry(inputAddress));
+        Address inputAddress = new Address("Fairlawn Ave", "", "Albany", "NY", "12203");
+        AddressInquiryResult res = amsNativeDao.addressInquiry(inputAddress);
+        OutputUtil.printObject(res);
 
         if (amsNativeDao.closeAmsLibrary()) {
             logger.info("Closed AMS successfully!");

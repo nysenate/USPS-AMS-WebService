@@ -9,29 +9,30 @@ public class USPSAddress
     protected final ParsedAddress parsedInputAddress;  // Parsed input address
     protected final String postOfficeCity;             // Main Post Office city
     protected final String postOfficeState;            // Main Post Office state
-    protected final String standardCity;               // Standardized city name
     protected final String standardCityAbbr;           // Standardized city abbreviation
-    protected final String standardState;              // Standardized state
     protected final String deliveryBarCode;            // Delivery point bar code
     protected final String carrierRoute;               // Carrier route
     protected final String addressKey;                 // Address key used for indexing purposes
-    protected final char fipsCounty;                   // FIPS county code
+    protected final int fipsCounty;                   // FIPS county code
 
     public USPSAddress(Address validatedAddress, ParsedAddress parsedInputAddress, String postOfficeCity,
-                       String postOfficeState, String standardCity, String standardCityAbbr, String standardState,
-                       String deliveryBarCode, String carrierRoute, String addressKey, char fipsCounty)
+                       String postOfficeState, String standardCityAbbr, String deliveryBarCode, String carrierRoute,
+                       String addressKey, String fipsCounty)
     {
         this.validatedAddress = validatedAddress;
         this.parsedInputAddress = parsedInputAddress;
         this.postOfficeCity = postOfficeCity;
         this.postOfficeState = postOfficeState;
-        this.standardCity = standardCity;
         this.standardCityAbbr = standardCityAbbr;
-        this.standardState = standardState;
         this.deliveryBarCode = deliveryBarCode;
         this.carrierRoute = carrierRoute;
-        this.fipsCounty = fipsCounty;
         this.addressKey = addressKey;
+        if (fipsCounty != null && !fipsCounty.isEmpty()) {
+            this.fipsCounty = Integer.parseInt(fipsCounty);
+        }
+        else {
+            this.fipsCounty = 0;
+        }
     }
 
     public Address getValidatedAddress() {
@@ -50,16 +51,8 @@ public class USPSAddress
         return postOfficeState;
     }
 
-    public String getStandardCity() {
-        return standardCity;
-    }
-
     public String getStandardCityAbbr() {
         return standardCityAbbr;
-    }
-
-    public String getStandardState() {
-        return standardState;
     }
 
     public String getDeliveryBarCode() {
@@ -70,7 +63,7 @@ public class USPSAddress
         return carrierRoute;
     }
 
-    public char getFipsCounty() {
+    public int getFipsCounty() {
         return fipsCounty;
     }
 

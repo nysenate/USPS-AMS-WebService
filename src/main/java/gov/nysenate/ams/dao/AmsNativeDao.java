@@ -66,7 +66,7 @@ public class AmsNativeDao
      * @param address Input Address
      * @return AddressInquiryResult
      */
-    public native Address addressInquiry(Address address);
+    public native AddressInquiryResult addressInquiry(Address address);
 
     /**
      * Wrapper to the AMS z4ctyget() method using the {zip5} as the search key.
