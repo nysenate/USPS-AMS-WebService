@@ -8,6 +8,12 @@ import java.util.Map;
  */
 public enum StatusCode
 {
+    /* Web API specific status codes */
+    INSUFFICIENT_ADDRESS(2,
+        "The input address must contain at minimum the following address components: (addr1, city, state) " +
+        "or (addr1, zip5)"),
+
+    /* AMS specific status codes */
     INVALID_DUAL_ADDRESS (10,
         "Information presented could not be processed in current format. Corrective action is needed. Be sure that " +
         "the address line components are correct. For example, the input address line may contain more than one " +
@@ -37,8 +43,7 @@ public enum StatusCode
         "requestor check the address for accuracy and completeness. Address elements may be missing"),
 
     EXACT_MATCH (31,
-        "Single response based on input information. No corrective action is needed since an exact match was found " +
-        "in the national ZIP+4 file."),
+        "Single response based on input information."),
 
     DEFAULT_MATCH (32,
         "A match was made to a default record in the national ZIP+4 file. A more specific match may be available if " +

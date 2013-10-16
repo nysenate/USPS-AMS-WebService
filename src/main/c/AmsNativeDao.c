@@ -348,12 +348,12 @@ void cacheIDs(JNIEnv * env)
     AddressInquiryResultConstr = (*env)->GetMethodID(env, AddressInquiryResultCls, "<init>", "(" INT_TYPE USPS_ADDRESS_TYPE INT_TYPE STRING_TYPE ARRAY_TYPE ADDRESS_RECORD_TYPE")V");
 
     /* Cached Methods */
-    Address_getFirmName = (*env)->GetMethodID(env, AddressConstr, "getFirmName", NO_ARGS STRING_TYPE);
-    Address_getAddr1 = (*env)->GetMethodID(env, AddressConstr, "getAddr1", NO_ARGS STRING_TYPE);
-    Address_getAddr2 = (*env)->GetMethodID(env, AddressConstr, "getAddr2", NO_ARGS STRING_TYPE);
-    Address_getCity = (*env)->GetMethodID(env, AddressConstr, "getCity", NO_ARGS STRING_TYPE);
-    Address_getState = (*env)->GetMethodID(env, AddressConstr, "getState", NO_ARGS STRING_TYPE);
-    Address_getZip5 = (*env)->GetMethodID(env, AddressConstr, "getZip5", NO_ARGS STRING_TYPE);
+    Address_getFirmName = (*env)->GetMethodID(env, AddressCls, "getFirmName", NO_ARGS STRING_TYPE);
+    Address_getAddr1 = (*env)->GetMethodID(env, AddressCls, "getAddr1", NO_ARGS STRING_TYPE);
+    Address_getAddr2 = (*env)->GetMethodID(env, AddressCls, "getAddr2", NO_ARGS STRING_TYPE);
+    Address_getCity = (*env)->GetMethodID(env, AddressCls, "getCity", NO_ARGS STRING_TYPE);
+    Address_getState = (*env)->GetMethodID(env, AddressCls, "getState", NO_ARGS STRING_TYPE);
+    Address_getZip5 = (*env)->GetMethodID(env, AddressCls, "getZip5", NO_ARGS STRING_TYPE);
 }
 
 jobject getObjectFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName, const char * returnType)

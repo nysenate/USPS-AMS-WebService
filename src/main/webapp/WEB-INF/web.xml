@@ -1,6 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+    <display-name>USPS-AMS</display-name>
 
-    <display-name>USPS-AMS-WebService</display-name>
+    <!-- Filters -->
+    <filter>
+        <display-name>ApiFilter</display-name>
+        <filter-name>ApiFilter</filter-name>
+        <filter-class>gov.nysenate.ams.filter.ApiFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ApiFilter</filter-name>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
 
+    <!-- Listeners -->
+    <listener>
+        <description>Context initialization and shutdown</description>
+        <display-name>NYSenateContextListener</display-name>
+        <listener-class>gov.nysenate.util.listener.NYSenateContextListener</listener-class>
+    </listener>
+
+    <context-param>
+        <param-name>Application</param-name>
+        <param-value>gov.nysenate.ams.util.Application</param-value>
+    </context-param>
+
+    <servlet>
+        <display-name>AddressValidateController</display-name>
+        <servlet-name>AddressValidateController</servlet-name>
+        <servlet-class>gov.nysenate.ams.controller.AddressValidateController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddressValidateController</servlet-name>
+        <url-pattern>/api/validate/*</url-pattern>
+    </servlet-mapping>
 </web-app>

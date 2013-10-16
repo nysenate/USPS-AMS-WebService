@@ -40,7 +40,7 @@ public class AmsNativeDao
             return true;
         }
         catch (UnsatisfiedLinkError ex) {
-            logger.fatal("Failed to load the AMS Native Library!");
+            logger.fatal("Failed to load the AMS Native Library!", ex);
             return false;
         }
     }
@@ -66,7 +66,7 @@ public class AmsNativeDao
      * @param address Input Address
      * @return AddressInquiryResult
      */
-    public native AddressInquiryResult addressInquiry(Address address);
+    public synchronized native AddressInquiryResult addressInquiry(Address address);
 
     /**
      * Wrapper to the AMS z4ctyget() method using the {zip5} as the search key.
@@ -74,7 +74,7 @@ public class AmsNativeDao
      * @param zip Zip5 or Zip9 code. String should just contain numbers.
      * @return CityStateResult
      */
-    public native CityStateResult cityStateLookup(String zip);
+    public synchronized native CityStateResult cityStateLookup(String zip);
 
     /**
      * Wrapper to the AMS z4xrfinq() method using the supplied {zip9} as the search key.
@@ -82,5 +82,5 @@ public class AmsNativeDao
      * @param zip9 9 digit zip5 code.
      * @return AddressInquiryResult
      */
-    public native AddressInquiryResult zip9Inquiry(String zip9);
+    public synchronized native AddressInquiryResult zip9Inquiry(String zip9);
 }

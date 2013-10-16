@@ -13,7 +13,7 @@ public class USPSAddress
     protected final String deliveryBarCode;            // Delivery point bar code
     protected final String carrierRoute;               // Carrier route
     protected final String addressKey;                 // Address key used for indexing purposes
-    protected final int fipsCounty;                   // FIPS county code
+    protected final int fipsCounty;                    // FIPS county code
 
     public USPSAddress(Address validatedAddress, ParsedAddress parsedInputAddress, String postOfficeCity,
                        String postOfficeState, String standardCityAbbr, String deliveryBarCode, String carrierRoute,
