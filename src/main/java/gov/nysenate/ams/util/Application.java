@@ -27,7 +27,8 @@ public class Application
             INSTANCE.config = new Config(DEFAULT_PROPERTY_FILENAME);
             INSTANCE.amsNativeDao = new AmsNativeDao();
             INSTANCE.amsSettings = new AmsSettings(INSTANCE.config);
-            INSTANCE.amsNativeDao.loadAmsLibrary("amsnative");
+            String libraryName = INSTANCE.config.getValue("shared.library.name", "amsnative");
+            INSTANCE.amsNativeDao.loadAmsLibrary(libraryName);
             INSTANCE.amsNativeDao.setupAmsLibrary(INSTANCE.amsSettings);
             return true;
         }

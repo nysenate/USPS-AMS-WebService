@@ -52,6 +52,7 @@ extern "C" {
 #define REP15(X) REP9(X) REP6(X)
 
 void cacheIDs(JNIEnv *);
+jobject handleAddressInquiryResult(JNIEnv * env, ZIP4_PARM * zip4_parm, int responseCode, int performStd);
 
 /* Method callers */
 
