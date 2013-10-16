@@ -6,6 +6,7 @@ import gov.nysenate.ams.util.OutputUtil;
 
 public class AddressRecordView
 {
+    protected int recordId;
     protected String recordType;
     protected String recordTypeDesc;
     protected String primaryLow;
@@ -28,6 +29,7 @@ public class AddressRecordView
     public AddressRecordView(AddressRecord addressRecord)
     {
         if (addressRecord != null) {
+            this.recordId = addressRecord.getRecordID();
             RecordType rType =  addressRecord.getRecordType();
             if (rType != null) {
                 this.recordType = rType.name();
@@ -50,6 +52,10 @@ public class AddressRecordView
             this.financeCode = addressRecord.getFinanceCode();
             this.fipsCounty = addressRecord.getCountyNum();
         }
+    }
+
+    public int getRecordId() {
+        return recordId;
     }
 
     public String getRecordType() {

@@ -178,7 +178,7 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_addressInquiry
 
         /* In the event of multiple matches,standardize on the first result */
         if (statusCode != Z4_SINGLE && statusCode != Z4_DEFAULT && parm.respn > 0) {
-            z4adrstd(&parm, 1);
+            z4adrstd(&parm, 0);
         }
 
         /* Get the validated address data */
@@ -234,37 +234,44 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_addressInquiry
         /* Create an array of the address records in the stack */
         jobjectArray addressRecordArray = NULL;
         if (parm.respn > 0) {
-            int recordID;
-            int recordCount = (parm.respn > ADDRESS_REC_STACK_SIZE) ? ADDRESS_REC_STACK_SIZE : parm.respn;
+            unsigned int recordCount = parm.respn;
+            unsigned int recordID, index;
             addressRecordArray = (*env)->NewObjectArray(env, recordCount, AddressRecordCls, NULL);
-            for (recordID = 0; recordID < parm.respn && recordID < ADDRESS_REC_STACK_SIZE; recordID++) {
+            for (recordID = 0; recordID < parm.respn; recordID++) {
+                /* Since only ten records are stored at one time, scroll to the next ten
+                   when we're done with the current stack. */
+                index = recordID % ADDRESS_REC_STACK_SIZE;
+                if (index == 0 && recordID > 0) {
+                    z4scroll(&parm);
+                }
+
                 jint recordNum = (jint) recordID;
-                jstring zipCode = (*env)->NewStringUTF(env, parm.stack[recordID].zip_code);
-                jstring updateKeyNum = (*env)->NewStringUTF(env, parm.stack[recordID].update_key);
-                jchar actionCode = (jchar) parm.stack[recordID].action_code;
-                jchar recordType = (jchar) parm.stack[recordID].rec_type;
-                jstring preDir = (*env)->NewStringUTF(env, parm.stack[recordID].pre_dir);
-                jstring streetName = (*env)->NewStringUTF(env, parm.stack[recordID].str_name);
-                jstring suffix = (*env)->NewStringUTF(env, parm.stack[recordID].suffix);
-                jstring postDir = (*env)->NewStringUTF(env, parm.stack[recordID].post_dir);
-                jstring primaryLow = (*env)->NewStringUTF(env, parm.stack[recordID].prim_low);
-                jstring primaryHigh = (*env)->NewStringUTF(env, parm.stack[recordID].prim_high);
-                jchar primaryEO = (jchar) parm.stack[recordID].prim_code;
-                jstring bldgFirmName = (*env)->NewStringUTF(env, parm.stack[recordID].sec_name);
-                jstring unit = (*env)->NewStringUTF(env, parm.stack[recordID].unit);
-                jstring secLow = (*env)->NewStringUTF(env, parm.stack[recordID].sec_low);
-                jstring secHigh = (*env)->NewStringUTF(env, parm.stack[recordID].sec_high);
-                jchar secCode = parm.stack[recordID].sec_code;
-                jstring addonLow = (*env)->NewStringUTF(env, parm.stack[recordID].addon_low);
-                jstring addonHigh = (*env)->NewStringUTF(env, parm.stack[recordID].addon_high);
-                jchar lacsStatus = (jchar) parm.stack[recordID].lacs_status;
-                jstring financeCode = (*env)->NewStringUTF(env, parm.stack[recordID].finance);
-                jstring stateAbbr = (*env)->NewStringUTF(env, parm.stack[recordID].state_abbrev);
-                jstring countyNum = (*env)->NewStringUTF(env, parm.stack[recordID].county_no);
-                jstring congressDist = (*env)->NewStringUTF(env, parm.stack[recordID].congress_dist);
-                jstring municipality = (*env)->NewStringUTF(env, parm.stack[recordID].municipality);
-                jstring urbanization = (*env)->NewStringUTF(env, parm.stack[recordID].urbanization);
-                jstring lastline = (*env)->NewStringUTF(env, parm.stack[recordID].last_line);
+                jstring zipCode = (*env)->NewStringUTF(env, parm.stack[index].zip_code);
+                jstring updateKeyNum = (*env)->NewStringUTF(env, parm.stack[index].update_key);
+                jchar actionCode = (jchar) parm.stack[index].action_code;
+                jchar recordType = (jchar) parm.stack[index].rec_type;
+                jstring preDir = (*env)->NewStringUTF(env, parm.stack[index].pre_dir);
+                jstring streetName = (*env)->NewStringUTF(env, parm.stack[index].str_name);
+                jstring suffix = (*env)->NewStringUTF(env, parm.stack[index].suffix);
+                jstring postDir = (*env)->NewStringUTF(env, parm.stack[index].post_dir);
+                jstring primaryLow = (*env)->NewStringUTF(env, parm.stack[index].prim_low);
+                jstring primaryHigh = (*env)->NewStringUTF(env, parm.stack[index].prim_high);
+                jchar primaryEO = (jchar) parm.stack[index].prim_code;
+                jstring bldgFirmName = (*env)->NewStringUTF(env, parm.stack[index].sec_name);
+                jstring unit = (*env)->NewStringUTF(env, parm.stack[index].unit);
+                jstring secLow = (*env)->NewStringUTF(env, parm.stack[index].sec_low);
+                jstring secHigh = (*env)->NewStringUTF(env, parm.stack[index].sec_high);
+                jchar secCode = parm.stack[index].sec_code;
+                jstring addonLow = (*env)->NewStringUTF(env, parm.stack[index].addon_low);
+                jstring addonHigh = (*env)->NewStringUTF(env, parm.stack[index].addon_high);
+                jchar lacsStatus = (jchar) parm.stack[index].lacs_status;
+                jstring financeCode = (*env)->NewStringUTF(env, parm.stack[index].finance);
+                jstring stateAbbr = (*env)->NewStringUTF(env, parm.stack[index].state_abbrev);
+                jstring countyNum = (*env)->NewStringUTF(env, parm.stack[index].county_no);
+                jstring congressDist = (*env)->NewStringUTF(env, parm.stack[index].congress_dist);
+                jstring municipality = (*env)->NewStringUTF(env, parm.stack[index].municipality);
+                jstring urbanization = (*env)->NewStringUTF(env, parm.stack[index].urbanization);
+                jstring lastline = (*env)->NewStringUTF(env, parm.stack[index].last_line);
 
                 /* Construct an AddressRecord */
                 jobject addressRecord = (*env)->NewObject(env, AddressRecordCls, AddressRecordConstr,
