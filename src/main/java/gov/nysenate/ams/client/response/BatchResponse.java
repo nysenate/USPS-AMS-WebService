@@ -1,11 +1,24 @@
 package gov.nysenate.ams.client.response;
 
+import java.util.List;
+
 /**
- * Created with IntelliJ IDEA.
- * User: ash
- * Date: 10/17/13
- * Time: 4:02 PM
- * To change this template use File | Settings | File Templates.
+ * Represents the structure of batch responses.
+ * @param <T> T is the response class.
  */
-public class BatchResponse {
+public class BatchResponse<T>
+{
+    protected List<T> results;
+
+    public BatchResponse(List<T> responses) {
+        this.results = responses;
+    }
+
+    public List<T> getResults() {
+        return results;
+    }
+
+    public int getTotal() {
+        return (this.results != null) ? this.results.size() : 0;
+    }
 }
