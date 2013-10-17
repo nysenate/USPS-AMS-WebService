@@ -34,4 +34,14 @@
         <servlet-name>AddressValidateController</servlet-name>
         <url-pattern>/api/validate/*</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <display-name>Zip9InquiryController</display-name>
+        <servlet-name>Zip9InquiryController</servlet-name>
+        <servlet-class>gov.nysenate.ams.controller.Zip9InquiryController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Zip9InquiryController</servlet-name>
+        <url-pattern>/api/inquiry/*</url-pattern>
+    </servlet-mapping>
 </web-app>
