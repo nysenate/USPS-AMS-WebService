@@ -2,6 +2,7 @@ package gov.nysenate.ams.util;
 
 import gov.nysenate.ams.dao.AmsNativeDao;
 import gov.nysenate.ams.model.AmsSettings;
+import gov.nysenate.ams.provider.AmsNativeProvider;
 import gov.nysenate.util.Config;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
@@ -15,7 +16,7 @@ public class Application
 
     private Config config;
     private AmsSettings amsSettings;
-    private AmsNativeDao amsNativeDao;
+    private AmsNativeProvider amsNativeProvider;
 
     /** Singleton instance */
     private static Application INSTANCE = new Application();
@@ -25,11 +26,13 @@ public class Application
     {
         try {
             INSTANCE.config = new Config(DEFAULT_PROPERTY_FILENAME);
-            INSTANCE.amsNativeDao = new AmsNativeDao();
             INSTANCE.amsSettings = new AmsSettings(INSTANCE.config);
-            String libraryName = INSTANCE.config.getValue("shared.library.name", "amsnative");
-            INSTANCE.amsNativeDao.loadAmsLibrary(libraryName);
-            INSTANCE.amsNativeDao.setupAmsLibrary(INSTANCE.amsSettings);
+
+            /* Setup the native AMS provider. */
+            INSTANCE.amsNativeProvider = new AmsNativeProvider(INSTANCE.config, INSTANCE.amsSettings);
+            INSTANCE.amsNativeProvider.load();
+            INSTANCE.amsNativeProvider.setup();
+
             return true;
         }
         catch (ConfigurationException ex) {
@@ -41,7 +44,7 @@ public class Application
     public static boolean shutdown()
     {
         logger.info("Shutting down AMS application");
-        if (INSTANCE.amsNativeDao.closeAmsLibrary()) {
+        if (INSTANCE.amsNativeProvider != null && INSTANCE.amsNativeProvider.shutDown()) {
             logger.info("Closed the AMS instance.");
             return true;
         }
@@ -52,4 +55,10 @@ public class Application
     {
         return INSTANCE.config;
     }
+
+    public static AmsNativeProvider getAmsNativeProvider()
+    {
+        return INSTANCE.amsNativeProvider;
+    }
+
 }

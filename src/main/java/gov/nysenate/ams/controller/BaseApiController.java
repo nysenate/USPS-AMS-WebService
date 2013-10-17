@@ -1,5 +1,6 @@
 package gov.nysenate.ams.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.nysenate.ams.model.Address;
 import org.apache.log4j.Logger;
@@ -59,12 +60,23 @@ public abstract class BaseApiController extends HttpServlet
     {
         ArrayList<Address> addresses = new ArrayList<>();
         try {
-            logger.debug("Batch address json body " + json);
+            logger.trace("Batch address json body " + json);
             ObjectMapper mapper = new ObjectMapper();
-            return new ArrayList<>(Arrays.asList(mapper.readValue(json, Address[].class)));
+            JsonNode root = mapper.readTree(json);
+            for (int i = 0; i < root.size(); i++) {
+                JsonNode addressNode = root.get(i);
+                String firm = (addressNode.has("firm")) ? addressNode.get("firm").asText() : "";
+                String addr1 = (addressNode.has("addr1")) ? addressNode.get("addr1").asText() : "";
+                String addr2 = (addressNode.has("addr2")) ? addressNode.get("addr2").asText() : "";
+                String city = (addressNode.has("city")) ? addressNode.get("city").asText() : "";
+                String state = (addressNode.has("state")) ? addressNode.get("state").asText() : "";
+                String zip5 = (addressNode.has("zip5")) ? addressNode.get("zip5").asText() : "";
+                String zip4 = (addressNode.has("zip4")) ? addressNode.get("zip4").asText() : "";
+                addresses.add(new Address(firm, addr1, addr2, city, state, zip5, zip4));
+            }
         }
         catch(Exception ex) {
-            logger.debug("No valid batch address payload detected.");
+            logger.debug("Invalid batch address payload detected.");
             logger.trace(ex);
         }
         return addresses;

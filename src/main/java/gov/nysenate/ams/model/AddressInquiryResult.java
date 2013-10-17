@@ -21,8 +21,16 @@ public class AddressInquiryResult
         this.statusCode = StatusCode.getByCode(statusCode);
         this.footnotes = new HashSet<>();
         if (footnotes != null && !footnotes.isEmpty()) {
-            for (String s : footnotes.split("#")) {
-                this.footnotes.add(Footnote.valueOf(s.toUpperCase()));
+            footnotes = footnotes.replaceAll("(#| )", "");
+            for (String s : footnotes.split("")) {
+                try {
+                    if (s != null && !s.isEmpty()) {
+                        this.footnotes.add(Footnote.valueOf(s.toUpperCase()));
+                    }
+                }
+                catch (IllegalArgumentException ex) {
+                    /** Ignore bad footnote value. */
+                }
             }
         }
         if (records != null && records.length > 0) {
