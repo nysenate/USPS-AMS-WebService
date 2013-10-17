@@ -16,7 +16,7 @@ public class CityRecord
                                                // Y = Mailing name
                                                // N = Non-mailing name
     protected final String lastLineNum;        // Preferred last line key
-    protected final String lastLineName;       // Preferred city name
+    protected final String preferredCity;       // Preferred city name
     protected final char cityDelvInd;
     protected final char autoZoneInd;
     protected final char uniqueZipInd;
@@ -24,7 +24,7 @@ public class CityRecord
     protected final String countyNum;          // County number
     protected final String countyName;         // County name
 
-    public CityRecord(String countyName, String stateAbbr, String zipCode,  String lastLineName, String lastLineNum,
+    public CityRecord(String countyName, String stateAbbr, String zipCode,  String preferredCity, String lastLineNum,
                       String cityAbbrev, String cityName,String cityKey, String countyNum, char zipClassCode,
                       char mailingNameInd,  char detailCode, char facilityCd, char cityDelvInd, char autoZoneind,
                       char uniqueZipInd)
@@ -36,7 +36,7 @@ public class CityRecord
         else {this.countyName = "";}
         this.countyNum = countyNum;
         this.stateAbbr = stateAbbr;
-        this.lastLineName = lastLineName;
+        this.preferredCity = preferredCity;
         this.lastLineNum = lastLineNum;
         this.mailingNameInd = mailingNameInd;
         this.facilityCd = FacilityCode.valueOf(Character.toString(facilityCd));
@@ -87,8 +87,8 @@ public class CityRecord
         return lastLineNum;
     }
 
-    public String getLastLineName() {
-        return lastLineName;
+    public String getPreferredCity() {
+        return preferredCity;
     }
 
     public String getStateAbbr() {

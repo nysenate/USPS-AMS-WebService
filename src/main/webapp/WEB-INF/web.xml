@@ -44,4 +44,15 @@
         <servlet-name>Zip9InquiryController</servlet-name>
         <url-pattern>/api/inquiry/*</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <display-name>CityStateController</display-name>
+        <servlet-name>CityStateController</servlet-name>
+        <servlet-class>gov.nysenate.ams.controller.CityStateController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CityStateController</servlet-name>
+        <url-pattern>/api/citystate/*</url-pattern>
+    </servlet-mapping>
+
 </web-app>
