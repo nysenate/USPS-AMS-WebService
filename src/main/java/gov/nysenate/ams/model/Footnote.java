@@ -52,7 +52,7 @@ public enum Footnote
         "CASS rule does not allow a match when the cardinal point of a directional changes more than 90%."),
 
     L ("Address Component Changed",
-        "An address component (i.e., directional or suffix only) was added, changed, or deleted in order to achieve a " +
+        "An address component was added, changed, or deleted in order to achieve a " +
         "match. "),
 
     M ("Street Name Changed",

@@ -1,7 +1,7 @@
 package gov.nysenate.ams.client.response;
 
-import gov.nysenate.ams.client.view.USPSDetailView;
 import gov.nysenate.ams.client.view.AddressRecordView;
+import gov.nysenate.ams.client.view.USPSDetailView;
 import gov.nysenate.ams.model.AddressInquiryResult;
 import gov.nysenate.ams.model.AddressRecord;
 

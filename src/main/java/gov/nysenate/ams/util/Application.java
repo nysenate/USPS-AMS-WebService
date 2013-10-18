@@ -1,6 +1,5 @@
 package gov.nysenate.ams.util;
 
-import gov.nysenate.ams.dao.AmsNativeDao;
 import gov.nysenate.ams.model.AmsSettings;
 import gov.nysenate.ams.provider.AmsNativeProvider;
 import gov.nysenate.util.Config;

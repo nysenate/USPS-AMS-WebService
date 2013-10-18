@@ -4,16 +4,10 @@ import gov.nysenate.ams.client.view.FacilityCodeView;
 import gov.nysenate.ams.client.view.ZipClassCodeView;
 import gov.nysenate.ams.model.CityStateResult;
 
-/**
- * Created with IntelliJ IDEA.
- * User: vincent
- * Date: 10/17/13
- * Time: 3:09 PM
- */
 public class DetailCityStateResponse extends BaseCityStateResponse {
 
-    protected ZipClassCodeView zipClassCode;
-    protected FacilityCodeView facilityCode;
+    protected ZipClassCodeView zipClass;
+    protected FacilityCodeView facility;
     protected char mailingNameInd;
     protected String preferredCity;
     protected String countyNum;
@@ -22,10 +16,10 @@ public class DetailCityStateResponse extends BaseCityStateResponse {
     public DetailCityStateResponse(CityStateResult result)
     {
         super(result);
-        if(result != null)
+        if(result != null && result.getCityRecord() != null)
         {
-            this.zipClassCode = new ZipClassCodeView(result.getCityRecord().getZipClassCode());
-            this.facilityCode = new FacilityCodeView(result.getCityRecord().getFacilityCd());
+            this.zipClass = new ZipClassCodeView(result.getCityRecord().getZipClassCode());
+            this.facility = new FacilityCodeView(result.getCityRecord().getFacilityCd());
             this.mailingNameInd = result.getCityRecord().getMailingNameInd();
             this.preferredCity = result.getCityRecord().getPreferredCity();
             this.countyNum = result.getCityRecord().getCountyNum();
@@ -33,16 +27,16 @@ public class DetailCityStateResponse extends BaseCityStateResponse {
         }
     }
 
-    public ZipClassCodeView getZipClassCode() {
-        return zipClassCode;
+    public ZipClassCodeView getZipClass() {
+        return zipClass;
     }
 
-    public FacilityCodeView getFacilityCode() {
-        return facilityCode;
+    public FacilityCodeView getFacility() {
+        return facility;
     }
 
-    public char getMailingNameInd() {
-        return mailingNameInd;
+    public String getMailingNameInd() {
+        return Character.toString(mailingNameInd);
     }
 
     public String getPreferredCity() {

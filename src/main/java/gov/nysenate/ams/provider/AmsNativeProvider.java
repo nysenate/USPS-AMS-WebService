@@ -1,14 +1,10 @@
 package gov.nysenate.ams.provider;
 
 import gov.nysenate.ams.dao.AmsNativeDao;
-import gov.nysenate.ams.model.Address;
-import gov.nysenate.ams.model.AddressInquiryResult;
-import gov.nysenate.ams.model.AmsSettings;
-import gov.nysenate.ams.model.CityStateResult;
+import gov.nysenate.ams.model.*;
 import gov.nysenate.ams.service.AddressService;
 import gov.nysenate.ams.service.LibraryService;
 import gov.nysenate.ams.service.LicensingService;
-import gov.nysenate.ams.util.Application;
 import gov.nysenate.util.Config;
 import org.apache.log4j.Logger;
 
@@ -82,19 +78,29 @@ public class AmsNativeProvider implements AddressService, LicensingService, Libr
     @Override
     public AddressInquiryResult addressInquiry(Address address)
     {
-        return this.amsNativeDao.addressInquiry(address);
+        if (address != null && !address.isEmpty()) {
+            return this.amsNativeDao.addressInquiry(address);
+        }
+        else return new AddressInquiryResult(-1, null, StatusCode.INSUFFICIENT_ADDRESS.getCode(), null, null);
     }
 
     @Override
     public CityStateResult cityStateLookup(String zip5)
     {
-        return this.amsNativeDao.cityStateLookup(zip5);
+        if (zip5 != null && !zip5.isEmpty()) {
+            return this.amsNativeDao.cityStateLookup(zip5);
+        }
+        else return new CityStateResult(-1, null);
+
     }
 
     @Override
     public AddressInquiryResult zip9Inquiry(String zip9)
     {
-        return this.amsNativeDao.zip9Inquiry(zip9);
+        if (zip9 != null && !zip9.isEmpty()) {
+            return this.amsNativeDao.zip9Inquiry(zip9);
+        }
+        else return new AddressInquiryResult(-1, null, StatusCode.INSUFFICIENT_ZIP9.getCode(), null, null);
     }
 
     @Override

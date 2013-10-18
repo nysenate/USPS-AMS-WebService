@@ -13,6 +13,9 @@ public enum StatusCode
         "The input address must contain at minimum the following address components: (addr1, city, state) " +
         "or (addr1, zip5)"),
 
+    INSUFFICIENT_ZIP9(2,
+        "The API method requires a Zip9 code"),
+
     /* AMS specific status codes */
     INVALID_DUAL_ADDRESS (10,
         "Information presented could not be processed in current format. Corrective action is needed. Be sure that " +

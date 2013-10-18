@@ -11,7 +11,7 @@ public enum FacilityCode
     G ("General mail facility"),
     K ("Bulk mail center"),
     M ("Money order unit"),
-    N ("Non-postal name, community name,former postal facility,or place name"),
+    N ("Non-postal name, community name, former postal facility, or place name"),
     P ("Post office"),
     S ("Station"),
     U ("Urbanization");

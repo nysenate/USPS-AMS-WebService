@@ -3,7 +3,10 @@ package gov.nysenate.ams.client.response;
 import gov.nysenate.ams.client.view.AddressView;
 import gov.nysenate.ams.client.view.FootnoteView;
 import gov.nysenate.ams.client.view.StatusCodeView;
-import gov.nysenate.ams.model.*;
+import gov.nysenate.ams.model.AddressInquiryResult;
+import gov.nysenate.ams.model.Footnote;
+import gov.nysenate.ams.model.StatusCode;
+import gov.nysenate.ams.model.USPSAddress;
 
 import java.util.ArrayList;
 

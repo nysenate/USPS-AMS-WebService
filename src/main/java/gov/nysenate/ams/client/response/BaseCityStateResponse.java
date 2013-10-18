@@ -21,10 +21,12 @@ public class BaseCityStateResponse
         if(result != null)
         {
             this.success = result.isSuccess();
-            this.cityName = result.getCityRecord().getCityName();
-            this.cityAbbr = result.getCityRecord().getCityAbbrev();
-            this.zipCode = result.getCityRecord().getZipCode();
-            this.stateAbbr = result.getCityRecord().getStateAbbr();
+            if (result.getCityRecord() != null) {
+                this.cityName = result.getCityRecord().getCityName();
+                this.cityAbbr = result.getCityRecord().getCityAbbrev();
+                this.zipCode = result.getCityRecord().getZipCode();
+                this.stateAbbr = result.getCityRecord().getStateAbbr();
+            }
         }
     }
 

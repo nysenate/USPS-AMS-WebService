@@ -12,11 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 public abstract class BaseApiController extends HttpServlet
 {
     private static Logger logger = Logger.getLogger(BaseApiController.class);
+    private static ObjectMapper mapper = new ObjectMapper();
     public abstract void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
     public abstract void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
     public abstract void init(ServletConfig config) throws ServletException;
@@ -56,12 +57,11 @@ public abstract class BaseApiController extends HttpServlet
      * @param json Json payload
      * @return ArrayList<Address>
      */
-    public static ArrayList<Address> getAddressesFromJsonBody(String json)
+    public static ArrayList<Address> getAddressesFromJson(String json)
     {
         ArrayList<Address> addresses = new ArrayList<>();
         try {
             logger.trace("Batch address json body " + json);
-            ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(json);
             for (int i = 0; i < root.size(); i++) {
                 JsonNode addressNode = root.get(i);
@@ -82,5 +82,102 @@ public abstract class BaseApiController extends HttpServlet
         return addresses;
     }
 
+    /**
+     * Retrieve zip5 value from query parameter.
+     * @param request HttpServletRequest.
+     * @return zip5 string or empty string if param doesn't exist.
+     */
+    public static String getZip5FromParams(HttpServletRequest request)
+    {
+        String zip5 = request.getParameter("zip5");
+        return (zip5 != null) ? zip5 : "";
+    }
 
+    /**
+     * Retrieve zip5 value from query parameter.
+     * @param json Json string containing array of zip5 strings.
+     * @return ArrayList<String>
+     */
+    public static List<String> getZip5ListFromJson(String json)
+    {
+        List<String> zip5List = new ArrayList<>();
+        try {
+            logger.trace("Batch zip5 json body " + json);
+            JsonNode root = mapper.readTree(json);
+            for (int i = 0; i < root.size(); i++) {
+                zip5List.add(root.get(i).asText());
+            }
+        }
+        catch (Exception ex) {
+            logger.debug("Invalid zip5 json payload.");
+            logger.trace(ex);
+        }
+        return zip5List;
+    }
+
+    /**
+     * Retrieve zip4 value from query parameter.
+     * @param request HttpServletRequest.
+     * @return zip4 string or empty string if param doesn't exist.
+     */
+    public static String getZip4FromParams(HttpServletRequest request)
+    {
+        String zip4 = request.getParameter("zip4");
+        return (zip4 != null) ? zip4 : "";
+    }
+
+    /**
+     * Retrieve zip9 value from query parameters zip5 and zip4.
+     * @param request HttpServletRequest.
+     * @return zip9 string or empty string.
+     */
+    public static String getZip9FromParams(HttpServletRequest request)
+    {
+        return getZip5FromParams(request) + getZip4FromParams(request);
+    }
+
+    /**
+     * Retrieve zip9 value from query parameters zip5 and zip4.
+     * @param json Json string containing array of objects with zip5 and zip4 fields.
+     * @return zip9 string or empty string.
+     */
+    public static List<String> getZip9ListFromJson(String json)
+    {
+        List<String> zip9List = new ArrayList<>();
+        try {
+            logger.trace("Batch zip9 json body " + json);
+            JsonNode root = mapper.readTree(json);
+            for (int i = 0; i < root.size(); i++) {
+                JsonNode node = root.get(i);
+                String zip5 = (node.hasNonNull("zip5")) ? node.get("zip5").asText() : "";
+                String zip4 = (node.hasNonNull("zip4")) ? node.get("zip4").asText() : "";
+                zip9List.add(zip5 + zip4);
+            }
+        }
+        catch (Exception ex) {
+            logger.debug("Invalid zip9 json payload.");
+            logger.trace(ex);
+        }
+        return zip9List;
+    }
+
+    /**
+     * Indicate if batch = true in the query parameters.
+     * @param request HttpServletRequest object.
+     * @return true if batch=true, false otherwise.
+     */
+    public static boolean isBatch(HttpServletRequest request)
+    {
+        return Boolean.parseBoolean(request.getParameter("batch"));
+    }
+
+    /**
+     * Indicate if detail = true in the query parameters.
+     * @param request HttpServletRequest object.
+     * @return true if detail = true, false otherwise.
+     */
+    public static boolean isDetail(HttpServletRequest request)
+    {
+        return Boolean.parseBoolean(request.getParameter("detail"));
+    }
 }

@@ -42,7 +42,7 @@ public class CityRecord
         this.facilityCd = FacilityCode.valueOf(Character.toString(facilityCd));
         this.cityAbbrev = cityAbbrev;
         this.cityName = cityName;
-        this.zipClassCode =ZipClassCode.getValue(Character.toString(zipClassCode));
+        this.zipClassCode = ZipClassCode.getValue(Character.toString(zipClassCode));
         this.cityKey = cityKey;
         this.zipCode = zipCode;
         this.detailCode = detailCode;
