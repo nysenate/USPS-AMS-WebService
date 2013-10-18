@@ -1,3 +1,9 @@
 z4cxlog.dat
 src/test/c/ams
+*.so
+*.properties
+*.log
+*.iml
+*.out
+target/
 .idea

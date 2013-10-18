@@ -135,7 +135,7 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_addressInquiry
     memset(&parm, 0, sizeof(ZIP4_PARM));
 
     /* Retrieve fields from input address. */
-    jstring firmName, addr1, addr2, city, state, zip5, zip4;
+    jstring firmName, addr1, addr2, city, state, zip5;
     firmName = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_getFirmName);
     addr1 = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_getAddr1);
     addr2 = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_getAddr2);
@@ -186,7 +186,6 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_addressInquiry
 JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_cityStateLookup
   (JNIEnv * env, jobject jThis, jstring jZip)
 {
-    jclass thisCls = (*env)->GetObjectClass(env, jThis);
     jobject cityStateResultObj;
     jobject cityRecordObj;
 
@@ -198,7 +197,7 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_cityStateLookup
 
     /* Handle successful response. */
     if ( responseCode == 0 ) {
-        jstring zipCode, cityName, stateAbbrev, finance, cityKey, cityAbbrev,
+        jstring zipCode, cityName, stateAbbrev, cityKey, cityAbbrev,
                 lastLineNum, lastLineName, countyName, countyNo;
 
         jchar zipClassCode, mailingNameInd, detailCode, facilityCd, cityDelvInd,
@@ -207,7 +206,6 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_cityStateLookup
         zipCode = (*env)->NewStringUTF(env, city.zip_code);
         cityName  = (*env)->NewStringUTF(env, city.city_name);
         stateAbbrev = (*env)->NewStringUTF(env, city.state_abbrev);
-        finance = (*env)->NewStringUTF(env, city.finance);
         detailCode = (jchar)city.detail_code;
         cityKey = (*env)->NewStringUTF(env, city.city_key);
         zipClassCode = (jchar)city.zip_class_code;
@@ -295,15 +293,13 @@ jobject handleAddressInquiryResult(JNIEnv * env, ZIP4_PARM * parm, int responseC
         zip4 = (*env)->NewStringUTF(env, parm->addon);
 
         /* Get the parsed input data */
-        jstring primaryNum, secondaryNum, rightSecondaryNum, ruralRouteNum, secondaryNumUnit, rightSecondaryNumUnit,
-            leftPre, rightPre, firstSuffix, secondSuffix, leftPost, rightPost, primaryName;
+        jstring primaryNum, secondaryNum, ruralRouteNum, secondaryNumUnit, leftPre, rightPre,
+                firstSuffix, secondSuffix, leftPost, rightPost, primaryName;
 
         primaryNum = (*env)->NewStringUTF(env, parm->ppnum);
         secondaryNum = (*env)->NewStringUTF(env, parm->psnum);
-        rightSecondaryNum = (*env)->NewStringUTF(env, parm->psnum2);
         ruralRouteNum = (*env)->NewStringUTF(env, parm->prote);
         secondaryNumUnit = (*env)->NewStringUTF(env, parm->punit);
-        rightSecondaryNumUnit = (*env)->NewStringUTF(env, parm->punit2);
         leftPre = (*env)->NewStringUTF(env, parm->ppre1);
         rightPre = (*env)->NewStringUTF(env, parm->ppre2);
         firstSuffix = (*env)->NewStringUTF(env, parm->psuf1);
@@ -351,8 +347,6 @@ jobject handleAddressInquiryResult(JNIEnv * env, ZIP4_PARM * parm, int responseC
 
                 jint recordNum = (jint) recordID;
                 jstring zipCode = (*env)->NewStringUTF(env, parm->stack[index].zip_code);
-                jstring updateKeyNum = (*env)->NewStringUTF(env, parm->stack[index].update_key);
-                jchar actionCode = (jchar) parm->stack[index].action_code;
                 jchar recordType = (jchar) parm->stack[index].rec_type;
                 jstring preDir = (*env)->NewStringUTF(env, parm->stack[index].pre_dir);
                 jstring streetName = (*env)->NewStringUTF(env, parm->stack[index].str_name);
@@ -368,7 +362,6 @@ jobject handleAddressInquiryResult(JNIEnv * env, ZIP4_PARM * parm, int responseC
                 jchar secCode = parm->stack[index].sec_code;
                 jstring addonLow = (*env)->NewStringUTF(env, parm->stack[index].addon_low);
                 jstring addonHigh = (*env)->NewStringUTF(env, parm->stack[index].addon_high);
-                jchar lacsStatus = (jchar) parm->stack[index].lacs_status;
                 jstring financeCode = (*env)->NewStringUTF(env, parm->stack[index].finance);
                 jstring stateAbbr = (*env)->NewStringUTF(env, parm->stack[index].state_abbrev);
                 jstring countyNum = (*env)->NewStringUTF(env, parm->stack[index].county_no);

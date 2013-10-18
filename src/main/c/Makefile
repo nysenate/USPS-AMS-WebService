@@ -6,7 +6,7 @@
 TARGETS= libamsnative.so
 
 libamsnative.so: AmsNativeDao.c
-	$(CC) -shared -fPIC -o $@ -I/usr/lib/jvm/jdk1.7.0_21/include -I/usr/lib/jvm/jdk1.7.0_21/include/linux -I/opt/usps_ams -Wall $+ -L/opt/usps_ams -lz4lnx64
+	$(CC) -shared -fPIC -o $@ -I/usr/lib/jvm/default-java/include -I/usr/lib/jvm/default-java/include/linux -I/opt/usps_ams -Wall $+ -L/opt/usps_ams -lz4lnx64
 
 clean:
 	rm -rf libamsnative.so
