@@ -13,7 +13,7 @@ public enum StatusCode
         "The input address must contain at minimum the following address components: (addr1, city, state) " +
         "or (addr1, zip5)"),
 
-    INSUFFICIENT_ZIP9(2,
+    INSUFFICIENT_ZIP9(3,
         "The API method requires a Zip9 code"),
 
     /* AMS specific status codes */

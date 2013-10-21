@@ -14,8 +14,8 @@ public class DetailAddressInquiryResponse extends BaseAddressInquiryResponse
     protected int recordCount;
     protected List<AddressRecordView> records = new ArrayList<>();
 
-    public DetailAddressInquiryResponse(AddressInquiryResult result) {
-        super(result);
+    public DetailAddressInquiryResponse(AddressInquiryResult result, boolean initCaps) {
+        super(result, initCaps);
         if (result != null) {
             this.detail = new USPSDetailView(result.getUspsAddress());
             this.recordCount = result.getRecords().size();

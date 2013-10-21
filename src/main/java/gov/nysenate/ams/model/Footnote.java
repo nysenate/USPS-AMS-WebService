@@ -27,9 +27,7 @@ public enum Footnote
         "Multiple records were returned, but each shares the same 5-digit ZIP Code."),
 
     F ("Address Not Found",
-        "The address, exactly as submitted, could not be found in the city, state, or ZIP Code provided. It is also " +
-        "recommended that the requestor check the submitted address for accuracy. For example, the street address " +
-        "line may be abbreviated excessively and may not be fully recognizable."),
+        "The address, exactly as submitted, could not be found in the city, state, or ZIP Code provided."),
 
     G ("All or Part of the Firm Line Used For Address Line",
         "Information in the firm line was determined to be a part of the address. It was moved out of the firm line " +
@@ -37,13 +35,11 @@ public enum Footnote
 
     H ("Missing Secondary Number",
         "ZIP+4 information indicates this address is a building. The address as submitted does not contain an " +
-        "apartment/suite number. It is recommended that the requestor check the submitted address and add the " +
-        "missing apartment or suite number to ensure the correct Delivery Point Barcode (DPBC)."),
+        "apartment/suite number."),
 
     I ("Insufficient/Incorrect Data",
         "More than one ZIP+4 Code was found to satisfy the address as submitted. The submitted address did not " +
-        "contain sufficiently complete or correct data to determine a single ZIP+4 Code. It is recommended that the " +
-        "requestor check the address for accuracy and completeness."),
+        "contain sufficiently complete or correct data to determine a single ZIP+4 Code."),
 
     J ("PO Box Dual Address",
         "The input contained two addresses. For example: 123 MAIN ST PO BOX 99."),

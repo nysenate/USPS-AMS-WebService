@@ -17,7 +17,7 @@ public class BaseAddressInquiryResponse
     protected StatusCodeView status;
     protected ArrayList<FootnoteView> footnotes = new ArrayList<>();
 
-    public BaseAddressInquiryResponse(AddressInquiryResult result)
+    public BaseAddressInquiryResponse(AddressInquiryResult result, boolean initCaps)
     {
         if (result != null) {
             StatusCode statusCode = result.getStatusCode();
@@ -29,7 +29,7 @@ public class BaseAddressInquiryResponse
                 this.status = new StatusCodeView(result.getStatusCode());
             }
             if (uspsAddress != null) {
-                this.address = new AddressView(uspsAddress.getValidatedAddress());
+                this.address = new AddressView(uspsAddress.getValidatedAddress(), initCaps);
             }
             if (result.getFootnotes() != null && !result.getFootnotes().isEmpty()) {
                 for (Footnote footnote : result.getFootnotes()) {

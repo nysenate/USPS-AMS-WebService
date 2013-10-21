@@ -180,4 +180,15 @@ public abstract class BaseApiController extends HttpServlet
     {
         return Boolean.parseBoolean(request.getParameter("detail"));
     }
+
+    /**
+     * Indicate if initCaps = true in the query parameters.
+     * @param request HttpServletRequest object.
+     * @return true if initCaps = true, false otherwise.
+     */
+    public static boolean isInitCaps(HttpServletRequest request)
+    {
+        return Boolean.parseBoolean(request.getParameter("initCaps")) ||
+               Boolean.parseBoolean(request.getParameter("initcaps"));
+    }
 }

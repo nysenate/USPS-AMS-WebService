@@ -20,6 +20,8 @@ import java.util.List;
 
 public class CityStateController extends BaseApiController
 {
+    /* TODO - Implement init caps functionality for city/state */
+
     private Logger logger = Logger.getLogger(CityStateController.class);
     private AmsNativeProvider amsNativeProvider;
 
@@ -37,6 +39,7 @@ public class CityStateController extends BaseApiController
 
         boolean batch = isBatch(request);
         boolean detail = isDetail(request);
+        boolean initCaps = isInitCaps(request);
 
         if (batch) {
             String json = IOUtils.toString(request.getInputStream(), "UTF-8");
@@ -76,6 +79,7 @@ public class CityStateController extends BaseApiController
 
         String zip5 = getZip5FromParams(request);
         boolean detail = isDetail(request);
+        boolean initCaps = isInitCaps(request);
 
         CityStateResult result = amsNativeProvider.cityStateLookup(zip5);
 
