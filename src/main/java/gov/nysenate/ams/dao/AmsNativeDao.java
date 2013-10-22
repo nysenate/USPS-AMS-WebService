@@ -83,4 +83,25 @@ public class AmsNativeDao
      * @return AddressInquiryResult
      */
     public synchronized native AddressInquiryResult zip9Inquiry(String zip9);
+
+    /**
+     * Wrapper to the AMS z4ver() method.
+     *
+     * @return String
+     */
+    public synchronized native String getAmsVersion();
+
+    /**
+     * Wrapper to the AMS z4GetDataExpireDays() method.
+     *
+     * @return int
+     */
+    public synchronized native int getDataExpireDays();
+
+    /**
+     * Wrapper to the AMS z4GetCodeExpireDays() method.
+     *
+     * @return int
+     */
+    public synchronized native int getLibraryExpireDays();
 }

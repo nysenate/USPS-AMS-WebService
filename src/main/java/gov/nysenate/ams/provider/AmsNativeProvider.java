@@ -139,18 +139,18 @@ public class AmsNativeProvider implements AddressService, LicensingService, Libr
     @Override
     public String getApiVersion()
     {
-        return null;
+        return amsNativeDao.getAmsVersion();
     }
 
     @Override
     public int getDataExpireDays()
     {
-        return 0;
+        return amsNativeDao.getDataExpireDays();
     }
 
     @Override
     public int getLibraryExpireDays()
     {
-        return 0;
+        return amsNativeDao.getLibraryExpireDays();
     }
 }
