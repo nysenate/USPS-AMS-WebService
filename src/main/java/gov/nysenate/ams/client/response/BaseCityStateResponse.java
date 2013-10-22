@@ -1,6 +1,7 @@
 package gov.nysenate.ams.client.response;
 
 import gov.nysenate.ams.model.CityStateResult;
+import org.apache.commons.lang.WordUtils;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,16 +17,25 @@ public class BaseCityStateResponse
     protected String zipCode;
     protected String stateAbbr;
 
-    public BaseCityStateResponse(CityStateResult result)
+    public BaseCityStateResponse(CityStateResult result, boolean initCaps)
     {
         if(result != null)
         {
             this.success = result.isSuccess();
             if (result.getCityRecord() != null) {
-                this.cityName = result.getCityRecord().getCityName();
-                this.cityAbbr = result.getCityRecord().getCityAbbrev();
+                if(initCaps)
+                {
+                    this.cityName = WordUtils.capitalizeFully(result.getCityRecord().getCityName());
+                    this.cityAbbr = WordUtils.capitalizeFully(result.getCityRecord().getCityAbbrev());
+                }
+                else
+                {
+                    this.cityName = result.getCityRecord().getCityName();
+                    this.cityAbbr = result.getCityRecord().getCityAbbrev();
+                }
                 this.zipCode = result.getCityRecord().getZipCode();
                 this.stateAbbr = result.getCityRecord().getStateAbbr();
+
             }
         }
     }

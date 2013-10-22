@@ -52,10 +52,10 @@ public class CityStateController extends BaseApiController
             List<DetailCityStateResponse> detailResponses = new ArrayList<>();
             for (CityStateResult result : results) {
                 if (!detail) {
-                    baseResponses.add(new BaseCityStateResponse(result));
+                    baseResponses.add(new BaseCityStateResponse(result, initCaps));
                 }
                 else {
-                    detailResponses.add(new DetailCityStateResponse(result));
+                    detailResponses.add(new DetailCityStateResponse(result, initCaps));
                 }
             }
             if (!detail) {
@@ -84,10 +84,10 @@ public class CityStateController extends BaseApiController
         CityStateResult result = amsNativeProvider.cityStateLookup(zip5);
 
         if (!detail) {
-            responseObj = new BaseCityStateResponse(result);
+            responseObj = new BaseCityStateResponse(result, initCaps);
         }
         else {
-            responseObj = new DetailCityStateResponse(result);
+            responseObj = new DetailCityStateResponse(result, initCaps);
         }
 
         ApiFilter.setApiResponse(responseObj, request);

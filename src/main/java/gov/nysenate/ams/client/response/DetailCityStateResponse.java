@@ -13,9 +13,9 @@ public class DetailCityStateResponse extends BaseCityStateResponse {
     protected String countyNum;
     protected String countyName;
 
-    public DetailCityStateResponse(CityStateResult result)
+    public DetailCityStateResponse(CityStateResult result, boolean initCaps)
     {
-        super(result);
+        super(result, initCaps);
         if(result != null && result.getCityRecord() != null)
         {
             this.zipClass = new ZipClassCodeView(result.getCityRecord().getZipClassCode());
