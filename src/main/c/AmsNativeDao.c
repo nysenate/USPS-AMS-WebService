@@ -264,6 +264,42 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_zip9Inquiry
     return inquiryResult;
 }
 
+/*
+ * Class:     gov_nysenate_ams_dao_AmsNativeDao
+ * Method:    getAmsVersion
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getAmsVersion
+  (JNIEnv * env, jobject jThis)
+{
+    char ams_version[32];
+    z4ver(ams_version);
+
+    return (*env)->NewStringUTF(env, ams_version);
+}
+
+/*
+ * Class:     gov_nysenate_ams_dao_AmsNativeDao
+ * Method:    getDataExpireDays
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getDataExpireDays
+  (JNIEnv * env, jobject jThis)
+{
+    return (jint)z4GetDataExpireDays();
+}
+
+/*
+ * Class:     gov_nysenate_ams_dao_AmsNativeDao
+ * Method:    getLibraryExpireDays
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getLibraryExpireDays
+  (JNIEnv * env, jobject jThis)
+{
+    return (jint)z4GetCodeExpireDays();
+}
+
 /**
 * After an address inquiry method has been called, this method will create a Java AddressInquiryResult
 * object using the data stored in the ZIP4_PARM struct.

@@ -1,6 +1,6 @@
 #include <jni.h>
 
-/* Header for class gov_nysenate_ams_dao_AmsNativeDao */
+/* JNI Header for class gov.nysenate.ams.dao.AmsNativeDao */
 
 #ifndef _Included_AmsNativeDao_Wrapper
 #define _Included_AmsNativeDao_Wrapper
@@ -51,7 +51,10 @@ extern "C" {
 #define REP14(X) REP8(X) REP6(X)
 #define REP15(X) REP9(X) REP6(X)
 
+/* Create global references to class/method IDs */
 void cacheIDs(JNIEnv *);
+
+/* Used to construct AddressInquiryResult object */
 jobject handleAddressInquiryResult(JNIEnv * env, ZIP4_PARM * zip4_parm, int responseCode, int performStd);
 
 /* Method callers */
@@ -60,6 +63,8 @@ jobject getObjectFromMethod(JNIEnv * env, jclass cls, jobject instance, const ch
 jstring getStringFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName);
 jboolean getBooleanFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName);
 jint getIntFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName);
+
+/* String helpers */
 
 char * getC_String(JNIEnv * env, const jstring javaString);
 void releaseC_String(JNIEnv * env, const char * cString, const jstring javaString);
@@ -104,6 +109,30 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_cityStateLookup
  */
 JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_zip9Inquiry
   (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     gov_nysenate_ams_dao_AmsNativeDao
+ * Method:    getAmsVersion
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getAmsVersion
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     gov_nysenate_ams_dao_AmsNativeDao
+ * Method:    getDataExpireDays
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getDataExpireDays
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     gov_nysenate_ams_dao_AmsNativeDao
+ * Method:    getLibraryExpireDays
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getLibraryExpireDays
+  (JNIEnv *, jobject);
 
 #ifdef __cplusplus
 }
