@@ -13,6 +13,8 @@ public class Application
     private static String DEFAULT_PROPERTY_FILENAME = "app.properties";
     private static String TEST_PROPERTY_FILENAME = "test.app.properties";
 
+    public static String AMS_VERSION = "";
+
     private Config config;
     private AmsSettings amsSettings;
     private AmsNativeProvider amsNativeProvider;
@@ -31,6 +33,8 @@ public class Application
             INSTANCE.amsNativeProvider = new AmsNativeProvider(INSTANCE.config, INSTANCE.amsSettings);
             INSTANCE.amsNativeProvider.load();
             INSTANCE.amsNativeProvider.setup();
+
+            AMS_VERSION = INSTANCE.amsNativeProvider.getApiVersion();
 
             return true;
         }
