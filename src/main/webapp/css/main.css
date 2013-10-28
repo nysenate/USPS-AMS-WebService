@@ -18,6 +18,11 @@ body {
     font-size: 1em;
     line-height: 1.4;
     font-family:"Source Sans Pro", sans-serif;
+    background:#efefef;
+}
+
+p, pre {
+    margin:0.5em 0;
 }
 
 ::-moz-selection {
@@ -35,7 +40,7 @@ hr {
     height: 1px;
     border: 0;
     border-top: 1px solid #ccc;
-    margin: 1em 0;
+    margin: 0;
     padding: 0;
 }
 
@@ -88,7 +93,8 @@ textarea {
 }
 
 #header ul li a {
-    color:#555;
+    color:#aaa;
+    text-decoration: none;
     font-weight: 600;
     padding:11px 9px;
     outline:none;
@@ -114,22 +120,6 @@ textarea {
     color:white;
 }
 
-.top-header {
-    padding:0 15px;
-    margin:0;
-    font-size:16px;
-    background:#333;
-    color:#005588 !important;
-    font-weight:600;
-    border-width:1px;
-    border-color:#aaa;
-    border-style: none none solid none;
-}
-
-.top-header .text {
-    padding:9px 0 11px 0;
-}
-
 .top-method-header {
     white-space: nowrap;
 }
@@ -143,6 +133,113 @@ textarea {
 
 #uspsLogoText a {
     color:#eee;
+}
+
+ul.address-input-list {
+    list-style-type: none;
+    padding: 10px 0 0 10px;
+}
+
+ul.address-input-list li label {
+    display:block;
+    font-size:13px;
+}
+
+ul.address-input-list li input[type='text'], ul.address-input-list li select {
+    outline: 0;
+    width:250px;
+    font-size:14px;
+    border: 1px solid #ddd;
+    border-radius: 2px 0 0 2px;
+    height: 30px;
+    line-height:20px;
+    background:white;
+    padding-left:5px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    margin-bottom:5px;
+}
+
+button.submit, button.submit.mini {
+    text-align: center;
+    background: #799933;
+    color: white;
+    border: 0;
+    outline: 0;
+    font-size: 14px;
+    font-family: 'Source Sans Pro', sans-serif;
+    padding: 7px 20px;
+    width: 250px;
+    font-weight: bold;
+    border-radius: 2px;
+}
+
+button.submit:hover{
+    background: #7BA838;
+}
+
+button.submit[disabled] {
+    background: #aaa;
+}
+
+h3.section-title {
+    font-size:16px;
+    margin:0;
+    padding:5px 0 5px 10px;
+    background:#efefef;
+    text-shadow: 0 0 1px #aaa;
+    font-weight: normal;
+}
+
+h3.success-indication {
+    background:#799933;
+    color:white;
+}
+
+h3.warning-indication {
+    background:#FCFFBF;
+    color:#333;
+}
+
+hr.section-title-hr {
+    margin:0;
+    padding:0;
+}
+
+.section-row {
+    padding: 5px 5px 5px 10px;
+}
+
+.col-1, .col-2, .col-3 {
+    float:left;
+    background:#fefefe;
+    box-shadow: 0 0 2px #ddd;
+    border:1px solid #ccc;
+}
+
+.col-1, .col-2 {
+    height:500px;
+    overflow-y: auto;
+}
+
+.col-2 {
+    margin-left:20px;
+    width:300px;
+}
+
+.grid-3:after {
+    content: "";
+    display: table;
+    clear:both;
+}
+
+table thead tr th {
+    font-size:12px;
+    color:#444;
+    padding:2px 5px;
+    border-right:1px solid #ccc;
+    border-bottom:1px solid #aaa;
 }
 
 /* ==========================================================================

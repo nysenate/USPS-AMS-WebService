@@ -25,6 +25,7 @@
         <param-value>gov.nysenate.ams.util.Application</param-value>
     </context-param>
 
+    <!-- Api Controller -->
     <servlet>
         <display-name>AddressValidateController</display-name>
         <servlet-name>AddressValidateController</servlet-name>

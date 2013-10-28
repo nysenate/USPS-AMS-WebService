@@ -41,9 +41,8 @@ public enum StatusCode
         "excessively and may not be fully recognizable."),
 
     MULTI_RESPONSE (22,
-        "More than one ZIP+4 Code was found to satisfy the address submitted. The submitted address did not " +
-        "contain sufficiently complete or correct data to determine a single ZIP+4 Code. It is recommended that the " +
-        "requestor check the address for accuracy and completeness. Address elements may be missing"),
+        "The submitted address did not contain sufficiently complete or correct data to determine a single ZIP+4 Code. " +
+        "It is recommended that the requestor check the address for completeness."),
 
     EXACT_MATCH (31,
         "Single response based on input information."),
