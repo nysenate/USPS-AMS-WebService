@@ -31,13 +31,14 @@ ams.controller('ValidateController', function($scope, $http, dataBus) {
     $scope.state = 'NY';
     $scope.zip5 = '';
     $scope.zip4 = '';
+    $scope.visible = true;
 
     $scope.lookup = function() {
         var url = this.baseUrl + 'addr1=' + this.addr1 + '&addr2=' + this.addr2 + '&city=' + this.city
                                + '&state=' + this.state + '&zip5=' + this.zip5 + '&zip4=' + this.zip4;
         $http.get(url)
             .success(function(data){
-                $scope.result = angular.extend($scope, data);
+                $scope.result = data;
             })
             .error(function(data){
 
@@ -46,6 +47,23 @@ ams.controller('ValidateController', function($scope, $http, dataBus) {
     };
 });
 
-ams.controller('ValidateView', function($scope, dataBus){
+ams.controller('CityStateController', function($scope, $http, dataBus){
+    $scope.baseURL = baseApi + cityStateApi + "?details =true&";
+    $scope.zip5 = '';
+    $scope.visible =false;
+
+    $scope.lookup = function() {
+        var url = this.baseURL + 'zip5=' + this.zip5;
+
+        $http.get(url)
+            .success(function(data){
+                $scope.result = data;
+            })
+            .error(function(data){
+
+            });
+    };
+
+
 
 });

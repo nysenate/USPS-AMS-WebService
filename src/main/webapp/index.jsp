@@ -29,6 +29,7 @@
         <ul class="top-method-header">
             <li>
                 <a class="active">Address Correction</a>
+                <a class="active">City State</a>
                 <a>API Documentation</a>
             </li>
         </ul>
@@ -211,6 +212,28 @@
                 </div>
             </div>
         </div>
+    </section>
+    <section ng-controller='CityStateController'>
+        <div class='grid-3' style='margin:60px 0 0 40px;'>
+            <div class='col-1' style='width:280px;'>
+                <form method='post' ng-submit='lookup()' autocomplete="off">
+                    <div style='height:auto;'>
+                        <h3 class='section-title' style='background:#005588;color:white;'>Enter a Zip5 to look up</h3>
+                        <hr class='section-title-hr'/>
+                        <ul class='address-input-list'>
+                            <li>
+                                <label>Zip 5</label>
+                                <input ng-model='zip5' type='text' id='zip5-in'/>
+                            </li>
+                            <li>
+                                <button ng-click='lookup()' style='margin-top:10px;' class='submit' >City State Look up</button>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+                </div>
+
+            </div>
     </section>
     <section style='display:none'>
         <iframe style='border:0;outline:0;width:100%;height:100%;' src="${pageContext.request.contextPath}/docs/_build/html/index.html"></iframe>
