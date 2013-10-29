@@ -188,6 +188,25 @@
                             <th>Zip4 High</th>
                         </tr>
                         </thead>
+                        <tbody>
+                            <tr ng-repeat='record in result.records'>
+                                <td>{{record.recordId}}</td>
+                                <td>{{record.primaryLow}}</td>
+                                <td>{{record.primaryHigh}}</td>
+                                <td>{{record.primaryParity}}</td>
+                                <td>{{record.streetName}}</td>
+                                <td>{{record.streetSuffix}}</td>
+                                <td>{{record.preDir}}</td>
+                                <td>{{record.postDir}}</td>
+                                <td>{{record.unit}}</td>
+                                <td>{{record.secondaryLow}}</td>
+                                <td>{{record.secondaryHigh}}</td>
+                                <td>{{record.secondaryParity}}</td>
+                                <td>{{record.zip5}}</td>
+                                <td>{{record.zip4Low}}</td>
+                                <td>{{record.zip4Hight}}</td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>

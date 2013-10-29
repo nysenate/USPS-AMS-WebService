@@ -208,7 +208,7 @@ hr.section-title-hr {
 }
 
 .section-row {
-    padding: 5px 5px 5px 10px;
+    padding: 5px 10px 5px 10px;
 }
 
 .col-1, .col-2, .col-3 {
@@ -225,7 +225,7 @@ hr.section-title-hr {
 
 .col-2 {
     margin-left:20px;
-    width:300px;
+    width:330px;
 }
 
 .grid-3:after {
