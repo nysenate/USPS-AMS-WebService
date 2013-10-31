@@ -1,0 +1,348 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Welcome to USPS AMS Web Service’s documentation &mdash; USPS AMS Web Service 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="USPS AMS Web Service 1.0 documentation" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="#">USPS AMS Web Service 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="welcome-to-usps-ams-web-service-s-documentation">
+<h1>Welcome to USPS AMS Web Service&#8217;s documentation<a class="headerlink" href="#welcome-to-usps-ams-web-service-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>The AMS API provides methods for address correction, address inquiry, and city/state lookup.</p>
+<p>There is currently no authentication needed to use this API.</p>
+<div class="section" id="api-methods">
+<h2>API Methods<a class="headerlink" href="#api-methods" title="Permalink to this headline">¶</a></h2>
+<p>The API exposes the following methods:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Method</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>validate</td>
+<td>Perform USPS address correction.</td>
+</tr>
+<tr class="row-odd"><td>citystate</td>
+<td>Lookup the city and state given the zip5.</td>
+</tr>
+<tr class="row-even"><td>inquiry</td>
+<td>Lookup a matching address given a zip9.</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="validate">
+<h3>Validate<a class="headerlink" href="#validate" title="Permalink to this headline">¶</a></h3>
+<p>Query Params:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Param</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>addr1</td>
+<td>Street address</td>
+</tr>
+<tr class="row-odd"><td>addr2</td>
+<td>Street address line 2</td>
+</tr>
+<tr class="row-even"><td>city</td>
+<td>City name</td>
+</tr>
+<tr class="row-odd"><td>state</td>
+<td>State name/abbreviation</td>
+</tr>
+<tr class="row-even"><td>zip5</td>
+<td>5 digit zip code</td>
+</tr>
+<tr class="row-odd"><td>zip4</td>
+<td>4 digit zip code</td>
+</tr>
+<tr class="row-even"><td>detail</td>
+<td>Show detailed information (true|false)</td>
+</tr>
+</tbody>
+</table>
+<p>Usage:</p>
+<div class="highlight-python"><pre>/api/validate?addr1=200 State Street&amp;city=Albany&amp;state=NY   // Using addr1, city, state
+/api/validate?addr1=200 State Street&amp;zip5=12210             // Using addr1, zip5</pre>
+</div>
+<p>As shown in the usage above this method requires at minimum either:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="n">addr1</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">addr1</span><span class="p">,</span> <span class="n">zip5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The usage above is the minimum requirement, thus you are allowed to fill all the query params
+if desired.</p>
+<p>By default the <cite>detail</cite> param is set to false. If set to true all the available address record
+information will be returned.</p>
+<p>Default Output (detail=false):</p>
+<div class="highlight-python"><pre>{
+  "validated" : true,
+  "address" : {
+    "firm" : "",
+    "addr1" : "200 STATE ST",
+    "addr2" : "",
+    "city" : "ALBANY",
+    "state" : "NY",
+    "zip5" : "12210",
+    "zip4" : ""
+  },
+  "status" : {
+    "code" : 31,
+    "name" : "EXACT_MATCH",
+    "desc" : "Single response based on input information."
+  },
+  "footnotes" : [ {
+    "code" : "N",
+    "name" : "Address Standardized",
+    "desc" : "The delivery address was standardized. For example, if STREET was in the delivery address,
+              the system will return ST as its standard spelling. "
+  } ]
+}</pre>
+</div>
+<p>Detailed Output (detail=true):</p>
+<div class="highlight-python"><pre>{
+  "validated" : true,
+  "address" : {
+    "firm" : "",
+    "addr1" : "200 STATE ST",
+    "addr2" : "",
+    "city" : "ALBANY",
+    "state" : "NY",
+    "zip5" : "12210",
+    "zip4" : ""
+  },
+  "status" : {
+    "code" : 31,
+    "name" : "EXACT_MATCH",
+    "desc" : "Single response based on input information."
+  },
+  "footnotes" : [ {
+    "code" : "N",
+    "name" : "Address Standardized",
+    "desc" : "The delivery address was standardized. For example, if STREET was in the delivery address,
+              the system will return ST as its standard spelling. "
+  } ],
+  "detail" : {
+    "standardCityAbbr" : "",
+    "postOfficeCity" : "ALBANY",
+    "postOfficeState" : "NY",
+    "deliveryBarCode" : "",
+    "carrierRoute" : "C001",
+    "fipsCounty" : 1
+  },
+  "recordCount" : 1,
+  "records" : [ {
+    "recordId" : 0,
+    "recordType" : "S",
+    "recordTypeDesc" : "Street Record",
+    "primaryLow" : "200",
+    "primaryHigh" : "238",
+    "primaryParity" : "E",
+    "preDir" : "",
+    "streetName" : "STATE",
+    "streetSuffix" : "ST",
+    "postDir" : "",
+    "unit" : "",
+    "secondaryLow" : "",
+    "secondaryHigh" : "",
+    "secondaryParity" : " ",
+    "zip5" : "12210",
+    "zip4Low" : "2138",
+    "zip4High" : "2138",
+    "financeCode" : "350060",
+    "fipsCounty" : "001"
+  } ]
+}</pre>
+</div>
+<p>The corrected address (or input address if match failed) is represented by the <cite>address</cite> portion of the output.</p>
+<p>The following table lists all possible status codes for this method:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="5%" />
+<col width="18%" />
+<col width="77%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Code</td>
+<td>Name</td>
+<td>Description</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>INSUFFICIENT_ADDRESS</td>
+<td>The input address does not contain the required address components.</td>
+</tr>
+<tr class="row-odd"><td>10</td>
+<td>INVALID_DUAL_ADDRESS</td>
+<td>Information presented could not be processed in current format. Corrective action is needed.</td>
+</tr>
+<tr class="row-even"><td>11</td>
+<td>INVALID_CITY_ST_ZIP</td>
+<td>The ZIP Code in the submitted address could not be found due to invalid city/st/zip.</td>
+</tr>
+<tr class="row-odd"><td>12</td>
+<td>INVALID_STATE</td>
+<td>The state in the submitted address is invalid. Corrective action is needed.</td>
+</tr>
+<tr class="row-even"><td>13</td>
+<td>INVALID_CITY</td>
+<td>The city in the submitted address is invalid. Corrective action is needed.</td>
+</tr>
+<tr class="row-odd"><td>21</td>
+<td>NOT_FOUND</td>
+<td>The address, exactly as submitted, could not be found in the national ZIP+4 file.</td>
+</tr>
+<tr class="row-even"><td>22</td>
+<td>MULTI_RESPONSE</td>
+<td>More than one ZIP+4 Code was found to satisfy the address submitted.</td>
+</tr>
+<tr class="row-odd"><td>31</td>
+<td>EXACT_MATCH</td>
+<td>Single response based on input information.</td>
+</tr>
+<tr class="row-even"><td>32</td>
+<td>DEFAULT_MATCH</td>
+<td>A match was made to a default record in the national ZIP+4 file. A more specific match may be exist.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The descriptions listed in the table are just summarized versions of the actual descriptions returned by the API.</p>
+</div>
+<p>The <cite>standardCityAbbr</cite> will be empty if the returned city is already abbreviated. Otherwise it will have the value of
+the abbreviated city name.</p>
+<p>The <cite>footnotes</cite> portion contains an array of messages that the matching system returns. The full listing of footnotes
+can be found at the end of this page.</p>
+<p>The <cite>records</cite> portion is an array of address record objects. Since the matching system primarily performs matching using
+a database of address records, all matching records are returned in this listing. If an exact match was found this array</p>
+<blockquote>
+<div>will usually contain one entry. In the event of ambiguity or multi-matches, all possible records will be listed.</div></blockquote>
+</div>
+</div>
+<div class="section" id="appendix">
+<h2>Appendix<a class="headerlink" href="#appendix" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="footnotes">
+<h3>Footnotes<a class="headerlink" href="#footnotes" title="Permalink to this headline">¶</a></h3>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to USPS AMS Web Service&#8217;s documentation</a><ul>
+<li><a class="reference internal" href="#api-methods">API Methods</a><ul>
+<li><a class="reference internal" href="#validate">Validate</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#appendix">Appendix</a><ul>
+<li><a class="reference internal" href="#footnotes">Footnotes</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="#">USPS AMS Web Service 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Ash Islam, Vincent Hueber.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>
