@@ -37,7 +37,7 @@
                                 <img style='position:relative;top:10px;' height="30px" src="${pageContext.request.contextPath}/img/uspslogo.png"/>
                             </h3>
                             <hr class='section-title-hr'/>
-                            <div style='color:#333;font-size:13px;margin:20px 10px 0 10px'>
+                            <div class='f13px-333' style='margin:20px 10px 0 10px'>
                                 Enter an address below to retrieve the USPS corrected version as well as matching address records.<br/><br/>
                                 In order to obtain a match Address Line 1 must be supplied with either City/State or Zip5.
                             </div>
@@ -124,16 +124,16 @@
                     </form>
                 </div>
 
-                <div ng-show='result' class='col-2'>
+                <div ng-show='result' class='col-2 animated'>
                     <div id='validated-address-container' style='width:100%;float:left;height:auto;'>
                         <h3 class='section-title' ng-class='statusClass'>{{result.status.code | statusNameFilter}}</h3>
                         <hr class='section-title-hr'/>
-                        <div class='section-row' style='font-size:13px;'>
+                        <div class='section-row f13px-333' style='padding-right:20px;'>
                             <p>{{result.status.desc}}</p>
                         </div>
                         <hr/>
                         <div ng-show='result.validated'>
-                            <div class='section-row' style='font-size:16px;color:#333;'>
+                            <div class='section-row f16px-333'>
                                 <p>{{result.address.addr1}}<br/>
                                     {{result.address.city}}, {{result.address.state}} {{result.address.zip5}}<span ng-show="result.address.zip4">-{{result.address.zip4}}</span>
                                 </p>
@@ -141,10 +141,12 @@
                             <hr/>
                         </div>
                         <div ng-show='result.validated'>
-                            <div class='section-row' style='font-size:13px;color:#333;'>
-                                <p><span style='color:teal;font-weight:bold;'>City Abbreviation:</span> {{result.detail.standardCityAbbr || result.address.city}}</p>
-                                <p><span style='color:teal;font-weight:bold;'>FIPS County:</span> {{result.detail.fipsCounty}}</p>
-                                <p><span style='color:teal;font-weight:bold;'>PO Location:</span> {{result.detail.postOfficeCity}} {{result.detail.postOfficeState}}</p>
+                            <div class='section-row f13px-333'>
+                                <p><label class='dd'>City Abbreviation:</label> {{result.detail.standardCityAbbr || result.address.city}}</p>
+                                <p><label class='dd'>FIPS County:</label> {{result.detail.fipsCounty}}</p>
+                                <p><label class='dd'>PO Location:</label> {{result.detail.postOfficeCity}} {{result.detail.postOfficeState}}</p>
+                                <p><label class='dd'>Carrier Route:</label> {{result.detail.carrierRoute}}</p>
+                                <p><label class='dd'>Delivery Point Bar Code</label> {{result.detail.deliveryBarCode}}</p>
                             </div>
                             <hr/>
                         </div>
@@ -154,62 +156,65 @@
                                 <p>{{footnote.desc}}</p>
                             </div>
                         </div>
+                        <div id='address-records-container' ng-show='result.recordCount > 0'>
+                            <hr/>
+                            <div class='section-row'>
+                                <p><span style='font-size:13px;font-weight:bold;color:#058;'>Matching Address Records</span></p>
+                            </div>
+                            <table class='light-table'>
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th colspan="3">Building</th>
+                                    <th colspan="4">Street</th>
+                                    <th colspan="4">Secondary</th>
+                                    <th colspan="1">Zip5</th>
+                                    <th colspan="2">Zip4</th>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <th>Low</th>
+                                    <th>High</th>
+                                    <th>Parity</th>
+                                    <th>Pre</th>
+                                    <th>Name</th>
+                                    <th>Suffix</th>
+                                    <th>Post</th>
+                                    <th>Unit</th>
+                                    <th>Low</th>
+                                    <th>High</th>
+                                    <th>Parity</th>
+                                    <th></th>
+                                    <th>Low</th>
+                                    <th>High</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat='record in result.records'>
+                                    <td>{{record.recordId}}</td>
+                                    <td>{{record.primaryLow}}</td>
+                                    <td>{{record.primaryHigh}}</td>
+                                    <td>{{record.primaryParity | parityFilter}}</td>
+                                    <td>{{record.preDir}}</td>
+                                    <td>{{record.streetName}}</td>
+                                    <td>{{record.streetSuffix}}</td>
+                                    <td>{{record.postDir}}</td>
+                                    <td>{{record.unit}}</td>
+                                    <td>{{record.secondaryLow}}</td>
+                                    <td>{{record.secondaryHigh}}</td>
+                                    <td>{{record.secondaryParity | parityFilter}}</td>
+                                    <td>{{record.zip5}}</td>
+                                    <td>{{record.zip4Low}}</td>
+                                    <td>{{record.zip4High}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
                 <div ng-show='result.recordCount > 0' class='col-3'>
-                    <div id='address-records-container'>
-                        <h3 class='section-title default-indication'>Matched Address Records</h3>
-                        <hr class='section-title-hr'/>
-                        <table class='light-table'>
-                            <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th colspan="3">Building</th>
-                                <th colspan="4">Street</th>
-                                <th colspan="4">Secondary</th>
-                                <th colspan="1">Zip5</th>
-                                <th colspan="2">Zip4</th>
-                            </tr>
-                            <tr>
-                                <th></th>
-                                <th>Low</th>
-                                <th>High</th>
-                                <th>Parity</th>
-                                <th>Pre</th>
-                                <th>Name</th>
-                                <th>Suffix</th>
-                                <th>Post</th>
-                                <th>Unit</th>
-                                <th>Low</th>
-                                <th>High</th>
-                                <th>Parity</th>
-                                <th></th>
-                                <th>Low</th>
-                                <th>High</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat='record in result.records'>
-                                <td>{{record.recordId}}</td>
-                                <td>{{record.primaryLow}}</td>
-                                <td>{{record.primaryHigh}}</td>
-                                <td>{{record.primaryParity | parityFilter}}</td>
-                                <td>{{record.preDir}}</td>
-                                <td>{{record.streetName}}</td>
-                                <td>{{record.streetSuffix}}</td>
-                                <td>{{record.postDir}}</td>
-                                <td>{{record.unit}}</td>
-                                <td>{{record.secondaryLow}}</td>
-                                <td>{{record.secondaryHigh}}</td>
-                                <td>{{record.secondaryParity | parityFilter}}</td>
-                                <td>{{record.zip5}}</td>
-                                <td>{{record.zip4Low}}</td>
-                                <td>{{record.zip4High}}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+
                 </div>
             </div>
         </section>
