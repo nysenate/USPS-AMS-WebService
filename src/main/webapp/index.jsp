@@ -14,13 +14,14 @@
 
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/normalize.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/jquery-ui-1.10.3.custom.css">
     <script>window.contextPath = "${pageContext.request.contextPath}";</script>
-    <script src="js/vendor/modernizr-2.6.2.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/vendor/jquery-ui-1.10.3.custom.min.js"></script>
     <script>window.jQuery || document.write('<script src="${pageContext.request.contextPath}/js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js" type="text/javascript"></script>
-    <script src="${pageContext.request.contextPath}/js/common.js" type="text/javascript"></script>
-    <script src="${pageContext.request.contextPath}/js/app.js" type="text/javascript"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/common.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/app.js"></script>
 </head>
 <body>
     <!--[if lt IE 7]>
@@ -28,104 +29,121 @@
     <![endif]-->
 
     <div id='wrapper'>
-        <section class='validate-section' ng-controller='ValidateController' ng-cloak>
+        <section class='api-section' ng-controller='ApiController' ng-cloak>
             <div class='grid-3'>
-                <div class='col-1' style='width:280px;'>
-                    <form method='post' ng-submit='lookup()' autocomplete="off">
-                        <div id='address-input-container' style='height:auto;'>
-                            <h3 class='section-title' style='padding-top:0px;background:#005588;color:white;'>
-                                <img style='position:relative;top:10px;' height="30px" src="${pageContext.request.contextPath}/img/uspslogo.png"/>
-                            </h3>
-                            <hr class='section-title-hr'/>
-                            <div class='f13px-333' style='margin:20px 10px 0 10px'>
-                                Enter an address below to retrieve the USPS corrected version as well as matching address records.<br/><br/>
-                                In order to obtain a match Address Line 1 must be supplied with either City/State or Zip5.
+                <div id='api-input-container' class='col-1'>
+                    <h3 class='section-title' style='padding-top:0px;background:#005588;color:white;'>
+                        <img style='position:relative;top:10px;' height="30px" src="${pageContext.request.contextPath}/img/uspslogo.png"/>
+                    </h3>
+                    <hr class='section-title-hr'/>
+                    <div id='method-selection'>
+                        <input type='radio' name='method' id='validate-method-radio' value='validate' ng-model='activeRequestView'/>
+                        <label for='validate-method-radio'>Validate</label>
+                        <input type='radio' name='method' id='citystate-method-radio' value='cityState' ng-model='activeRequestView'/>
+                        <label for='citystate-method-radio'>City/State</label>
+                        <input type='radio' name='method' id='inquiry-method-radio' value='inquiry' ng-model='activeRequestView'/>
+                        <label for='inquiry-method-radio'>Zip 9</label>
+                    </div>
+                    <div ng-show="activeRequestView == 'validate'">
+                        <form method='post' ng-submit='sendValidateRequest()' autocomplete="off">
+                            <div id='address-input-container' style='height:auto;'>
+                                <div class='f13px-333' style='margin:20px 10px 0 10px'>
+                                    Enter an address below to retrieve the USPS corrected version as well as matching address records.<br/><br/>
+                                    In order to obtain a match Address Line 1 must be supplied with either City/State or Zip5.
+                                </div>
+                                <ul class='address-input-list'>
+                                    <li>
+                                        <label>Address Line 1</label>
+                                        <input ng-model='validateInput.addr1' type='text' id='addr1-input'/>
+                                    </li>
+                                    <li>
+                                        <label>Address Line 2</label>
+                                        <input ng-model='validateInput.addr2' type='text' id='addr2-input'/>
+                                    </li>
+                                    <li>
+                                        <label>City</label>
+                                        <input ng-model='validateInput.city' type='text' id='city-input'/>
+                                    </li>
+                                    <li>
+                                        <label>State</label>
+                                        <select ng-model='validateInput.state' name="state">
+                                            <option value=""></option>
+                                            <option value="AL">Alabama</option>
+                                            <option value="AK">Alaska</option>
+                                            <option value="AZ">Arizona</option>
+                                            <option value="AR">Arkansas</option>
+                                            <option value="CA">California</option>
+                                            <option value="CO">Colorado</option>
+                                            <option value="CT">Connecticut</option>
+                                            <option value="DE">Delaware</option>
+                                            <option value="DC">District of Columbia</option>
+                                            <option value="FL">Florida</option>
+                                            <option value="GA">Georgia</option>
+                                            <option value="HI">Hawaii</option>
+                                            <option value="ID">Idaho</option>
+                                            <option value="IL">Illinois</option>
+                                            <option value="IN">Indiana</option>
+                                            <option value="IA">Iowa</option>
+                                            <option value="KS">Kansas</option>
+                                            <option value="KY">Kentucky</option>
+                                            <option value="LA">Louisiana</option>
+                                            <option value="ME">Maine</option>
+                                            <option value="MD">Maryland</option>
+                                            <option value="MA">Massachusetts</option>
+                                            <option value="MI">Michigan</option>
+                                            <option value="MN">Minnesota</option>
+                                            <option value="MS">Mississippi</option>
+                                            <option value="MO">Missouri</option>
+                                            <option value="MT">Montana</option>
+                                            <option value="NE">Nebraska</option>
+                                            <option value="NV">Nevada</option>
+                                            <option value="NH">New Hampshire</option>
+                                            <option value="NJ">New Jersey</option>
+                                            <option value="NM">New Mexico</option>
+                                            <option selected="selected" value="NY">New York</option>
+                                            <option value="NC">North Carolina</option>
+                                            <option value="ND">North Dakota</option>
+                                            <option value="OH">Ohio</option>
+                                            <option value="OK">Oklahoma</option>
+                                            <option value="OR">Oregon</option>
+                                            <option value="PA">Pennsylvania</option>
+                                            <option value="RI">Rhode Island</option>
+                                            <option value="SC">South Carolina</option>
+                                            <option value="SD">South Dakota</option>
+                                            <option value="TN">Tennessee</option>
+                                            <option value="TX">Texas</option>
+                                            <option value="UT">Utah</option>
+                                            <option value="VT">Vermont</option>
+                                            <option value="VA">Virginia</option>
+                                            <option value="WA">Washington</option>
+                                            <option value="WV">West Virginia</option>
+                                            <option value="WI">Wisconsin</option>
+                                            <option value="WY">Wyoming</option>
+                                        </select>
+                                    </li>
+                                    <li>
+                                        <label>Zip 5</label>
+                                        <input ng-model='validateInput.zip5' type='text' id='zip5-input'/>
+                                    </li>
+                                    <li>
+                                        <button ng-click='sendValidateRequest()' style='margin-top:10px;' class='submit' >Validate Address</button>
+                                        <!--<input type="submit" style='display:none;visibility: hidden;'/>-->
+                                    </li>
+                                </ul>
                             </div>
-                            <ul class='address-input-list'>
-                                <li>
-                                    <label>Address Line 1</label>
-                                    <input ng-model='addr1' type='text' id='addr1-input'/>
-                                </li>
-                                <li>
-                                    <label>Address Line 2</label>
-                                    <input ng-model='addr2' type='text' id='addr2-input'/>
-                                </li>
-                                <li>
-                                    <label>City</label>
-                                    <input ng-model='city' type='text' id='city-input'/>
-                                </li>
-                                <li>
-                                    <label>State</label>
-                                    <select ng-model='state' name="state">
-                                        <option value=""></option>
-                                        <option value="AL">Alabama</option>
-                                        <option value="AK">Alaska</option>
-                                        <option value="AZ">Arizona</option>
-                                        <option value="AR">Arkansas</option>
-                                        <option value="CA">California</option>
-                                        <option value="CO">Colorado</option>
-                                        <option value="CT">Connecticut</option>
-                                        <option value="DE">Delaware</option>
-                                        <option value="DC">District of Columbia</option>
-                                        <option value="FL">Florida</option>
-                                        <option value="GA">Georgia</option>
-                                        <option value="HI">Hawaii</option>
-                                        <option value="ID">Idaho</option>
-                                        <option value="IL">Illinois</option>
-                                        <option value="IN">Indiana</option>
-                                        <option value="IA">Iowa</option>
-                                        <option value="KS">Kansas</option>
-                                        <option value="KY">Kentucky</option>
-                                        <option value="LA">Louisiana</option>
-                                        <option value="ME">Maine</option>
-                                        <option value="MD">Maryland</option>
-                                        <option value="MA">Massachusetts</option>
-                                        <option value="MI">Michigan</option>
-                                        <option value="MN">Minnesota</option>
-                                        <option value="MS">Mississippi</option>
-                                        <option value="MO">Missouri</option>
-                                        <option value="MT">Montana</option>
-                                        <option value="NE">Nebraska</option>
-                                        <option value="NV">Nevada</option>
-                                        <option value="NH">New Hampshire</option>
-                                        <option value="NJ">New Jersey</option>
-                                        <option value="NM">New Mexico</option>
-                                        <option selected="selected" value="NY">New York</option>
-                                        <option value="NC">North Carolina</option>
-                                        <option value="ND">North Dakota</option>
-                                        <option value="OH">Ohio</option>
-                                        <option value="OK">Oklahoma</option>
-                                        <option value="OR">Oregon</option>
-                                        <option value="PA">Pennsylvania</option>
-                                        <option value="RI">Rhode Island</option>
-                                        <option value="SC">South Carolina</option>
-                                        <option value="SD">South Dakota</option>
-                                        <option value="TN">Tennessee</option>
-                                        <option value="TX">Texas</option>
-                                        <option value="UT">Utah</option>
-                                        <option value="VT">Vermont</option>
-                                        <option value="VA">Virginia</option>
-                                        <option value="WA">Washington</option>
-                                        <option value="WV">West Virginia</option>
-                                        <option value="WI">Wisconsin</option>
-                                        <option value="WY">Wyoming</option>
-                                    </select>
-                                </li>
-                                <li>
-                                    <label>Zip 5</label>
-                                    <input ng-model='zip5' type='text' id='zip5-input'/>
-                                </li>
-                                <li>
-                                    <button ng-click='lookup()' style='margin-top:10px;' class='submit' >Validate Address</button>
-                                    <!--<input type="submit" style='display:none;visibility: hidden;'/>-->
-                                </li>
-                            </ul>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
+                    <div ng-show="activeRequestView == 'cityState'">
+
+                    </div>
+                    <div ng-show="activeRequestView == 'inquiry'">
+
+                    </div>
                 </div>
 
-                <div ng-show='result' class='col-2 animated'>
-                    <div id='validated-address-container' style='width:100%;float:left;height:auto;'>
+                <div id='api-response-container' class='col-2 animated' ng-show='responseVisible()'>
+                    <div ng-controller='ValidateResponseController'
+                         ng-show="(activeResponseView == 'validate') || (activeResponseView == 'inquiry')">
                         <h3 class='section-title' ng-class='statusClass'>{{result.status.code | statusNameFilter}}</h3>
                         <hr class='section-title-hr'/>
                         <div class='section-row f13px-333' style='padding-right:20px;'>
