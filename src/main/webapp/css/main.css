@@ -75,7 +75,7 @@ html {
 }
 
 body {
-    background: rgb(20,79,130);
+    background: rgba(229,229,229, 0.6);  /*
     background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzE0NGY4MiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlNWU1ZTUiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
     background: -moz-linear-gradient(top,  rgba(20,79,130,1) 0%, rgba(229,229,229,0) 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(20,79,130,1)), color-stop(100%,rgba(229,229,229,0)));
@@ -84,7 +84,7 @@ body {
     background: -ms-linear-gradient(top,  rgba(20,79,130,1) 0%,rgba(229,229,229,0) 100%);
     background: linear-gradient(to bottom,  rgba(20,79,130,1) 0%,rgba(229,229,229,0) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#144f82', endColorstr='#e5e5e5',GradientType=0 );
-    background-repeat:no-repeat;
+    background-repeat:no-repeat; */
 
     margin:0;
     padding:0;
@@ -110,22 +110,22 @@ body {
     position:relative;
 }
 
-.validate-section {
-    width:960px;
+.api-section {
+    width:900px;
     margin: auto;
 }
 
-ul.address-input-list {
+ul.input-list {
     list-style-type: none;
     padding: 5px 0 0 10px;
 }
 
-ul.address-input-list li label {
+ul.input-list li label {
     display:block;
     font-size:13px;
 }
 
-ul.address-input-list li input[type='text'], ul.address-input-list li select {
+ul.input-list li input[type='text'], ul.input-list li select {
     outline: 0;
     width:250px;
     font-size:14px;
@@ -215,18 +215,17 @@ label.dd {
 
 .col-1, .col-2, .col-3 {
     background:#fefefe;
-    box-shadow:3px 3px 5px rgba(204,204,204,0.1);
-    /*border:1px solid #ccc;*/
+    box-shadow:2px 2px 10px #ccc;
 }
 
 .grid-3 {
-    margin:20px 0 0 40px;
+    margin:20px 0 0 0;
 }
 
 .col-1 {
     float:left;
-    margin-right:20px;
     position:fixed;
+    width:280px;
 }
 
 .col-1, .col-2 {
@@ -248,6 +247,10 @@ label.dd {
     content: "";
     display: table;
     clear:both;
+}
+
+#method-selection {
+    margin:10px 0 0 28px;
 }
 
 table.light-table {
@@ -278,6 +281,9 @@ table.light-table tbody tr td {
     text-align: center;
 }
 
+/* ==========================================================================
+   Animations
+   ========================================================================== */
 @keyframes bounce-in {
     0%, 100%{
         opacity:1; top:0;
@@ -298,35 +304,31 @@ table.light-table tbody tr td {
 
 .bounce-in-anim {
     position:relative;
+
     -webkit-animation-name:bounce-in;
     -moz-animation-name:bounce-in;
     -ms-animation-name:bounce-in;
     -o-animation-name:bounce-in;
     animation-name: bounce-in;
-    /*animation-iteration-count*/
+
     -webkit-animation-iteration-count:1;
     -moz-animation-iteration-count:1;
     -ms-animation-iteration-count:1;
     -o-animation-iteration-count:1;
     animation-iteration-count:1;
-    /*animation-timing-function*/
+
     -webkit-animation-timing-function:ease-out;
     -moz-animation-timing-function:ease-out;
     -ms-animation-timing-function:ease-out;
     -o-animation-timing-function:ease-out;
     animation-timing-function:ease-out;
-    /*animation-duration*/
+
     -webkit-animation-duration:.2s;
     -moz-animation-duration:.2s;
     -ms-animation-duration:.2s;
     -o-animation-duration:.2s;
     animation-duration:.2s;
 }
-
-/* ==========================================================================
-   Animations
-   ========================================================================== */
-
 
 /* ==========================================================================
    Media Queries

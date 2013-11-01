@@ -51,18 +51,18 @@
                                     Enter an address below to retrieve the USPS corrected version as well as matching address records.<br/><br/>
                                     In order to obtain a match Address Line 1 must be supplied with either City/State or Zip5.
                                 </div>
-                                <ul class='address-input-list'>
+                                <ul class='input-list'>
                                     <li>
                                         <label>Address Line 1</label>
-                                        <input ng-model='validateInput.addr1' type='text' id='addr1-input'/>
+                                        <input ng-model='validateInput.addr1' type='text'/>
                                     </li>
                                     <li>
                                         <label>Address Line 2</label>
-                                        <input ng-model='validateInput.addr2' type='text' id='addr2-input'/>
+                                        <input ng-model='validateInput.addr2' type='text'/>
                                     </li>
                                     <li>
                                         <label>City</label>
-                                        <input ng-model='validateInput.city' type='text' id='city-input'/>
+                                        <input ng-model='validateInput.city' type='text'/>
                                     </li>
                                     <li>
                                         <label>State</label>
@@ -123,21 +123,39 @@
                                     </li>
                                     <li>
                                         <label>Zip 5</label>
-                                        <input ng-model='validateInput.zip5' type='text' id='zip5-input'/>
+                                        <input ng-model='validateInput.zip5' maxlength="5" type='text'/>
                                     </li>
                                     <li>
                                         <button ng-click='sendValidateRequest()' style='margin-top:10px;' class='submit' >Validate Address</button>
-                                        <!--<input type="submit" style='display:none;visibility: hidden;'/>-->
                                     </li>
                                 </ul>
                             </div>
                         </form>
                     </div>
                     <div ng-show="activeRequestView == 'cityState'">
-
+                        <form method='post' ng-submit='sendCityStateRequest()' autocomplete="off">
+                        </form>
                     </div>
                     <div ng-show="activeRequestView == 'inquiry'">
-
+                        <form method='post' ng-submit='sendInquiryRequest()' autocomplete="off">
+                            <div class='f13px-333' style='margin:20px 10px 0 10px'>
+                                Enter a Zip 9 code to retrieve matching address records.<br/><br/>
+                                Note that the Zip 9 code does not necessarily map to a specific address.
+                            </div>
+                            <ul class='input-list'>
+                                <li>
+                                    <label>Zip 5</label>
+                                    <input ng-model='inquiryInput.zip5' maxlength="5" type='text'/>
+                                </li>
+                                <li>
+                                    <label>Zip 4</label>
+                                    <input ng-model='inquiryInput.zip4' maxlength="4" type='text'/>
+                                </li>
+                                <li>
+                                    <button ng-click='sendInquiryRequest()' style='margin-top:10px;' class='submit'>Zip 9 Inquiry</button>
+                                </li>
+                            </ul>
+                        </form>
                     </div>
                 </div>
 
@@ -168,21 +186,23 @@
                             </div>
                             <hr/>
                         </div>
-                        <div ng-show='result.footnotes.length > 0' class='section-row' style='font-size:13px;'>
-                            <div ng-repeat='footnote in result.footnotes'>
-                                <p style='color:#ff4500'><strong>{{footnote.name}}</strong></p>
-                                <p>{{footnote.desc}}</p>
+                        <div ng-show='result.footnotes.length > 0'>
+                            <div class='section-row' style='font-size:13px;'>
+                                <div ng-repeat='footnote in result.footnotes'>
+                                    <p style='color:#ff4500'><strong>{{footnote.name}}</strong></p>
+                                    <p>{{footnote.desc}}</p>
+                                </div>
                             </div>
+                            <hr/>
                         </div>
                         <div id='address-records-container' ng-show='result.recordCount > 0'>
-                            <hr/>
                             <div class='section-row'>
                                 <p><span style='font-size:13px;font-weight:bold;color:#058;'>Matching Address Records</span></p>
                             </div>
                             <table class='light-table'>
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th colspan="2">Record</th>
                                     <th colspan="3">Building</th>
                                     <th colspan="4">Street</th>
                                     <th colspan="4">Secondary</th>
@@ -190,7 +210,8 @@
                                     <th colspan="2">Zip4</th>
                                 </tr>
                                 <tr>
-                                    <th></th>
+                                    <th>ID</th>
+                                    <th>Type</th>
                                     <th>Low</th>
                                     <th>High</th>
                                     <th>Parity</th>
@@ -210,6 +231,7 @@
                                 <tbody>
                                 <tr ng-repeat='record in result.records'>
                                     <td>{{record.recordId}}</td>
+                                    <td>{{record.recordType}}</td>
                                     <td>{{record.primaryLow}}</td>
                                     <td>{{record.primaryHigh}}</td>
                                     <td>{{record.primaryParity | parityFilter}}</td>

@@ -101,8 +101,8 @@ ams.controller('ApiController', function($scope, $http) {
         var url = this.inquiryUrl + $.param($scope.inquiryInput);
         $http.get(url)
             .success(function(data) {
-                $scope.activeResponseView = 'cityState';
-                $scope.$broadcast('cityStateResponse', data);
+                $scope.activeResponseView = 'inquiry';
+                $scope.$broadcast('validateResponse', data);
             })
             .error(function() {
                 $scope.alertDefaultError();
