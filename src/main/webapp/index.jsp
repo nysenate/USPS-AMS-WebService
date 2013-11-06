@@ -19,8 +19,8 @@
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/vendor/jquery-ui-1.10.3.custom.min.js"></script>
     <script>window.jQuery || document.write('<script src="${pageContext.request.contextPath}/js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
+    <script src="${pageContext.request.contextPath}/js/vendor/modernizr-2.6.2.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/common.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/app.js"></script>
 </head>
 <body>
@@ -37,7 +37,7 @@
                     </h3>
                     <hr class='section-title-hr'/>
                     <div id='method-selection'>
-                        <input type='radio' name='method' id='validate-method-radio' value='validate' ng-model='activeRequestView'/>
+                        <input type='radio' name='method' id='validate-method-radio' checked value='validate' ng-model='activeRequestView'/>
                         <label for='validate-method-radio'>Validate</label>
                         <input type='radio' name='method' id='citystate-method-radio' value='cityState' ng-model='activeRequestView'/>
                         <label for='citystate-method-radio'>City/State</label>
@@ -68,6 +68,9 @@
                                         <label>State</label>
                                         <select ng-model='validateInput.state' name="state">
                                             <option value=""></option>
+                                            <option value="AA">U.S. Armed Forces - Americas</option>
+                                            <option value="AE">U.S. Armed Forces - Europe</option>
+                                            <option value="AP">U.S. Armed Forces - Pacific</option>
                                             <option value="AL">Alabama</option>
                                             <option value="AK">Alaska</option>
                                             <option value="AZ">Arizona</option>
@@ -107,6 +110,7 @@
                                             <option value="OK">Oklahoma</option>
                                             <option value="OR">Oregon</option>
                                             <option value="PA">Pennsylvania</option>
+                                            <option value="PR">Puerto Rico</option>
                                             <option value="RI">Rhode Island</option>
                                             <option value="SC">South Carolina</option>
                                             <option value="SD">South Dakota</option>
@@ -182,7 +186,7 @@
                                 <p><label class='dd'>FIPS County:</label> {{result.detail.fipsCounty}}</p>
                                 <p><label class='dd'>PO Location:</label> {{result.detail.postOfficeCity}} {{result.detail.postOfficeState}}</p>
                                 <p><label class='dd'>Carrier Route:</label> {{result.detail.carrierRoute}}</p>
-                                <p><label class='dd'>Delivery Point Bar Code</label> {{result.detail.deliveryBarCode}}</p>
+                                <p><label class='dd'>Delivery Point Bar Code:</label> {{result.detail.deliveryBarCode}}</p>
                             </div>
                             <hr/>
                         </div>

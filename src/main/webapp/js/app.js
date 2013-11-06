@@ -1,4 +1,4 @@
-var ams = angular.module('ams', ['ams-common']);
+var ams = angular.module('ams', []);
 
 var baseApi = contextPath + '/api';
 var validateApi = '/validate';
