@@ -138,6 +138,18 @@
                     </div>
                     <div ng-show="activeRequestView == 'cityState'">
                         <form method='post' ng-submit='sendCityStateRequest()' autocomplete="off">
+                            <div class='f13px-333' style='margin:20px 10px 0 10px'>
+                                Enter a Zip 5 to retrieve the corresponding city and state of that Zip.<br/><br/>
+                                </div>
+                            <ul class='input-list'>
+                                <li>
+                                    <label>Zip 5</label>
+                                    <input ng-model='cityStateInput.zip5' maxlength='5' type='text' />
+                                </li>
+                                <li>
+                                    <button ng-click='sendCityStateRequest()' style='margin-top:10px;' class='submit'>City State Inquiry</button>
+                                </li>
+                            </ul>
                         </form>
                     </div>
                     <div ng-show="activeRequestView == 'inquiry'">
@@ -163,7 +175,39 @@
                     </div>
                 </div>
 
+
                 <div id='api-response-container' class='col-2 animated' ng-show='responseVisible()'>
+                    <div ng-controller='CityStateResponseController' ng-show="(activeResponseView ==  'cityState')">
+                        <h3 class='section-title' ng-class='statusClass'>{{messageResponse}}</h3>
+                        <hr class='section-title-hr'/>
+                        <div class='section-row f13px-333' style='padding-right:20px;'>
+                            <p>{{message}}</p>
+
+                        </div>
+                         <div ng-show='result.success'>
+
+                            <hr/>
+                            <div class='section-row f16px-333'>
+                                <p>
+                                    {{result.cityName}}, {{result.stateAbbr}}<br/>
+                                </p>
+                            </div>
+                            <hr/>
+                            <div class='section-row f13px-333'>
+                                <p><label class='dd'>City Name:</label> {{result.cityName}}</p>
+                                <p><label class='dd'>City Abbreviation:</label> {{result.cityAbbr}}</p>
+                                <p><label class='dd'>Zipcode:</label> {{result.zipCode}}</p>
+                                <p><label class='dd'>State Abbreviation:</label> {{result.stateAbbr}}</p>
+                                <p><label class='dd'>Mailing Name Indicator:</label> {{result.mailingNameInd}}</p>
+                                <p><label class='dd'>Preferred City:</label> {{result.preferredCity}}</p>
+                                <p><label class='dd'>County Name:</label> {{result.countyName}}</p>
+                                <p><label class='dd'>Zip Class Code:</label> {{result.zipClass.desc}}</p>
+                                <p><label class='dd'>Facility Code:</label> {{result.facility.desc}}</p>
+
+                            </div>
+                        </div>
+                    </div>
+
                     <div ng-controller='ValidateResponseController'
                          ng-show="(activeResponseView == 'validate') || (activeResponseView == 'inquiry')">
                         <h3 class='section-title' ng-class='statusClass'>{{result.status.code | statusNameFilter}}</h3>

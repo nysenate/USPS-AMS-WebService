@@ -46,6 +46,12 @@ ams.filter('parityFilter', function(){
     }
 });
 
+ams.filter('foundFilter', function(){
+    return function(success) {
+        return (success) ? 'success-indication' : 'error-indication';
+    }
+});
+
 ams.controller('ApiController', function($scope, $http) {
     $scope.validateUrl = baseApi + validateApi + "?detail=true&";
     $scope.cityStateUrl = baseApi + cityStateApi + "?detail=true&";
@@ -137,11 +143,16 @@ ams.controller('ValidateResponseController', function($scope, $http, $filter) {
 
 ams.controller('CityStateResponseController', function($scope, $http, $filter) {
     $scope.statusClass = '';
+    $scope.messageResponse= '';
+    $scope.message= '';
 
     $scope.$on('cityStateResponse', function(event, data) {
         $scope.result = data;
         if ($scope.result != null) {
-            $scope.statusClass = $filter('statusClassFilter')($scope.result.status.code);
+            $scope.statusClass = $filter('foundFilter')($scope.result.success);
+            $scope.messageResponse =($scope.result.success) ? 'Success' : 'Failure';
+            $scope.message = ($scope.result.success) ?
+                'The zip code was matched to a city and state.' : 'The zip code was not matched to a city and state.';
         }
         $scope.replayAnimation();
     });
