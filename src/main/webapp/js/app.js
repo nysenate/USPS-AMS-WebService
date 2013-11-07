@@ -1,74 +1,9 @@
-var ams = angular.module('ams', ['ams-common']);
+var ams = angular.module('ams', []);
 
 var baseApi = contextPath + '/api';
 var validateApi = '/validate';
-var citystateApi = '/citystate';
+var cityStateApi = '/citystate';
 var inquiryApi = '/inquiry';
-
-ams.directive('myTable', function() {
-    return function(scope, element, attrs) {
-
-        // apply DataTable options, use defaults if none specified by user
-        var options = {};
-        if (attrs.myTable.length > 0) {
-            options = scope.$eval(attrs.myTable);
-        } else {
-            options = {
-                "bStateSave": true,
-                "iCookieDuration": 2419200, /* 1 month */
-                "bJQueryUI": true,
-                "bPaginate": true,
-                "bLengthChange": true,
-                "bFilter": false,
-                "bInfo": false,
-                "bDestroy": true
-            };
-        }
-
-        // Tell the dataTables plugin what columns to use
-        // We can either derive them from the dom, or use setup from the controller
-        var explicitColumns = [];
-        element.find('th').each(function(index, elem) {
-            explicitColumns.push($(elem).text());
-        });
-        if (explicitColumns.length > 0) {
-            options["aoColumns"] = explicitColumns;
-        } else if (attrs.aoColumns) {
-            options["aoColumns"] = scope.$eval(attrs.aoColumns);
-        }
-
-        // aoColumnDefs is dataTables way of providing fine control over column config
-        if (attrs.aoColumnDefs) {
-            options["aoColumnDefs"] = scope.$eval(attrs.aoColumnDefs);
-        }
-
-        // aaSorting defines which column to sort on by default
-        if (attrs.aaSorting) {
-            options["aaSorting"] = scope.$eval(attrs.aaSorting);
-        }
-
-        if (attrs.fnRowCallback) {
-            options["fnRowCallback"] = scope.$eval(attrs.fnRowCallback);
-        }
-
-        // apply the plugin
-        var dataTable = element.dataTable(options);
-
-        //$("#street-search").keyup( function () {
-        //    /* Filter on the street column */
-        //    dataTable.fnFilter( this.value, 2 );
-        //});
-
-        // watch for any changes to our data, rebuild the DataTable
-        scope.$watch(attrs.aaData, function(value) {
-            var val = value || null;
-            if (val) {
-                dataTable.fnClearTable();
-                dataTable.fnAddData(scope.$eval(attrs.aaData));
-            }
-        });
-    };
-});
 
 ams.filter('statusNameFilter', function(){
     return function(statusCode) {
@@ -111,40 +46,150 @@ ams.filter('parityFilter', function(){
     }
 });
 
-ams.controller('ValidateController', function($scope, $http, $filter, dataBus) {
-    $scope.baseUrl = baseApi + validateApi + "?detail=true&";
-    $scope.addr1 = '';
-    $scope.addr2 = '';
-    $scope.city = '';
-    $scope.state = 'NY';
-    $scope.zip5 = '';
-    $scope.zip4 = '';
+ams.controller('ApiController', function($scope, $http) {
+    $scope.validateUrl = baseApi + validateApi + "?detail=true&";
+    $scope.cityStateUrl = baseApi + cityStateApi + "?detail=true&";
+    $scope.inquiryUrl = baseApi + inquiryApi + "?detail=true&";
+    $scope.$responseContainer = $('#api-response-container');
 
-    $scope.statusClass = '';
+    $scope.validateInput = {
+        addr1 : '',
+        addr2 : '',
+        city  : '',
+        state : 'NY',
+        zip5  : '',
+        zip4  : ''
+    };
 
-    (function(){
-        var $element = $('.col-2, .col-3').bind('webkitAnimationEnd', function(){
-            $(this).removeClass('wobble');
-        });
-    })();
+    $scope.cityStateInput = {
+        zip5  : ''
+    };
 
-    $scope.lookup = function() {
-        var url = this.baseUrl + 'addr1=' + this.addr1 + '&addr2=' + this.addr2 + '&city=' + this.city
-                               + '&state=' + this.state + '&zip5=' + this.zip5 + '&zip4=' + this.zip4;
+    $scope.inquiryInput = {
+        zip5  : '',
+        zip4  : ''
+    };
+
+    $scope.activeRequestView = 'validate';
+    $scope.activeResponseView = '';
+
+    $scope.sendValidateRequest = function() {
+        var url = this.validateUrl + $.param($scope.validateInput);
         $http.get(url)
-            .success(function(data){
-                $scope.result = angular.extend($scope, data);
-                if ($scope.result != null) {
-                    $scope.statusClass = $filter('statusClassFilter')($scope.result.status.code);
-                }
-                $('.col-2, .col-3').addClass('wobble');
+            .success(function(data) {
+                $scope.activeResponseView = 'validate';
+                $scope.$broadcast('validateResponse', data);
             })
-            .error(function(data){
-
+            .error(function() {
+                $scope.alertDefaultError();
             });
     };
+
+    $scope.sendCityStateRequest = function() {
+        var url = this.cityStateUrl + $.param($scope.cityStateInput);
+        $http.get(url)
+            .success(function(data) {
+                $scope.activeResponseView = 'cityState';
+                $scope.$broadcast('cityStateResponse', data);
+            })
+            .error(function() {
+                $scope.alertDefaultError();
+            });
+    };
+
+    $scope.sendInquiryRequest = function() {
+        var url = this.inquiryUrl + $.param($scope.inquiryInput);
+        $http.get(url)
+            .success(function(data) {
+                $scope.activeResponseView = 'inquiry';
+                $scope.$broadcast('validateResponse', data);
+            })
+            .error(function() {
+                $scope.alertDefaultError();
+            });
+    };
+
+    $scope.responseVisible = function() {
+        return this.activeResponseView != null && this.activeResponseView != '';
+    };
+
+    $scope.alertDefaultError = function() {
+        alert('Unable to get response. The server may be temporarily offline.');
+    };
+
+    $scope.replayAnimation = function() {
+        window.scrollTo(0, 0);
+        $scope.$responseContainer.addClass('bounce-in-anim');
+    }
 });
 
-ams.controller('ValidateView', function($scope, dataBus){
+ams.controller('ValidateResponseController', function($scope, $http, $filter) {
+    $scope.statusClass = '';
 
+    $scope.$on('validateResponse', function(event, data) {
+        $scope.result = data;
+        if ($scope.result != null) {
+            $scope.statusClass = $filter('statusClassFilter')($scope.result.status.code);
+        }
+        $scope.replayAnimation();
+    });
+});
+
+ams.controller('CityStateResponseController', function($scope, $http, $filter) {
+    $scope.statusClass = '';
+
+    $scope.$on('cityStateResponse', function(event, data) {
+        $scope.result = data;
+        if ($scope.result != null) {
+            $scope.statusClass = $filter('statusClassFilter')($scope.result.status.code);
+        }
+        $scope.replayAnimation();
+    });
+});
+
+ams.controller('InquiryResponseController', function($scope, $http, $filter) {
+    $scope.statusClass = '';
+
+    $scope.$on('validateResponse', function(event, data) {
+        $scope.result = data;
+        if ($scope.result != null) {
+            $scope.statusClass = $filter('statusClassFilter')($scope.result.status.code);
+        }
+        $scope.replayAnimation();
+    });
+});
+
+$(document).ready(function(){
+
+    setUpAnimations();
+    setUpjQueryUi();
+
+    /**
+     * Used to setup event handlers to reset animations so that they
+     * can replay when needed.
+     */
+    function setUpAnimations() {
+
+        $animated = $('.animated');
+        function removeAnimations() {
+            $animated.removeClass('bounce-in-anim');
+        }
+
+        $animated.bind('webkitAnimationEnd', function() {
+            removeAnimations();
+        }).bind('oanimationend', function() {
+            removeAnimations();
+        }).bind('msAnimationEnd', function() {
+            removeAnimations();
+        }).bind('animationend', function() {
+            removeAnimations();
+        });
+    }
+
+    /**
+     * All elements that use jQuery UI are initialized here.
+     */
+    function setUpjQueryUi() {
+        $('#method-selection').buttonset();
+    }
 });
