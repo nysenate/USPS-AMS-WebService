@@ -184,6 +184,112 @@ The `records` portion is an array of address record objects. Since the matching 
 a database of address records, all matching records are returned in this listing. If an exact match was found this array
 will usually contain one entry. In the event of ambiguity or multi-matches, all possible records will be listed.
 
+City/State
+----------
+
+Query Params:
+
++-------------+---------------------------------------------+
+| Param       | Description                                 |
++=============+=============================================+
+| zip5        | 5 digit zip code                            |
++-------------+---------------------------------------------+
+
+Usage::
+
+    /api/citystate?zip5=11716
+
+As shown in the usage above this method requires::
+
+    (zip5)
+
+By default the `detail` param is set to false. If set to true all the available address record
+information will be returned.
+
+Detailed Output (detail=true)::
+
+    {
+    "success" : true,
+     "cityName" : "BOHEMIA",
+    "cityAbbr" : "",
+    "zipCode" : "11716",
+    "stateAbbr" : "NY",
+     "zipClass" : {
+       "code" : "B",
+      "desc" : "Non-Unique Zip5"
+    },
+    "facility" : {
+      "code" : "P",
+      "desc" : "Post office"
+    },
+     "mailingNameInd" : "Y",
+      "preferredCity" : "BOHEMIA",
+      "countyNum" : "103",
+      "countyName" : "SUFFOLK"
+    }
+
+Default Output (detail=false)::
+
+    {
+    "success" : true,
+    "cityName" : "BOHEMIA",
+     "cityAbbr" : "",
+     "zipCode" : "11716",
+     "stateAbbr" : "NY"
+    }
+
+The `cityAbbr` will be empty if the returned city is already abbreviated. Otherwise it will have the value of
+the abbreviated city name.
+
+The following table lists all possible zip class codes for this method:
+
++------+------------------------+
+| Code |  Name                  |
++------+------------------------+
+|  M   |  APO/FPO Military Zip5 |
++------+------------------------+
+|  P   |  PO BOX Zip5           |
++------+------------------------+
+|  U   |  Unique Zip5           |
++------+------------------------+
+|  B   |  Non-Unique Zip5       |
++------+------------------------+
+
+The following table lists all possible facility codes for this method:
+
++------+--------------------------+
+| Code |  Name                    |
++------+--------------------------+
+|  A   |  Airport mail facility   |
++------+--------------------------+
+|  B   |  Branch                  |
++------+--------------------------+
+|  C   |  Community post office   |
++------+--------------------------+
+|  D   |  Area distrib. center    |
++------+--------------------------+
+|  E   |  Sect. center facility   |
++------+--------------------------+
+|  F   |  General distrib. center |
++------+--------------------------+
+|  G   |  General mail facility   |
++------+--------------------------+
+|  K   |  Bulk mail center        |
++------+--------------------------+
+|  M   |  Money order unit        |
++------+--------------------------+
+|  N   |  Non-postal name,        |
+|      |   community name,        |
+|      |   former postal facility,|
+|      |   or place name          |
++------+--------------------------+
+|  P   |  Post office             |
++------+--------------------------+
+|  S   |  Station                 |
++------+--------------------------+
+|  U   |  Urbanization            |
++------+--------------------------+
+
 Appendix
 --------
 
