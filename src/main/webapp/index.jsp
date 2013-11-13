@@ -175,22 +175,17 @@
                     </div>
                 </div>
 
-
                 <div id='api-response-container' class='col-2 animated' ng-show='responseVisible()'>
                     <div ng-controller='CityStateResponseController' ng-show="(activeResponseView ==  'cityState')">
                         <h3 class='section-title' ng-class='statusClass'>{{messageResponse}}</h3>
                         <hr class='section-title-hr'/>
                         <div class='section-row f13px-333' style='padding-right:20px;'>
                             <p>{{message}}</p>
-
                         </div>
-                         <div ng-show='result.success'>
-
+                        <div ng-show='result.success'>
                             <hr/>
                             <div class='section-row f16px-333'>
-                                <p>
-                                    {{result.cityName}}, {{result.stateAbbr}}<br/>
-                                </p>
+                                <p>{{result.cityName}}, {{result.stateAbbr}}</p>
                             </div>
                             <hr/>
                             <div class='section-row f13px-333'>
@@ -203,7 +198,6 @@
                                 <p><label class='dd'>County Name:</label> {{result.countyName}}</p>
                                 <p><label class='dd'>Zip Class Code:</label> {{result.zipClass.desc}}</p>
                                 <p><label class='dd'>Facility Code:</label> {{result.facility.desc}}</p>
-
                             </div>
                         </div>
                     </div>

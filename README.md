@@ -1,32 +1,57 @@
 USPS-AMS-WebService
 ===================
 
-A network wrapper around the USPS Address Matching System API library that utilizes JNI to connect a Java servlet with the AMS proprietary C library.
+A Web Service that exposes the functionality of the USPS Address Matching System C library through an easy to use API and interface.
+
+Prerequisites
+-------------
+
+1. Linux, JDK 7, Tomcat 7, Maven, GCC Compiler.
+
+1.  Obtain the five data folders from the USPS AMS disk
+    * ams_comm
+    * ams_dpv
+    * ams_elot
+    * lacslink
+    * suitelink
+
+1. Have the necessary library files from the ams disk (shared objects and headers).
+   The filenames listed here are not exact.
+    * libabbrst.so
+    * libkeymgr.so
+    * libz4lnx64.so
+    * libdpv.so
+    * libstelnk.so
+    * zip4_lnx64.a
+    * zip4.h
+    * z4dpv.h
+
+1. Have access to the date/time log file
+    * z4cxlog.dat
 
 Setup
-=====
+-----
 
-Prerequisites:
-1. Obtain the five data folders from the AMS disk.
-	ams_comm; ams_dpv; ams_elot; lacslink; suitelink
+1. Place the data files in */data/usps_ams*.
 
-2. Have the necessary library files from the ams disk(shared objects).
-	libabbrst.so.1; libkeymgr.so.3; libz4lnx64.so;
-	zip4.h; libdpv.so.8; libstelnk.so.1;
-	z4dpv.h; zip4_lnx64.a; z4cxlog.dat
+1. Place the library files in */opt/usps_ams*.
 
-3. Place the library files in the directory /opt/usps_ams
+1. Edit the ldconf (/etc/ld.so.conf) and add an entry for */opt/usps_ams*.
 
-4. Navigate to your src/main/c directory and run make to obtain            libamsnative.so
+1. Navigate to your src/main/c directory and run *make* to obtain *libamsnative.so*. If you
+   are running into problems, edit the Makefile and ensure that the java paths are set correctly.
 
-5. Copy over the shared library to /usr/lib/libamsnative.so
+1. Tomcat must be able to load the *amsnative* shared library.
+The *java.library.path* environment variable contains a listing of the search directories.
+Either modify your Tomcat startup and set -Djava.library.path to the location of *libamsnative.so* or place
+*libamsnative.so* into one of the default library folders that Tomcat looks in (e.g. /usr/lib/).
 
-6. Create app.properties in /src/main/resources using app.example.properties as a template
+1. Create app.properties in /src/main/resources using app.example.properties as a template.
 
-7. ams.cfg.system.path should point to /opt/usps_ams more specifcally the directy where the z4cxlog.dat fileis located
+    * ams.cfg.system.path should point to the directory where the z4cxlog.dat file is located (/opt/usps_ams).
 
-8. If you have stored the ams data folders in an alternate location ajust the other file paths accordingly
+    * If you have stored the ams data folders in an alternate location adjust the other file paths accordingly.
 
-8. Do a maven compile war:war and then deploy to tomcat 
+1. Perform *mvn compile war:war* and deploy .war to Tomcat.
 
-
+Note: Due to loading of native libraries it's recommended to restart the Tomcat server when trying to do re-deployments.
