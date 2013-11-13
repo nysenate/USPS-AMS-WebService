@@ -15,7 +15,7 @@ Prerequisites
     * lacslink
     * suitelink
 
-1. Have the necessary library files from the ams disk (shared objects and headers).
+1. Have the necessary library files from the AMS disk (shared objects and headers).
    The filenames listed here are not exact.
     * libabbrst.so
     * libkeymgr.so
@@ -32,7 +32,7 @@ Prerequisites
 Setup
 -----
 
-1. Place the data files in */data/usps_ams*.
+1. Place the data folders in */data/usps_ams*.
 
 1. Place the library files in */opt/usps_ams*.
 
