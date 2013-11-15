@@ -48,8 +48,7 @@
                         <form method='post' ng-submit='sendValidateRequest()' autocomplete="off">
                             <div id='address-input-container' style='height:auto;'>
                                 <div class='f13px-333' style='margin:20px 10px 0 10px'>
-                                    Enter an address below to retrieve the USPS corrected version as well as matching address records.<br/><br/>
-                                    In order to obtain a match Address Line 1 must be supplied with either City/State or Zip5.
+                                    Enter an address below to retrieve the USPS corrected version. In order to obtain a match Address Line 1 must be supplied with either City/State or Zip5.
                                 </div>
                                 <ul class='input-list'>
                                     <li>
