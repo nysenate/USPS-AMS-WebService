@@ -49,9 +49,8 @@ Either modify your Tomcat startup and set -Djava.library.path to the location of
 1. Create app.properties in /src/main/resources using app.example.properties as a template.
 
     * ams.cfg.system.path should point to the directory where the z4cxlog.dat file is located (/opt/usps_ams).
-
     * If you have stored the ams data folders in an alternate location adjust the other file paths accordingly.
-
-1. Perform *mvn compile war:war* and deploy .war to Tomcat.
+    
+Finally, perform *mvn compile war:war* and deploy .war to Tomcat.
 
 Note: Due to loading of native libraries it's recommended to restart the Tomcat server when trying to do re-deployments.
