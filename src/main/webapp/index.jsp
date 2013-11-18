@@ -293,14 +293,7 @@
                         </div>
                     </div>
                 </div>
-
-                <div ng-show='result.recordCount > 0' class='col-3'>
-
-                </div>
             </div>
-        </section>
-        <section style='display:none'>
-            <iframe style='border:0;outline:0;width:100%;height:100%;' src="${pageContext.request.contextPath}/docs/_build/html/index.html"></iframe>
         </section>
     </div>
 </body>
