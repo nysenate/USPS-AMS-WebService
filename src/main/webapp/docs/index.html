@@ -1,0 +1,803 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Welcome to USPS AMS Web Service’s documentation &mdash; USPS AMS Web Service 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="USPS AMS Web Service 1.0 documentation" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="#">USPS AMS Web Service 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="welcome-to-usps-ams-web-service-s-documentation">
+<h1>Welcome to USPS AMS Web Service&#8217;s documentation<a class="headerlink" href="#welcome-to-usps-ams-web-service-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>The AMS API provides methods for address correction, address inquiry, and city/state lookup.</p>
+<p>There is currently no authentication required to use this API.</p>
+<p>The API returns results in either JSON, JSONP, or XML. The default format is JSON. You can specify the output formats
+by appending the query param <cite>format</cite> to the request url:</p>
+<div class="highlight-python"><pre>JSON:  format=json
+JSONP: format=jsonp&amp;callback=your_fn_name
+XML:   format=xml</pre>
+</div>
+<div class="section" id="api-methods">
+<h2>API Methods<a class="headerlink" href="#api-methods" title="Permalink to this headline">¶</a></h2>
+<p>The API exposes the following methods:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Method</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>validate</td>
+<td>Perform USPS address correction.</td>
+</tr>
+<tr class="row-odd"><td>citystate</td>
+<td>Lookup the city and state given the zip5.</td>
+</tr>
+<tr class="row-even"><td>inquiry</td>
+<td>Lookup a matching address given a zip9.</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="validate">
+<h3>Validate<a class="headerlink" href="#validate" title="Permalink to this headline">¶</a></h3>
+<p>This is the method you will most likely need to use. Given an input address it will try to perform a match against
+USPS address records and return either a response indicating the correct form of the address or some detailed error
+messages otherwise.</p>
+<p>Query Params (Not all are required):</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Param</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>addr1</td>
+<td>Street address</td>
+</tr>
+<tr class="row-odd"><td>addr2</td>
+<td>Street address line 2</td>
+</tr>
+<tr class="row-even"><td>city</td>
+<td>City name</td>
+</tr>
+<tr class="row-odd"><td>state</td>
+<td>State name/abbreviation</td>
+</tr>
+<tr class="row-even"><td>zip5</td>
+<td>5 digit zip code</td>
+</tr>
+<tr class="row-odd"><td>zip4</td>
+<td>4 digit zip code</td>
+</tr>
+<tr class="row-even"><td>detail</td>
+<td>Show detailed information (true|false)</td>
+</tr>
+</tbody>
+</table>
+<p>Usage:</p>
+<div class="highlight-python"><pre>/api/validate?addr1=200 State Street&amp;city=Albany&amp;state=NY   // Using addr1, city, state
+/api/validate?addr1=200 State Street&amp;zip5=12210             // Using addr1, zip5</pre>
+</div>
+<p>This method requires at minimum either:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="n">addr1</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">addr1</span><span class="p">,</span> <span class="n">zip5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The usage above is the minimum requirement, thus you are allowed to fill all the query params
+if the data is available.</p>
+<p>By default the <cite>detail</cite> param is set to false. If set to true all the available address record
+information will be returned.</p>
+<p>Default Output (detail=false):</p>
+<div class="highlight-python"><pre>{
+  "validated" : true,
+  "address" : {
+    "firm" : "",
+    "addr1" : "200 STATE ST",
+    "addr2" : "",
+    "city" : "ALBANY",
+    "state" : "NY",
+    "zip5" : "12210",
+    "zip4" : ""
+  },
+  "status" : {
+    "code" : 31,
+    "name" : "EXACT_MATCH",
+    "desc" : "Single response based on input information."
+  },
+  "footnotes" : [ {
+    "code" : "N",
+    "name" : "Address Standardized",
+    "desc" : "The delivery address was standardized. For example, if STREET was in the delivery address,
+              the system will return ST as its standard spelling. "
+  } ]
+}</pre>
+</div>
+<p>Detailed Output (detail=true):</p>
+<div class="highlight-python"><pre>{
+  "validated" : true,
+  "address" : {
+    "firm" : "",
+    "addr1" : "200 STATE ST",
+    "addr2" : "",
+    "city" : "ALBANY",
+    "state" : "NY",
+    "zip5" : "12210",
+    "zip4" : ""
+  },
+  "status" : {
+    "code" : 31,
+    "name" : "EXACT_MATCH",
+    "desc" : "Single response based on input information."
+  },
+  "footnotes" : [ {
+    "code" : "N",
+    "name" : "Address Standardized",
+    "desc" : "The delivery address was standardized. For example, if STREET was in the delivery address,
+              the system will return ST as its standard spelling. "
+  } ],
+  "detail" : {
+    "standardCityAbbr" : "",
+    "postOfficeCity" : "ALBANY",
+    "postOfficeState" : "NY",
+    "deliveryBarCode" : "",
+    "carrierRoute" : "C001",
+    "fipsCounty" : 1
+  },
+  "recordCount" : 1,
+  "records" : [ {
+    "recordId" : 0,
+    "recordType" : "S",
+    "recordTypeDesc" : "Street Record",
+    "primaryLow" : "200",
+    "primaryHigh" : "238",
+    "primaryParity" : "E",
+    "preDir" : "",
+    "streetName" : "STATE",
+    "streetSuffix" : "ST",
+    "postDir" : "",
+    "unit" : "",
+    "secondaryLow" : "",
+    "secondaryHigh" : "",
+    "secondaryParity" : " ",
+    "zip5" : "12210",
+    "zip4Low" : "2138",
+    "zip4High" : "2138",
+    "financeCode" : "350060",
+    "fipsCounty" : "001"
+  } ]
+}</pre>
+</div>
+<p>The corrected address (or input address if match failed) is represented by the <cite>address</cite> portion of the output.</p>
+<p>The following table lists all possible status codes for this method:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="5%" />
+<col width="18%" />
+<col width="77%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Code</td>
+<td>Name</td>
+<td>Description</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>INSUFFICIENT_ADDRESS</td>
+<td>The input address does not contain the required address components.</td>
+</tr>
+<tr class="row-odd"><td>10</td>
+<td>INVALID_DUAL_ADDRESS</td>
+<td>Information presented could not be processed in current format. Corrective action is needed.</td>
+</tr>
+<tr class="row-even"><td>11</td>
+<td>INVALID_CITY_ST_ZIP</td>
+<td>The ZIP Code in the submitted address could not be found due to invalid city/st/zip.</td>
+</tr>
+<tr class="row-odd"><td>12</td>
+<td>INVALID_STATE</td>
+<td>The state in the submitted address is invalid. Corrective action is needed.</td>
+</tr>
+<tr class="row-even"><td>13</td>
+<td>INVALID_CITY</td>
+<td>The city in the submitted address is invalid. Corrective action is needed.</td>
+</tr>
+<tr class="row-odd"><td>21</td>
+<td>NOT_FOUND</td>
+<td>The address, exactly as submitted, could not be found in the national ZIP+4 file.</td>
+</tr>
+<tr class="row-even"><td>22</td>
+<td>MULTI_RESPONSE</td>
+<td>More than one ZIP+4 Code was found to satisfy the address submitted.</td>
+</tr>
+<tr class="row-odd"><td>31</td>
+<td>EXACT_MATCH</td>
+<td>Single response based on input information.</td>
+</tr>
+<tr class="row-even"><td>32</td>
+<td>DEFAULT_MATCH</td>
+<td>A match was made to a default record in the national ZIP+4 file. A more specific match may be exist.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The descriptions listed in the table are just summarized versions of the actual descriptions returned by the API.</p>
+</div>
+<p>The <cite>standardCityAbbr</cite> will be empty if the returned city is already abbreviated. Otherwise it will have the value of
+the abbreviated city name.</p>
+<p>The <cite>footnotes</cite> portion contains an array of messages that the matching system returns.</p>
+<p>The <cite>records</cite> portion is an array of address record objects. Since the matching system primarily performs matching using
+a database of address records, all matching records are returned in this listing. If an exact match was found this array
+will usually contain one entry. In the event of ambiguity or multi-matches, all possible records will be listed. This can
+be particularly useful when entering in the address of an apartment building and then viewing the valid unit ranges.</p>
+</div>
+<div class="section" id="city-state">
+<h3>City/State<a class="headerlink" href="#city-state" title="Permalink to this headline">¶</a></h3>
+<p>Use this method if you want to find the city and state that a 5 digit zip code maps to.</p>
+<p>Query Params:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Param</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>zip5</td>
+<td>5 digit zip code</td>
+</tr>
+<tr class="row-odd"><td>detail</td>
+<td>If true get full city details.</td>
+</tr>
+</tbody>
+</table>
+<p>Usage:</p>
+<div class="highlight-python"><pre>/api/citystate?zip5=11716</pre>
+</div>
+<p>This method offers additional information about the city such as the abbreviated form when the <cite>detail=true</cite> query param is set.</p>
+<p>Default Output (detail=false):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+<span class="s">&quot;success&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+<span class="s">&quot;cityName&quot;</span> <span class="p">:</span> <span class="s">&quot;BOHEMIA&quot;</span><span class="p">,</span>
+ <span class="s">&quot;cityAbbr&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+ <span class="s">&quot;zipCode&quot;</span> <span class="p">:</span> <span class="s">&quot;11716&quot;</span><span class="p">,</span>
+ <span class="s">&quot;stateAbbr&quot;</span> <span class="p">:</span> <span class="s">&quot;NY&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Detailed Output (detail=true):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+<span class="s">&quot;success&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+ <span class="s">&quot;cityName&quot;</span> <span class="p">:</span> <span class="s">&quot;BOHEMIA&quot;</span><span class="p">,</span>
+<span class="s">&quot;cityAbbr&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+<span class="s">&quot;zipCode&quot;</span> <span class="p">:</span> <span class="s">&quot;11716&quot;</span><span class="p">,</span>
+<span class="s">&quot;stateAbbr&quot;</span> <span class="p">:</span> <span class="s">&quot;NY&quot;</span><span class="p">,</span>
+ <span class="s">&quot;zipClass&quot;</span> <span class="p">:</span> <span class="p">{</span>
+   <span class="s">&quot;code&quot;</span> <span class="p">:</span> <span class="s">&quot;B&quot;</span><span class="p">,</span>
+  <span class="s">&quot;desc&quot;</span> <span class="p">:</span> <span class="s">&quot;Non-Unique Zip5&quot;</span>
+<span class="p">},</span>
+<span class="s">&quot;facility&quot;</span> <span class="p">:</span> <span class="p">{</span>
+  <span class="s">&quot;code&quot;</span> <span class="p">:</span> <span class="s">&quot;P&quot;</span><span class="p">,</span>
+  <span class="s">&quot;desc&quot;</span> <span class="p">:</span> <span class="s">&quot;Post office&quot;</span>
+<span class="p">},</span>
+ <span class="s">&quot;mailingNameInd&quot;</span> <span class="p">:</span> <span class="s">&quot;Y&quot;</span><span class="p">,</span>
+  <span class="s">&quot;preferredCity&quot;</span> <span class="p">:</span> <span class="s">&quot;BOHEMIA&quot;</span><span class="p">,</span>
+  <span class="s">&quot;countyNum&quot;</span> <span class="p">:</span> <span class="s">&quot;103&quot;</span><span class="p">,</span>
+  <span class="s">&quot;countyName&quot;</span> <span class="p">:</span> <span class="s">&quot;SUFFOLK&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <cite>cityAbbr</cite> will be empty if the returned city is already abbreviated. Otherwise it will have the value of
+the abbreviated city name.</p>
+<p>The following table lists all possible zip class codes for this method:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Code</td>
+<td>Name</td>
+</tr>
+<tr class="row-even"><td>M</td>
+<td>APO/FPO Military Zip5</td>
+</tr>
+<tr class="row-odd"><td>P</td>
+<td>PO BOX Zip5</td>
+</tr>
+<tr class="row-even"><td>U</td>
+<td>Unique Zip5</td>
+</tr>
+<tr class="row-odd"><td>B</td>
+<td>Non-Unique Zip5</td>
+</tr>
+</tbody>
+</table>
+<p>The following table lists all possible facility codes for this method:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="81%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Code</td>
+<td>Name</td>
+</tr>
+<tr class="row-even"><td>A</td>
+<td>Airport mail facility</td>
+</tr>
+<tr class="row-odd"><td>B</td>
+<td>Branch</td>
+</tr>
+<tr class="row-even"><td>C</td>
+<td>Community post office</td>
+</tr>
+<tr class="row-odd"><td>D</td>
+<td>Area distrib. center</td>
+</tr>
+<tr class="row-even"><td>E</td>
+<td>Sect. center facility</td>
+</tr>
+<tr class="row-odd"><td>F</td>
+<td>General distrib. center</td>
+</tr>
+<tr class="row-even"><td>G</td>
+<td>General mail facility</td>
+</tr>
+<tr class="row-odd"><td>K</td>
+<td>Bulk mail center</td>
+</tr>
+<tr class="row-even"><td>M</td>
+<td>Money order unit</td>
+</tr>
+<tr class="row-odd"><td>N</td>
+<td>Non-postal name,
+community name,
+former postal facility,
+or place name</td>
+</tr>
+<tr class="row-even"><td>P</td>
+<td>Post office</td>
+</tr>
+<tr class="row-odd"><td>S</td>
+<td>Station</td>
+</tr>
+<tr class="row-even"><td>U</td>
+<td>Urbanization</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="inquiry">
+<h3>Inquiry<a class="headerlink" href="#inquiry" title="Permalink to this headline">¶</a></h3>
+<p>This method should be used if a full Zip 9 code is known and a matching address record is desired.
+A Zip 9 code does not necessarily map to a single address so a multi-match status should typically be expected.</p>
+<p>The available query param options are:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Param</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>zip5</td>
+<td>5 digit zip code</td>
+</tr>
+<tr class="row-odd"><td>zip4</td>
+<td>4 digit zip code</td>
+</tr>
+<tr class="row-even"><td>detail</td>
+<td>Show detailed information (true|false)</td>
+</tr>
+</tbody>
+</table>
+<p>Usage:</p>
+<div class="highlight-python"><pre>/api/inquiry?zip5=12180&amp;zip4=1928</pre>
+</div>
+<p>The output is exactly identical to the validate method so it won&#8217;t be reproduced here.</p>
+</div>
+</div>
+<div class="section" id="batch-api-methods">
+<h2>Batch API Methods<a class="headerlink" href="#batch-api-methods" title="Permalink to this headline">¶</a></h2>
+<p>The <cite>validate</cite>, <cite>citystate</cite>, and <cite>inquiry</cite> methods all support batch processing. The batch mode is triggered by
+sending a POST request to the API method and appending the query param <cite>batch=true</cite> to the url. Any input params
+(addr1, zip5, etc) appended to the url will be ignored.</p>
+<p>The input list must be encoded as a JSON string and set as the POST body payload.</p>
+<p>If the full information for each record is desired, add the <cite>detail=true</cite> query param to the url in the same way as you
+would for single request.</p>
+<p>While the input must be a JSON encoded payload, the output can be any of the supported formats and can be toggled using
+the <cite>format</cite> query param in the url.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">According to the AMS documentation, the AMS library is intended to be used in single threaded applications.
+As a result it&#8217;s not possible at this time to take advantage of multi-threaded batch operations.</p>
+</div>
+<div class="section" id="batch-validate">
+<h3>Batch Validate<a class="headerlink" href="#batch-validate" title="Permalink to this headline">¶</a></h3>
+<p>Sample Usage:</p>
+<div class="highlight-python"><pre>POST
+/api/validate?batch=true
+
+Sample JSON Input
+[ {"addr1":"75 Ridge Dr","city":"Manhasset","state":"NY","zip5":"11030"},
+  {"addr1":"8 Parkway Dr","city":"Roslyn Heights","state":"NY","zip5":"11577"},
+  {"addr1":"157 Evans St","city":"New Hyde Park","state":"NY","zip5":"11040"},
+  {"addr1":"39 Irma Ave","city":"Port Washington","state":"NY","zip5":"11050"},
+  {"addr1":"470 Tulip Ave","city":"Floral Park","state":"NY","zip5":"11001"} ]</pre>
+</div>
+<p>The input objects in the list represent the same key value pairs as the query parameters used in the single request version.</p>
+<p>Given the above request the output will be the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;results&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+    <span class="s">&quot;validated&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s">&quot;address&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;firm&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr1&quot;</span> <span class="p">:</span> <span class="s">&quot;75 RIDGE DR&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr2&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;city&quot;</span> <span class="p">:</span> <span class="s">&quot;MANHASSET&quot;</span><span class="p">,</span>
+      <span class="s">&quot;state&quot;</span> <span class="p">:</span> <span class="s">&quot;NY&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip5&quot;</span> <span class="p">:</span> <span class="s">&quot;11030&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip4&quot;</span> <span class="p">:</span> <span class="s">&quot;3115&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;status&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;code&quot;</span> <span class="p">:</span> <span class="mi">31</span><span class="p">,</span>
+      <span class="s">&quot;name&quot;</span> <span class="p">:</span> <span class="s">&quot;EXACT_MATCH&quot;</span><span class="p">,</span>
+      <span class="s">&quot;desc&quot;</span> <span class="p">:</span> <span class="s">&quot;Single response based on input information.&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;footnotes&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">]</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="s">&quot;validated&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s">&quot;address&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;firm&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr1&quot;</span> <span class="p">:</span> <span class="s">&quot;8 PARKWAY DR&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr2&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;city&quot;</span> <span class="p">:</span> <span class="s">&quot;ROSLYN HEIGHTS&quot;</span><span class="p">,</span>
+      <span class="s">&quot;state&quot;</span> <span class="p">:</span> <span class="s">&quot;NY&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip5&quot;</span> <span class="p">:</span> <span class="s">&quot;11577&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip4&quot;</span> <span class="p">:</span> <span class="s">&quot;2706&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;status&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;code&quot;</span> <span class="p">:</span> <span class="mi">31</span><span class="p">,</span>
+      <span class="s">&quot;name&quot;</span> <span class="p">:</span> <span class="s">&quot;EXACT_MATCH&quot;</span><span class="p">,</span>
+      <span class="s">&quot;desc&quot;</span> <span class="p">:</span> <span class="s">&quot;Single response based on input information.&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;footnotes&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">]</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="s">&quot;validated&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s">&quot;address&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;firm&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr1&quot;</span> <span class="p">:</span> <span class="s">&quot;157 EVANS ST&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr2&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;city&quot;</span> <span class="p">:</span> <span class="s">&quot;NEW HYDE PARK&quot;</span><span class="p">,</span>
+      <span class="s">&quot;state&quot;</span> <span class="p">:</span> <span class="s">&quot;NY&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip5&quot;</span> <span class="p">:</span> <span class="s">&quot;11040&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip4&quot;</span> <span class="p">:</span> <span class="s">&quot;1757&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;status&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;code&quot;</span> <span class="p">:</span> <span class="mi">31</span><span class="p">,</span>
+      <span class="s">&quot;name&quot;</span> <span class="p">:</span> <span class="s">&quot;EXACT_MATCH&quot;</span><span class="p">,</span>
+      <span class="s">&quot;desc&quot;</span> <span class="p">:</span> <span class="s">&quot;Single response based on input information.&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;footnotes&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">]</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="s">&quot;validated&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s">&quot;address&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;firm&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr1&quot;</span> <span class="p">:</span> <span class="s">&quot;39 IRMA AVE&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr2&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;city&quot;</span> <span class="p">:</span> <span class="s">&quot;PORT WASHINGTON&quot;</span><span class="p">,</span>
+      <span class="s">&quot;state&quot;</span> <span class="p">:</span> <span class="s">&quot;NY&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip5&quot;</span> <span class="p">:</span> <span class="s">&quot;11050&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip4&quot;</span> <span class="p">:</span> <span class="s">&quot;2811&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;status&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;code&quot;</span> <span class="p">:</span> <span class="mi">31</span><span class="p">,</span>
+      <span class="s">&quot;name&quot;</span> <span class="p">:</span> <span class="s">&quot;EXACT_MATCH&quot;</span><span class="p">,</span>
+      <span class="s">&quot;desc&quot;</span> <span class="p">:</span> <span class="s">&quot;Single response based on input information.&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;footnotes&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">]</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="s">&quot;validated&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s">&quot;address&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;firm&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr1&quot;</span> <span class="p">:</span> <span class="s">&quot;470 TULIP AVE&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr2&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;city&quot;</span> <span class="p">:</span> <span class="s">&quot;FLORAL PARK&quot;</span><span class="p">,</span>
+      <span class="s">&quot;state&quot;</span> <span class="p">:</span> <span class="s">&quot;NY&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip5&quot;</span> <span class="p">:</span> <span class="s">&quot;11001&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip4&quot;</span> <span class="p">:</span> <span class="s">&quot;3206&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;status&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;code&quot;</span> <span class="p">:</span> <span class="mi">31</span><span class="p">,</span>
+      <span class="s">&quot;name&quot;</span> <span class="p">:</span> <span class="s">&quot;EXACT_MATCH&quot;</span><span class="p">,</span>
+      <span class="s">&quot;desc&quot;</span> <span class="p">:</span> <span class="s">&quot;Single response based on input information.&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;footnotes&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">]</span>
+  <span class="p">}</span> <span class="p">],</span>
+  <span class="s">&quot;total&quot;</span> <span class="p">:</span> <span class="mi">5</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="batch-city-state">
+<h3>Batch City/State<a class="headerlink" href="#batch-city-state" title="Permalink to this headline">¶</a></h3>
+<p>Sample Usage:</p>
+<div class="highlight-python"><pre>POST
+/api/citystate?batch=true
+
+POST Body
+["11030","11577","11040","11050","11001"]</pre>
+</div>
+<p>The input should be a single array of zip5 strings.</p>
+<p>Sample Output:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;results&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+    <span class="s">&quot;success&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s">&quot;cityName&quot;</span> <span class="p">:</span> <span class="s">&quot;MANHASSET&quot;</span><span class="p">,</span>
+    <span class="s">&quot;cityAbbr&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+    <span class="s">&quot;zipCode&quot;</span> <span class="p">:</span> <span class="s">&quot;11030&quot;</span><span class="p">,</span>
+    <span class="s">&quot;stateAbbr&quot;</span> <span class="p">:</span> <span class="s">&quot;NY&quot;</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="s">&quot;success&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s">&quot;cityName&quot;</span> <span class="p">:</span> <span class="s">&quot;ROSLYN HEIGHTS&quot;</span><span class="p">,</span>
+    <span class="s">&quot;cityAbbr&quot;</span> <span class="p">:</span> <span class="s">&quot;ROSLYN HTS&quot;</span><span class="p">,</span>
+    <span class="s">&quot;zipCode&quot;</span> <span class="p">:</span> <span class="s">&quot;11577&quot;</span><span class="p">,</span>
+    <span class="s">&quot;stateAbbr&quot;</span> <span class="p">:</span> <span class="s">&quot;NY&quot;</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="s">&quot;success&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s">&quot;cityName&quot;</span> <span class="p">:</span> <span class="s">&quot;NEW HYDE PARK&quot;</span><span class="p">,</span>
+    <span class="s">&quot;cityAbbr&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+    <span class="s">&quot;zipCode&quot;</span> <span class="p">:</span> <span class="s">&quot;11040&quot;</span><span class="p">,</span>
+    <span class="s">&quot;stateAbbr&quot;</span> <span class="p">:</span> <span class="s">&quot;NY&quot;</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="s">&quot;success&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s">&quot;cityName&quot;</span> <span class="p">:</span> <span class="s">&quot;PORT WASHINGTON&quot;</span><span class="p">,</span>
+    <span class="s">&quot;cityAbbr&quot;</span> <span class="p">:</span> <span class="s">&quot;PRT WASHINGTN&quot;</span><span class="p">,</span>
+    <span class="s">&quot;zipCode&quot;</span> <span class="p">:</span> <span class="s">&quot;11050&quot;</span><span class="p">,</span>
+    <span class="s">&quot;stateAbbr&quot;</span> <span class="p">:</span> <span class="s">&quot;NY&quot;</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="s">&quot;success&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s">&quot;cityName&quot;</span> <span class="p">:</span> <span class="s">&quot;FLORAL PARK&quot;</span><span class="p">,</span>
+    <span class="s">&quot;cityAbbr&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+    <span class="s">&quot;zipCode&quot;</span> <span class="p">:</span> <span class="s">&quot;11001&quot;</span><span class="p">,</span>
+    <span class="s">&quot;stateAbbr&quot;</span> <span class="p">:</span> <span class="s">&quot;NY&quot;</span>
+  <span class="p">}</span> <span class="p">],</span>
+  <span class="s">&quot;total&quot;</span> <span class="p">:</span> <span class="mi">5</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="batch-inquiry">
+<h3>Batch Inquiry<a class="headerlink" href="#batch-inquiry" title="Permalink to this headline">¶</a></h3>
+<p>Sample Usage:</p>
+<div class="highlight-python"><pre>POST
+/api/inquiry?batch=true
+
+POST Body
+[{"zip5":"11030","zip4":"3115"},
+ {"zip5":"11577","zip4":"2706"},
+ {"zip5":"11040","zip4":"1757"},
+ {"zip5":"11050","zip4":"2811"},
+ {"zip5":"11001","zip4":"3206"}]</pre>
+</div>
+<p>Sample Output:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span>
+  <span class="s">&quot;results&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+    <span class="s">&quot;validated&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s">&quot;address&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;firm&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr1&quot;</span> <span class="p">:</span> <span class="s">&quot;RIDGE DR&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr2&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;city&quot;</span> <span class="p">:</span> <span class="s">&quot;MANHASSET&quot;</span><span class="p">,</span>
+      <span class="s">&quot;state&quot;</span> <span class="p">:</span> <span class="s">&quot;NY&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip5&quot;</span> <span class="p">:</span> <span class="s">&quot;11030&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip4&quot;</span> <span class="p">:</span> <span class="s">&quot;3115&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;status&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;code&quot;</span> <span class="p">:</span> <span class="mi">31</span><span class="p">,</span>
+      <span class="s">&quot;name&quot;</span> <span class="p">:</span> <span class="s">&quot;EXACT_MATCH&quot;</span><span class="p">,</span>
+      <span class="s">&quot;desc&quot;</span> <span class="p">:</span> <span class="s">&quot;Single response based on input information.&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;footnotes&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">]</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="s">&quot;validated&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s">&quot;address&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;firm&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr1&quot;</span> <span class="p">:</span> <span class="s">&quot;PARKWAY DR&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr2&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;city&quot;</span> <span class="p">:</span> <span class="s">&quot;ROSLYN HEIGHTS&quot;</span><span class="p">,</span>
+      <span class="s">&quot;state&quot;</span> <span class="p">:</span> <span class="s">&quot;NY&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip5&quot;</span> <span class="p">:</span> <span class="s">&quot;11577&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip4&quot;</span> <span class="p">:</span> <span class="s">&quot;2706&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;status&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;code&quot;</span> <span class="p">:</span> <span class="mi">31</span><span class="p">,</span>
+      <span class="s">&quot;name&quot;</span> <span class="p">:</span> <span class="s">&quot;EXACT_MATCH&quot;</span><span class="p">,</span>
+      <span class="s">&quot;desc&quot;</span> <span class="p">:</span> <span class="s">&quot;Single response based on input information.&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;footnotes&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">]</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="s">&quot;validated&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s">&quot;address&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;firm&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr1&quot;</span> <span class="p">:</span> <span class="s">&quot;EVANS ST&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr2&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;city&quot;</span> <span class="p">:</span> <span class="s">&quot;NEW HYDE PARK&quot;</span><span class="p">,</span>
+      <span class="s">&quot;state&quot;</span> <span class="p">:</span> <span class="s">&quot;NY&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip5&quot;</span> <span class="p">:</span> <span class="s">&quot;11040&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip4&quot;</span> <span class="p">:</span> <span class="s">&quot;1757&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;status&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;code&quot;</span> <span class="p">:</span> <span class="mi">31</span><span class="p">,</span>
+      <span class="s">&quot;name&quot;</span> <span class="p">:</span> <span class="s">&quot;EXACT_MATCH&quot;</span><span class="p">,</span>
+      <span class="s">&quot;desc&quot;</span> <span class="p">:</span> <span class="s">&quot;Single response based on input information.&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;footnotes&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">]</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="s">&quot;validated&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s">&quot;address&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;firm&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr1&quot;</span> <span class="p">:</span> <span class="s">&quot;IRMA AVE&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr2&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;city&quot;</span> <span class="p">:</span> <span class="s">&quot;PORT WASHINGTON&quot;</span><span class="p">,</span>
+      <span class="s">&quot;state&quot;</span> <span class="p">:</span> <span class="s">&quot;NY&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip5&quot;</span> <span class="p">:</span> <span class="s">&quot;11050&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip4&quot;</span> <span class="p">:</span> <span class="s">&quot;2811&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;status&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;code&quot;</span> <span class="p">:</span> <span class="mi">31</span><span class="p">,</span>
+      <span class="s">&quot;name&quot;</span> <span class="p">:</span> <span class="s">&quot;EXACT_MATCH&quot;</span><span class="p">,</span>
+      <span class="s">&quot;desc&quot;</span> <span class="p">:</span> <span class="s">&quot;Single response based on input information.&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;footnotes&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">]</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="s">&quot;validated&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="s">&quot;address&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;firm&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr1&quot;</span> <span class="p">:</span> <span class="s">&quot;TULIP AVE&quot;</span><span class="p">,</span>
+      <span class="s">&quot;addr2&quot;</span> <span class="p">:</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+      <span class="s">&quot;city&quot;</span> <span class="p">:</span> <span class="s">&quot;FLORAL PARK&quot;</span><span class="p">,</span>
+      <span class="s">&quot;state&quot;</span> <span class="p">:</span> <span class="s">&quot;NY&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip5&quot;</span> <span class="p">:</span> <span class="s">&quot;11001&quot;</span><span class="p">,</span>
+      <span class="s">&quot;zip4&quot;</span> <span class="p">:</span> <span class="s">&quot;3206&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;status&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">&quot;code&quot;</span> <span class="p">:</span> <span class="mi">31</span><span class="p">,</span>
+      <span class="s">&quot;name&quot;</span> <span class="p">:</span> <span class="s">&quot;EXACT_MATCH&quot;</span><span class="p">,</span>
+      <span class="s">&quot;desc&quot;</span> <span class="p">:</span> <span class="s">&quot;Single response based on input information.&quot;</span>
+    <span class="p">},</span>
+    <span class="s">&quot;footnotes&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">]</span>
+  <span class="p">}</span> <span class="p">],</span>
+  <span class="s">&quot;total&quot;</span> <span class="p">:</span> <span class="mi">5</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to USPS AMS Web Service&#8217;s documentation</a><ul>
+<li><a class="reference internal" href="#api-methods">API Methods</a><ul>
+<li><a class="reference internal" href="#validate">Validate</a></li>
+<li><a class="reference internal" href="#city-state">City/State</a></li>
+<li><a class="reference internal" href="#inquiry">Inquiry</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#batch-api-methods">Batch API Methods</a><ul>
+<li><a class="reference internal" href="#batch-validate">Batch Validate</a></li>
+<li><a class="reference internal" href="#batch-city-state">Batch City/State</a></li>
+<li><a class="reference internal" href="#batch-inquiry">Batch Inquiry</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="#">USPS AMS Web Service 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Ash Islam, Vincent Hueber.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>
