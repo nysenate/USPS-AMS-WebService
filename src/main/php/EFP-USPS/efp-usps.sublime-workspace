@@ -1,0 +1,847 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"json",
+				"json_encode"
+			],
+			[
+				"if",
+				"if	if …"
+			],
+			[
+				"deb",
+				"debug_level_val"
+			],
+			[
+				"re",
+				"req1	require_once …"
+			],
+			[
+				"for",
+				"for	for …"
+			],
+			[
+				"glo",
+				"global"
+			],
+			[
+				"ran",
+				"range_end"
+			],
+			[
+				"errors",
+				"Errors"
+			],
+			[
+				"strto",
+				"strtolower"
+			],
+			[
+				"uns",
+				"unset"
+			],
+			[
+				"VAR",
+				"var_dump"
+			],
+			[
+				"activ",
+				"activity_id"
+			],
+			[
+				"activity",
+				"activityId"
+			],
+			[
+				"de",
+				"deleted"
+			],
+			[
+				"con",
+				"console"
+			],
+			[
+				"messa",
+				"messageId"
+			],
+			[
+				"pad",
+				"padding-right"
+			],
+			[
+				"assign",
+				"assign-popup"
+			],
+			[
+				"preg",
+				"preg_match_all"
+			],
+			[
+				"int",
+				"intval"
+			],
+			[
+				"strip",
+				"strip_tags"
+			],
+			[
+				"ass",
+				"assigned"
+			],
+			[
+				"add",
+				"add_email"
+			],
+			[
+				"emt",
+				"empty"
+			],
+			[
+				"padd",
+				"padding-left"
+			],
+			[
+				"pare",
+				"parent_list"
+			],
+			[
+				"pre",
+				"prepend"
+			],
+			[
+				"current",
+				"current_tree"
+			],
+			[
+				"data",
+				"dataType"
+			],
+			[
+				"back",
+				"background-image"
+			],
+			[
+				"isN",
+				"is_numeric"
+			],
+			[
+				"ent",
+				"entityTable"
+			],
+			[
+				"prin",
+				"print_r"
+			],
+			[
+				"bac",
+				"background-color"
+			],
+			[
+				"marg",
+				"margin-bottom"
+			],
+			[
+				"fo",
+				"fon	CSS - font: 1em/1.5 sans-serif;"
+			],
+			[
+				"error",
+				"error"
+			],
+			[
+				"ma",
+				"margin-left"
+			],
+			[
+				"font-",
+				"font-weight"
+			],
+			[
+				"font",
+				"font-weight"
+			],
+			[
+				"wr",
+				"wra	CSS - word-wrap"
+			],
+			[
+				"clear",
+				"clear_button"
+			],
+			[
+				"abs",
+				"absolute"
+			],
+			[
+				"mar",
+				"margin"
+			],
+			[
+				"rem",
+				"removeClass"
+			],
+			[
+				"field",
+				"fieldset"
+			],
+			[
+				"Iss",
+				"issueCode"
+			],
+			[
+				"ex",
+				"exit"
+			],
+			[
+				"html",
+				"htmlspecialchars_decode"
+			],
+			[
+				"upload",
+				"uploadInbox"
+			],
+			[
+				"text",
+				"text-align"
+			],
+			[
+				"text-",
+				"text-indent"
+			],
+			[
+				"fon",
+				"font-weight"
+			],
+			[
+				"fun",
+				"fun	Function"
+			],
+			[
+				"backr",
+				"background"
+			],
+			[
+				"last",
+				"last_name"
+			],
+			[
+				"tex",
+				"tex	CSS - text-shadow: ;"
+			],
+			[
+				"wid",
+				"width"
+			],
+			[
+				"var",
+				"var_dump"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "efp-update.php",
+			"settings":
+			{
+				"buffer_size": 2800,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "lib/utils.php",
+			"settings":
+			{
+				"buffer_size": 2871,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "efp-usps.ini",
+			"settings":
+			{
+				"buffer_size": 1027,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/CoffeeScript/CoffeeScript.sublime-build",
+	"command_palette":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 176.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": true,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/stefan/Sites/EFP-USPS/utils/utils.php",
+		"/home/stefan/Sites/tracker/tracker-wip/tmp/api.php",
+		"/home/stefan/Sites/tracker/tracker-wip/tmp/admin.php",
+		"/home/stefan/Sites/tracker/tracker-wip/tmp/index.php",
+		"/home/stefan/Sites/weatherscraper/NOAA_weather.php",
+		"/home/stefan/Sites/EFP-USPS/usps_epf_restapi_guide.pdf",
+		"/home/stefan/Sites/Bluebird-Analytics/reports/definitions.sql",
+		"/home/stefan/Sites/Bluebird-Analytics/reports/ajax_rest.csv",
+		"/home/stefan/Sites/Bluebird-Analytics/scripts/imapper usage query.sql",
+		"/home/stefan/Sites/Bluebird-Analytics/lib/utils.php",
+		"/home/stefan/Sites/Bluebird-Analytics/reports/contact_view.csv",
+		"/home/stefan/Desktop/intern overview",
+		"/home/stefan/Sites/Bluebird-Analytics/reports/urllist.txt",
+		"/home/stefan/Desktop/unknown.csv",
+		"/home/stefan/Sites/Bluebird-Analytics/locations.csv",
+		"/home/stefan/Sites/Bluebird-Analytics/resources/schema.sql",
+		"/home/stefan/Sites/Bluebird-Analytics/scripts/mysql_cron.php",
+		"/home/stefan/Sites/Bluebird-Analytics/public/layout.php",
+		"/home/stefan/Sites/Bluebird-Analytics/public/index.php",
+		"/home/stefan/Sites/Bluebird-Analytics/public/static/vendor/bootstrap-daterangepicker-1.3.7/daterangepicker.js",
+		"/home/stefan/Sites/Bluebird-Analytics/README.md",
+		"/home/stefan/Sites/Bluebird-Analytics/public/static/vendor/bootstrap-3.1.0/bootstrap.css",
+		"/home/stefan/Sites/Bluebird-Analytics/public/static/vendor/jquery.cookie-1.4.1.js",
+		"/home/stefan/Sites/Bluebird-CRM/bluebird.cfg",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/php/CRM/NYSS/BAO/Log.php",
+		"/home/stefan/Dropbox/placesToVist.csv",
+		"/home/stefan/Sites/imap-contact-search.md",
+		"/home/stefan/Sites/Bluebird-CRM/modules/nyss_imapper/nyss_imapper.xml",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/scripts/processMailboxes.php",
+		"/home/stefan/Sites/Bluebird-CRM/modules/civicrm/CRM/Contact/StateMachine/Search.php",
+		"/home/stefan/Sites/Bluebird-DB/contactSearchCustom.sql",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/templates/CRM/Contact/Page/View/Summary.extra.tpl",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/templates/CRM/IMAP/Page/Mapper.tpl",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/core/CRM/Contact/BAO/SearchCustom.php",
+		"/home/stefan/Sites/Bluebird-DB/contactSearchCustom.txt",
+		"/home/stefan/Sites/Bluebird-CRM/modules/nyss_dashboards/nyss_dashboards.xml",
+		"/home/stefan/Sites/Moodle/legethics/report/nys/results.php",
+		"/home/stefan/Desktop/release notes 1.5.3",
+		"/home/stefan/Sites/Bluebird-CRM/scripts/v153.sh",
+		"/home/stefan/Sites/Bluebird-CRM/modules/civicrm/CRM/Case/Form/Activity/ChangeCaseStartDate.php",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/php/CRM/Activity/BAO/Activity.php",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/php/CRM/Case/BAO/Case.php",
+		"/home/stefan/Sites/Bluebird-CRM/drupal/authorize.php",
+		"/home/stefan/Sites/Bluebird-CRM/modules/apachesolr/Apache_Solr_Document.php",
+		"/home/stefan/Sites/Bluebird-CRM/modules/nyss_imapper/nyss_imapper_2.js",
+		"/home/stefan/Desktop/testnumbers.txt",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/scripts/addFirstNames.php",
+		"/home/stefan/.xchat2/xchatlogs/FreeNode-#nyssbb.log",
+		"/home/stefan/Desktop/names_final/dmv_output.txt",
+		"/home/stefan/Sites/Bluebird-CRM/modules/nyss_dedupe/source/firstNames_DMV_SS_BLUEBIRD.txt",
+		"/home/stefan/Desktop/first_name_groups/bb_output.txt",
+		"/home/stefan/Desktop/names_final/firstNames_DMV_SS_BLUEBIRD.txt",
+		"/home/stefan/Desktop/DMV_count.txt",
+		"/home/stefan/Desktop/ss-firstnames/ss/ss_output.txt",
+		"/home/stefan/Desktop/first_name_groups/saland.tsv",
+		"/home/stefan/Sites/Bluebird-CRM/modules/civicrm/CRM/Core/Transaction.php",
+		"/home/stefan/Desktop/names_final/DMVSorted.txt",
+		"/home/stefan/Desktop/names_final/BluebirdSorted.txt",
+		"/home/stefan/Desktop/names_final/SocialSecuriySorted.txt",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/scripts/Redistricting.php",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/scripts/signup_reports/nysenate_api/deprecated/Form.php",
+		"/home/stefan/Sites/Bluebird-CRM/modules/nyss_dedupe/load_suffixes.py",
+		"/home/stefan/Sites/Bluebird-CRM/modules/nyss_dedupe/load_nicknames.py",
+		"/home/stefan/Sites/Bluebird-CRM/modules/nyss_dedupe/fn_group_update.sql",
+		"/home/stefan/Sites/Bluebird-CRM/themes/Bluebird/nyss_skin/tags/tags.css",
+		"/home/stefan/Sites/Bluebird-CRM/modules/civicrm/CRM/Contact/BAO/Contact/Utils.php",
+		"/home/stefan/Desktop/ss-firstnames/arrays.php",
+		"/home/stefan/Desktop/namelib.php",
+		"/home/stefan/Desktop/ss-firstnames/all_array.txt",
+		"/home/stefan/Desktop/ss-firstnames/common.txt",
+		"/home/stefan/Desktop/ss-firstnames/common_array.txt",
+		"/home/stefan/Desktop/ss-firstnames/all_sorted.txt",
+		"/home/stefan/Desktop/ss-firstnames/all.txt",
+		"/tmp/names.csv",
+		"/home/stefan/Desktop/CSV_Database_of_First_Names.csv",
+		"/home/stefan/Desktop/fn-every5years-1910-2010.txt",
+		"/home/stefan/Desktop/CSV_Database_of_Last_Names.csv",
+		"/home/stefan/Sites/Bluebird-CRM/modules/nyss_imapper/nyss_imapper.module",
+		"/home/stefan/Sites/Bluebird-CRM/includes/file.inc",
+		"/home/stefan/Sites/Bluebird-CRM/drupal/themes/garland/fix-ie.css",
+		"/home/stefan/Desktop/imapper_2.0.js",
+		"/home/stefan/Sites/Bluebird-CRM/drupal/misc/ui/jquery.ui.theme.css",
+		"/home/stefan/Sites/Bluebird-CRM/scripts/Old/v140b.sh",
+		"/home/stefan/Downloads/wordlists/random/asphistory_WordList.txt",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/scripts/updateAddresses2.php",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/php/CRM/Contact/Form/Task/ExportPrintProduction.php",
+		"/home/stefan/Sites/Bluebird-CRM/themes/Bluebird/scripts/bbtree.js",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/php/CRM/IMAP/Page/Activities.php",
+		"/home/stefan/Sites/mapping/WigleWifi_20140318144310.csv",
+		"/home/stefan/Sites/mapping/backup-1395166705709.sqlite",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/templates/CRM/IMAP/Page/Reports.tpl",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/templates/CRM/IMAP/Page/Activities.tpl",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/php/CRM/Admin/Page/AJAX.php",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/templates/CRM/common/Tag.tpl",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/php/CRM/Utils/MessageBodyParser.php",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/core/CRM/Admin/Page/AJAX.php",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/php/CRM/Tag/AJAX.php",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/php/CRM/Core/Form/Tag.php",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/templates/CRM/Contact/Form/Edit/TagsAndGroups.tpl",
+		"/home/stefan/Sites/Bluebird-CRM/themes/Bluebird/scripts/prototypes/current.php",
+		"/home/stefan/Sites/Bluebird-CRM/modules/nyss_io/nyss_io.module",
+		"/home/stefan/Sites/Bluebird-CRM/modules/civicrm/css/civicrm.css",
+		"/home/stefan/Sites/Bluebird-CRM/themes/Bluebird/scripts/message-manager.js",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/core/api/v3/MailingEventSubscribe.php",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/core/CRM/Core/ManagedEntities.php",
+		"/home/stefan/Sites/Bluebird-CRM/includes/graph.inc",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/templates/CRM/Admin/Page/Tag.tpl",
+		"/home/stefan/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/templates/CRM/Tag/Form/Tag.tpl",
+		"/home/stefan/Sites/Bluebird-CRM/modules/nyss_civihooks/nyss_civihooks.module",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/templates/CRM/Contact/Page/View/Tag.tpl",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/php/CRM/Admin/Page/Tag.php",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/php/CRM/Admin/Form/Tag.php",
+		"/home/stefan/Sites/Bluebird-CRM/modules/nyss_imapper/tagtree.js",
+		"/home/stefan/Sites/Bluebird-CRM/modules/nyss_imapper/nyss_imapper.css",
+		"/home/stefan/Sites/Bluebird-CRM/modules/civicrm/templates/CRM/Form/validate.tpl",
+		"/home/stefan/Sites/Bluebird-CRM/analytics/public/layout.php",
+		"/home/stefan/Sites/Bluebird-CRM/analytics/public/index.php",
+		"/home/stefan/Sites/Bluebird-CRM/analytics/public/.htaccess",
+		"/home/stefan/Sites/Bluebird-CRM/analytics/public/css/sb-admin.css",
+		"/home/stefan/Sites/Bluebird-CRM/analytics/public/js/app.js",
+		"/home/stefan/Sites/Bluebird-CRM/modules/civicrm/packages/jquery/plugins/DataTables/media/js/jquery.dataTables.js",
+		"/home/stefan/Sites/Bluebird-CRM/civicrm/custom/templates/CRM/common/jquery.files.tpl",
+		"/home/stefan/Sites/Bluebird-CRM/modules/civicrm/packages/jquery/plugins/DataTables/extras/FixedHeader/index.html",
+		"/home/stefan/Desktop/moodle notes",
+		"/home/stefan/Sites/Bluebird-CRM/analytics/public/ajax.php",
+		"/home/stefan/Sites/Bluebird-CRM/analytics/analytics.ini",
+		"/home/stefan/Sites/Bluebird-CRM/.gitignore"
+	],
+	"find":
+	{
+		"height": 46.0
+	},
+	"find_in_files":
+	{
+		"height": 104.0,
+		"where_history":
+		[
+			"/home/stefan/Sites/Bluebird-CRM",
+			"/home/stefan/Sites/Bluebird-CRM/scripts/Old",
+			"/home/stefan/Sites/Bluebird-CRM",
+			"/home/stefan/Sites/Bluebird-CRM/themes/Bluebird/images/icons",
+			"/home/stefan/Sites/Bluebird-CRM",
+			"/home/stefan/Sites/Bluebird-CRM/civicrm",
+			"/home/stefan/Sites/Bluebird-CRM/scripts"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"$list",
+			"key",
+			"count",
+			"code",
+			"east",
+			"$List",
+			"$list",
+			"$List",
+			"Login",
+			"login",
+			"]",
+			"[",
+			":.*",
+			"result",
+			"test",
+			"$curl",
+			"$online",
+			"$online ",
+			"online",
+			"var_dum",
+			"CURL",
+			"curl",
+			"ch",
+			"INFO",
+			"WARN",
+			" ",
+			"<",
+			"g_debug_level",
+			" = 0;\nconst ",
+			"fnName",
+			"###",
+			"REport",
+			"###",
+			"Login",
+			"###",
+			"LDAP",
+			"auth ",
+			"ldap",
+			"authorization",
+			"drupal_role",
+			"authorization",
+			"/admin/",
+			"sample data",
+			"###",
+			"/civicrm/case/report/print",
+			"print",
+			"Print",
+			"print",
+			"Print",
+			"print",
+			"Print",
+			"print",
+			"Print",
+			"print",
+			"Print",
+			"print",
+			"Print",
+			"print",
+			"Print",
+			"print",
+			",/civicrm/case/report/print",
+			"/civicrm/case/report/print",
+			"/civicrm/report/instance/",
+			"tag/",
+			"tag/tre",
+			"tag/tree",
+			"/civicrm/profile/view",
+			"Bluebird User",
+			"### , 0 , read ,/civicrm/case/report/print&",
+			"### , 0 , read ,/admin/reports/event/",
+			"/admin/reports/",
+			"### , 0 , delete ,(/user/[0-9]+/delete)",
+			"### , 0 , read ,(/user/[0-9]+/cancel)",
+			"/user/,",
+			"### , 0 , read ,(/user/[0-9]+/cancel)",
+			"### , 0 , .* ,(/user/[0-9]+/cancel$)",
+			"### , 0 , read ,(/user/[0-9]+/cancel$)",
+			"### , 0 , read ,(/user/[0-9]+/$)",
+			"### , 0 , update ,(/user/[0-9]+/edit)",
+			"### , 0 , read ,(/admin/people/)",
+			"### , 0 , read ,(/user/[0-9]+/cancel)",
+			"### , 0 , update ,(/user/[0-9]+/cancel)",
+			"### , 0 , read ,(/user/[0-9]+/$)",
+			"### , 0 , update ,(/user/[0-9]+/$)",
+			"### , 0 , update ,(/user/[0-9]+/edit)",
+			"/user/[0-9]+/edit",
+			"[0-9]+",
+			"\\/user\\/[0-9]+",
+			"/user/[0-9]+",
+			"/user/[0-9]+/edit",
+			"/user/.*/edit",
+			"/user/84/edit",
+			"/import",
+			"importData",
+			"CRM_Import_DataSource_CSV",
+			"Import",
+			"import",
+			"### \\(, 0 , read ,/civicrm/case/report/print\\)",
+			"### (, 0 , read ,/civicrm/case/report/print)",
+			"### , 0 , read ,/civicrm/re",
+			"\\(\\#\\#\\#\\)",
+			"\\(\\#\\#\\#\\).*",
+			"\\(###\\).*",
+			"\\(###\\).*/civicrm/case/report/print",
+			"/civicrm/case/report/print",
+			"/civicrm/report/",
+			"dashlet",
+			"search",
+			"contact",
+			"changelog",
+			"dashboard",
+			"@@@",
+			".*action=create.*\\n",
+			".*return=display_name.*\\n",
+			".*getContactList.*",
+			"getContactList",
+			"^//",
+			", 123 ,",
+			"123",
+			"### , 123 , @@@ ,",
+			"### , 123 , @@@ ,/user/[0-9]+/delete",
+			"### , 123 , @@@ ,/civicrm/",
+			"### , 123 , @@@ ,/civicrm/dashlet",
+			"### , 123 , @@@ ,/civicrm/mailing/",
+			"### , 123 , @@@ ,/civicrm/mailing",
+			"### , 123 , @@@ ,/civicrm/mailing/optout",
+			"### , 123 , @@@ ,/civicrm/mailing/",
+			"### , 123 , @@@ ,/civicrm/mailing/unsubscribe"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"=>$abc,",
+			"",
+			"Case Report Print, 0 , read ,/civicrm/case/report/print&",
+			"Admin Report, 0 , read ,/admin/reports/event/",
+			"Bluebird User Delete , 0 , delete ,\\1",
+			"Bluebird User Confirm Delete , 0 , read ,\\1",
+			"Bluebird User Confirm Delete , 0 , delete ,\\1",
+			"Bluebird User View , 0 , read ,\\1",
+			"Bluebird User Update , 0 , update ,\\1",
+			"Bluebird User Cancel , 0 , update ,\\1",
+			"Bluebird User View , 0 , update ,\\1",
+			"Bluebird User Edit , 0 , update ,\\1",
+			"#",
+			", 0 ,",
+			"View Mailing , 0 , read ,/civicrm/mailing/",
+			"Unsubscribe from mailing , 0 , update ,/civicrm/mailing/optout",
+			"Unsubscribe from mailing , 0 , update ,/civicrm/mailing/unsubscribe",
+			"View Mailing , 0 , read ,/civicrm/mailing/",
+			"MailMemoReadBodyContent , 0 , read ,/0",
+			"0 , update ,\\1",
+			"0 , read ,/civicrm/case/report/print",
+			"0 , read ,/user/\\1/",
+			"0 , read ,/user/\\1/cancel",
+			"0 , read ,/civicrm/admin/",
+			"0 , read ,/admin/reports",
+			"0 , read ,/civicrm/report",
+			"0 , read ,/user/\\1/edit",
+			"0 , update ,/user/\\1/edit",
+			"### , 123 ,",
+			"### , @@@ ,",
+			"###, @@@, ",
+			"###,@@@,",
+			"",
+			",",
+			"",
+			"\\n",
+			",",
+			"",
+			"(518) ",
+			"(518)",
+			"",
+			"\",\"",
+			",",
+			"",
+			"  ",
+			"",
+			"] = $row[''];",
+			"  ",
+			"searchTimer",
+			"\"parent\": 292,",
+			"\"parent\": 292"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "efp-update.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2800,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								182,
+								182
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 840.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "lib/utils.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2871,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								753,
+								753
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 588.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "efp-usps.ini",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1027,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								952,
+								952
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 263.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 36.0
+	},
+	"input":
+	{
+		"height": 40.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 257.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "efp-usps.sublime-project",
+	"replace":
+	{
+		"height": 84.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"messagebo",
+				"civicrm/custom/php/CRM/Utils/MessageBodyParser.php"
+			],
+			[
+				"process",
+				"civicrm/scripts/processMailboxes.php"
+			],
+			[
+				"proces",
+				"civicrm/scripts/processMailboxes.php"
+			],
+			[
+				"tokeninput",
+				"civicrm/core/packages/jquery/plugins/jquery.tokeninput.js"
+			],
+			[
+				"autocom",
+				"civicrm/core/js/AutoComplete.js"
+			],
+			[
+				"datatables",
+				"civicrm/core/packages/jquery/plugins/DataTables/media/js/jquery.dataTables.js"
+			],
+			[
+				"bluebird_conf",
+				"civicrm/scripts/bluebird_config.php"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 375.0,
+		"selected_items":
+		[
+		],
+		"width": 633.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 316.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
