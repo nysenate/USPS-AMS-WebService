@@ -1,2 +1,3 @@
-efp_config.ini
+epf_config.ini
 *.sublime-project
+*.sublime-workspace
