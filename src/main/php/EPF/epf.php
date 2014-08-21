@@ -8,8 +8,9 @@
  * Ignore file checks and download most recent file, overwriting existing
  * epf.php --force
  *
- * For quite output for anything less then WARN
+ * For quiet output, hide anything less then a warning (WARN)
  * epf.php -q
+ * Also works with force
  * epf.php --force -q
  *
  */
@@ -121,7 +122,7 @@ foreach ($productFiles as $key => $value) {
     log_(WARN, "Latest File exits in system at: ".$headers['fileoutput']);
     exit();
   }else{
-    log_(INFO, "Downloading Newest file: ".$headers['filepath']);
+    log_(INFO, "Downloading most recent file: ".$headers['filepath']);
     log_(INFO, "File will be placed in: ".$headers['fileoutput']);
   }
 

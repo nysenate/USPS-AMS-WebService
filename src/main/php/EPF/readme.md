@@ -40,7 +40,7 @@ Server is online, Version v1.05.1
 Login was Successful
 Getting List for FILE Code:AMS, ID:DVD_COMM
 List was Successful, Found 2 Items
-Downloading Newest file: /epf/pepf/a00shared/epfdata/ams/20140915/dvd_comm.tar
+Downloading most recent file: /epf/pepf/a00shared/epfdata/ams/20140915/dvd_comm.tar
 File will be placed in: /data/downloads/20140915_dvd_comm.tar
 Updated File status to 'Started'
 Updated File status to 'Completed'
