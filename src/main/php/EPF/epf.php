@@ -8,7 +8,7 @@
  * Ignore file checks and download most recent file, overwriting existing
  * epf.php --force
  *
- * For quite output
+ * For quite output for anything less then WARN
  * epf.php -q
  * epf.php --force -q
  *
@@ -27,10 +27,10 @@ $longopts  = array("force");
 $cli = getopt("fq",$longopts);
 $action = (isset($cli['f'])|| isset($cli['force'])) ? "Clear" : "Update" ;
 # Set log vars
-$g_log_level = (isset($cli['q'])) ? 2 : get_log_level($config['debug']);
+$g_log_level = (isset($cli['q'])) ? intval(2) : intval(get_log_level($config['debug']));
 $g_log_file = get_log_file($config['debug']);
 
-# reformat the config products
+# reformat the files listed in the config
 foreach ($config['file']['code'] as $key => $value) {
   $productFiles[$key]['code'] = $value;
 }
@@ -105,13 +105,14 @@ foreach ($productFiles as $key => $value) {
     exit(1);
   }
 
-  // we only care about the last file
+  // we only care about the most recent file
   $download = $filelist[$filecount-1];
-  // set some headers to save & access the file
+
+  // generate a local filename for download
   $path = explode('/', $download['filepath']);
   $filename = $path[6].'_'.$path[7];
 
-
+  // set some headers to save & access the file
   $headers = array(
     "filepath"  => $download['filepath'], // fileid from file list required
     "fileoutput"  => $config['destination']['download_path'].'/'.$filename // fileid from file list required
