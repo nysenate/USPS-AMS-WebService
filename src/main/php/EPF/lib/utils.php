@@ -20,12 +20,12 @@ function load_config()
   }
   // var_dump($config);
 
-  // foreach(array('database','input') as $section) {
-  //   if (!array_key_exists($section, $config)) {
-  //     log_(500,"Invalid config file. '$section' section required");
-  //     return FALSE;
-  //   }
-  // }
+  foreach(array('credentials','file','destination') as $section) {
+    if (!array_key_exists($section, $config)) {
+      log_(ERROR,"Invalid config file. '$section' section required");
+      return FALSE;
+    }
+  }
 
   return $config;
 }
