@@ -7,7 +7,7 @@
     <groupId>gov.nysenate</groupId>
     <artifactId>USPS-AMS-WebService</artifactId>
     <packaging>war</packaging>
-    <version>0.1</version>
+    <version>1.0</version>
     <name>USPS-AMS-WebService</name>
 
     <build>
