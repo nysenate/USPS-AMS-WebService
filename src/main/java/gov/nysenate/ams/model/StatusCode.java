@@ -16,6 +16,9 @@ public enum StatusCode
     INSUFFICIENT_ZIP9(3,
         "The API method requires a Zip9 code"),
 
+    UNKNOWN_ERROR(-1, "There was an unexpected error while handling your request. This may be a result of " +
+            "an expired license and/or data. Please notify Senate Tech if you received this error."),
+
     /* AMS specific status codes */
     INVALID_DUAL_ADDRESS (10,
         "Information presented could not be processed in current format. Corrective action is needed. Be sure that " +
