@@ -28,6 +28,9 @@ public class BaseAddressInquiryResponse
                 }
                 this.status = new StatusCodeView(result.getStatusCode());
             }
+            else {
+                this.status = new StatusCodeView(StatusCode.UNKNOWN_ERROR);
+            }
             if (uspsAddress != null) {
                 this.address = new AddressView(uspsAddress.getValidatedAddress(), initCaps);
             }
