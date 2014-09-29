@@ -17,19 +17,33 @@
 
 // required config parsing
 require(realpath(dirname(__FILE__).'/lib/utils.php'));
+
+# CLI options
+$longopts = array("force", "quiet");
+$cli = getopt("fq", $longopts);
+
+$action = (isset($cli['f']) || isset($cli['force'])) ? "Clear" : "Update" ;
+
+# Set log vars
+$g_log_level = null;
+$g_log_file = null;
+
+if (isset($cli['q']) || isset($cli['quiet'])) {
+  $g_log_level = WARN;
+}
+
 $config = load_config();
 if ($config === false) {
+  echo "Exiting\n";
   exit(1);
 }
 
-
-# CLI options
-$longopts  = array("force");
-$cli = getopt("fq",$longopts);
-$action = (isset($cli['f'])|| isset($cli['force'])) ? "Clear" : "Update" ;
-# Set log vars
-$g_log_level = (isset($cli['q'])) ? intval(2) : intval(get_log_level($config['debug']));
-$g_log_file = get_log_file($config['debug']);
+if ($g_log_level === null && isset($config['debug']['level'])) {
+  $g_log_level = get_log_level($config['debug']['level']);
+}
+if ($g_log_file === null && isset($config['debug']['file'])) {
+  $g_log_file = get_log_file($config['debug']['file']);
+}
 
 # reformat the files listed in the config
 foreach ($config['file']['code'] as $key => $value) {
@@ -40,44 +54,28 @@ foreach ($config['file']['id'] as $key => $value) {
 }
 
 # Test to see if the Server is online before we start
-$test = curl('https://epfws.usps.gov/ws/resources/epf/version');
-if ($test['body']['response'] === "success" &&  $test['meta']['http_code'] === 200) {
+$test = send_request('epf/version');
+if ($test['body']['response'] === 'success' &&  $test['meta']['http_code'] === 200) {
   log_(INFO, "Server is online, Version ".$test['body']['version']);
-}else{
-  log_(ERROR, "Server is offline (ERROR ".$test['meta']['http_code']."), Exiting Script");
+}
+else {
+  log_(ERROR, "Server is offline (ERROR ".$test['meta']['http_code']."); exiting script");
   exit(1);
 }
 
-/**
- * Login to the site and retrieve logonkey & tokenkey
- * @return [array]    login credentials
- */
-function login()
-{
-  global $config;
-  $loginpost = array(
-    'login'=>$config['credentials']['login'],
-    'pword'=>$config['credentials']['pword']
-  );
-  $login = curl('https://epfws.usps.gov/ws/resources/epf/login',$loginpost);
-  if ($login['body']['response'] === "success" && $login['meta']['http_code'] === 200) {
-    log_(INFO, "Login was Successful");
-    return array('logonkey'=>$login['body']['logonkey'],'tokenkey'=>$login['body']['tokenkey']);
-  }else{
-    log_(ERROR, "Login Request Failed");
-    var_dump($login);
-    exit(1);
-  }
+$login = login($config);
+if (!$login) {
+  log_(ERROR, "Unable to authenticate to the server");
+  exit(1);
 }
 
-$login = login();
 $logonkey = $login['logonkey'];
 $tokenkey = $login['tokenkey'];
 
 // loop through the config, allowing several productFiles
 foreach ($productFiles as $key => $value) {
   log_(INFO, "Getting List for FILE Code:".$value['code'].", ID:".$value['id']);
-  $listpost =   array(
+  $listpost = array(
     "logonkey"=>$logonkey, // epf logon key required
     "tokenkey"=>$tokenkey, // epf security token required
     "productcode"=>$value['code'], // epf product code required
@@ -85,23 +83,27 @@ foreach ($productFiles as $key => $value) {
     "status"=> "NSXC", // filter by download status - optional
     // "fulfilled"=>$abc, // filter by fulfilled date - optional
   );
-  $list[$key] = curl('https://epfws.usps.gov/ws/resources/download/list',$listpost);
-  if ($list[$key]['body']['response'] === "success" && $list[$key]['meta']['http_code'] === 200 && (!empty($list[$key]['body']['fileList']))) {
+
+  $list[$key] = send_request('download/list', $listpost);
+  if ($list[$key]['body']['response'] === 'success' && $list[$key]['meta']['http_code'] === 200 && !empty($list[$key]['body']['fileList'])) {
     $logonkey = $list[$key]['body']['logonkey'];
     $tokenkey = $list[$key]['body']['tokenkey'];
     $filelist = $list[$key]['body']['fileList'];
     $filecount =count($list[$key]['body']['fileList']);
     log_(INFO, "List was Successful, Found ".$filecount." Items");
     // var_dump($list[$key]['body']);
-  } elseif ($list[$key]['meta']['http_code'] === 403) {
+  }
+  elseif ($list[$key]['meta']['http_code'] === 403) {
     log_(WARN, "Key Expired, Logging in again");
     $login = login();
     $logonkey = $login['logonkey'];
     $tokenkey = $login['tokenkey'];
-  }elseif (empty($list[$key]['body']['fileList'])) {
+  }
+  elseif (empty($list[$key]['body']['fileList'])) {
     log_(ERROR, "List was Empty, No new files for :".$value['code'].", ID :".$value['id']." With Filter ".$Filter);
     exit(1);
-  }else{
+  }
+  else{
     log_(ERROR, "List Request Failed, Product Code :".$value['code'].", ID :".$value['id']);
     exit(1);
   }
@@ -133,12 +135,14 @@ foreach ($productFiles as $key => $value) {
     "newstatus"=> 'S', // download started
     "fileid"   => $download['fileid'] // fileid from file list required
   );
-  $status[$filename] = curl('https://epfws.usps.gov/ws/resources/download/status',$statuspost);
+
+  $status[$filename] = send_request('download/status', $statuspost);
   if ($status[$filename]['meta']['http_code'] === 200) {
     log_(INFO, "Updated File status to 'Started'");
     $logonkey = $status[$filename]['body']['logonkey'];
     $tokenkey = $status[$filename]['body']['tokenkey'];
-  } else {
+  }
+  else {
     log_(WARN, "Key Expired, Logging in again");
     $login = login();
     $logonkey = $login['logonkey'];
@@ -151,11 +155,13 @@ foreach ($productFiles as $key => $value) {
     "tokenkey"=>$tokenkey, // epf security token required
     "fileid"  =>$download['fileid'] // fileid from file list required
   );
-  $files[$filename] = curl('https://epfws.usps.gov/ws/resources/download/file',$filepost,$headers);
+
+  $files[$filename] = send_request('download/file', $filepost, $headers);
   if ($files[$filename]['meta']['http_code'] === 200) {
     $logonkey = $files[$filename]['meta']['User-Logonkey'];
     $tokenkey = $files[$filename]['meta']['User-Tokenkey'];
-  } else {
+  }
+  else {
     log_(WARN, "Key Expired, Logging in again");
     $login = login();
     $logonkey = $login['logonkey'];
@@ -169,20 +175,46 @@ foreach ($productFiles as $key => $value) {
     "newstatus"=>'C', // download completed
     "fileid"  => $download['fileid'] // fileid from file list required
   );
-  $status[$filename] = curl('https://epfws.usps.gov/ws/resources/download/status',$statuspost);
+  $status[$filename] = send_request('download/status', $statuspost);
   if ($status[$filename]['meta']['http_code'] === 200) {
     log_(INFO, "Updated File status to 'Completed'");
 
     $logonkey = $status[$filename]['body']['logonkey'];
     $tokenkey = $status[$filename]['body']['tokenkey'];
-  } else {
+  }
+  else {
     log_(WARN, "Key Expired, Logging in again");
     $login = login();
     $logonkey = $login['logonkey'];
     $tokenkey = $login['tokenkey'];
   }
   log_(INFO, "Completed FILE Code:".$value['code'].", ID:".$value['id']);
-
 }
+
+
+/**
+ * Login to the site and retrieve logonkey & tokenkey
+ * @return [array]    login credentials
+ */
+function login($cfg)
+{
+  $loginpost = array(
+    'login'=>$cfg['credentials']['login'],
+    'pword'=>$cfg['credentials']['pword']
+  );
+
+  $login = send_request('epf/login', $loginpost);
+
+  if ($login['body']['response'] === 'success' && $login['meta']['http_code'] == 200) {
+    log_(INFO, 'Login was Successful');
+    return $login['body'];
+  }
+  else {
+    log_(ERROR, "Login Request Failed");
+    var_dump($login);
+    return null;
+  }
+} // login()
+
 
 ?>
