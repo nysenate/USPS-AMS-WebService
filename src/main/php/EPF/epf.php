@@ -8,10 +8,11 @@
  * Ignore file checks and download most recent file, overwriting existing
  * epf.php --force
  *
- * For quiet output, hide anything less then a warning (WARN)
- * epf.php -q
+ * For quiet output, hide anything less than a warning (WARN)
+ * epf.php --quiet
+ *
  * Also works with force
- * epf.php --force -q
+ * epf.php --force --quiet
  *
  */
 
@@ -19,202 +20,275 @@
 require(realpath(dirname(__FILE__).'/lib/utils.php'));
 
 # CLI options
-$longopts = array("force", "quiet");
-$cli = getopt("fq", $longopts);
+$opts = getopt("fq", array("force", "quiet"));
+$force_update = false;
 
-$action = (isset($cli['f']) || isset($cli['force'])) ? "Clear" : "Update" ;
-
-# Set log vars
+# Set global vars
 $g_log_level = null;
 $g_log_file = null;
 
-if (isset($cli['q']) || isset($cli['quiet'])) {
+if (isset($opts['q']) || isset($opts['quiet'])) {
   $g_log_level = WARN;
+}
+
+if (isset($opts['f']) || isset($opts['force'])) {
+  $force_update = true;
 }
 
 $config = load_config();
 if ($config === false) {
-  echo "Exiting\n";
+  echo "Unable to load configuration file; exiting\n";
   exit(1);
 }
 
 if ($g_log_level === null && isset($config['debug']['level'])) {
-  $g_log_level = get_log_level($config['debug']['level']);
+  $lvl = $config['debug']['level'];
+  if (is_numeric($lvl)) {
+    $g_log_level = $lvl;
+  }
+  else {
+    echo "debug.level setting [$lvl] is not valid; defaulting to WARN\n";
+    $g_log_level = WARN;
+  }
 }
+
 if ($g_log_file === null && isset($config['debug']['file'])) {
   $g_log_file = get_log_file($config['debug']['file']);
 }
 
-# reformat the files listed in the config
-foreach ($config['file']['code'] as $key => $value) {
-  $productFiles[$key]['code'] = $value;
-}
-foreach ($config['file']['id'] as $key => $value) {
-  $productFiles[$key]['id'] = $value;
-}
-
-# Test to see if the Server is online before we start
-$test = send_request('epf/version');
-if ($test['body']['response'] === 'success' &&  $test['meta']['http_code'] === 200) {
-  log_(INFO, "Server is online, Version ".$test['body']['version']);
-}
-else {
-  log_(ERROR, "Server is offline (ERROR ".$test['meta']['http_code']."); exiting script");
+$output_dir = $config['output']['dir'];
+if (!file_exists($output_dir)) {
+  echo "$output_dir: Output directory not found\n";
   exit(1);
 }
 
-$login = login($config);
-if (!$login) {
+$products = $config['products'];
+if (!isset($products['product'])) {
+  log_(ERROR, "At least one USPS product must be specified in the config file\n");
+  exit(1);
+}
+else if (!is_array($products['product'])) {
+  $products['product'] = array($products['product']);
+}
+
+
+# Test to see if the server is online before we start
+$version = epf_version();
+log_(INFO, "USPS EPF server version = $version");
+
+
+$login_keys = epf_login($config);
+if (!$login_keys) {
   log_(ERROR, "Unable to authenticate to the server");
   exit(1);
 }
 
-$logonkey = $login['logonkey'];
-$tokenkey = $login['tokenkey'];
-
 // loop through the config, allowing several productFiles
-foreach ($productFiles as $key => $value) {
-  log_(INFO, "Getting List for FILE Code:".$value['code'].", ID:".$value['id']);
-  $listpost = array(
-    "logonkey"=>$logonkey, // epf logon key required
-    "tokenkey"=>$tokenkey, // epf security token required
-    "productcode"=>$value['code'], // epf product code required
-    "productid"=>$value['id'], // epf product id required
-    "status"=> "NSXC", // filter by download status - optional
-    // "fulfilled"=>$abc, // filter by fulfilled date - optional
-  );
+foreach ($products['product'] as $val) {
+  $val_parts = explode(':', $val);
+  $product = array('code' => $val_parts[0], 'id' => $val_parts[1]);
+  $filelist = epf_list($login_keys, $product);
+  $numfiles = count($filelist);
 
-  $list[$key] = send_request('download/list', $listpost);
-  if ($list[$key]['body']['response'] === 'success' && $list[$key]['meta']['http_code'] === 200 && !empty($list[$key]['body']['fileList'])) {
-    $logonkey = $list[$key]['body']['logonkey'];
-    $tokenkey = $list[$key]['body']['tokenkey'];
-    $filelist = $list[$key]['body']['fileList'];
-    $filecount =count($list[$key]['body']['fileList']);
-    log_(INFO, "List was Successful, Found ".$filecount." Items");
-    // var_dump($list[$key]['body']);
-  }
-  elseif ($list[$key]['meta']['http_code'] === 403) {
-    log_(WARN, "Key Expired, Logging in again");
-    $login = login();
-    $logonkey = $login['logonkey'];
-    $tokenkey = $login['tokenkey'];
-  }
-  elseif (empty($list[$key]['body']['fileList'])) {
-    log_(ERROR, "List was Empty, No new files for :".$value['code'].", ID :".$value['id']." With Filter ".$Filter);
-    exit(1);
-  }
-  else{
-    log_(ERROR, "List Request Failed, Product Code :".$value['code'].", ID :".$value['id']);
-    exit(1);
+  if ($numfiles < 1) {
+    log_(INFO, "No files to download for this product");
+    continue;
   }
 
   // we only care about the most recent file
-  $download = $filelist[$filecount-1];
+  $lastfile = $filelist[$numfiles - 1];
+  $lastfileid = $lastfile['fileid'];
+  $lastfilepath = $lastfile['filepath'];
+  $lastfilestatus = $lastfile['status'];
+  $lastfilefulfill = $lastfile['fulfilled'];
+
+  log_(INFO, "About to download file '$lastfilepath' (id=$lastfileid, status='$lastfilestatus', fulfilled=$lastfilefulfill)");
 
   // generate a local filename for download
-  $path = explode('/', $download['filepath']);
-  $filename = $path[6].'_'.$path[7];
+  $lastfilename = basename($lastfilepath);
+  $pathsegs = explode('/', $lastfilepath);
+  $numpathsegs = count($pathsegs);
+  $filename = $pathsegs[$numpathsegs-2].'_'.$pathsegs[$numpathsegs-1];
+  $outfile = $output_dir.DIRECTORY_SEPARATOR.$filename;
 
-  // set some headers to save & access the file
-  $headers = array(
-    "filepath"  => $download['filepath'], // fileid from file list required
-    "fileoutput"  => $config['destination']['download_path'].'/'.$filename // fileid from file list required
-  );
-  if ($action === "Update" && file_exists($headers['fileoutput'])) {
-    log_(WARN, "Latest File exits in system at: ".$headers['fileoutput']);
-    exit();
-  }else{
-    log_(INFO, "Downloading most recent file: ".$headers['filepath']);
-    log_(INFO, "File will be placed in: ".$headers['fileoutput']);
-  }
-
-  # Mark the file as started
-  $statuspost = array(
-    "logonkey" => $logonkey, // epf logon key required
-    "tokenkey" => $tokenkey, // epf security token required
-    "newstatus"=> 'S', // download started
-    "fileid"   => $download['fileid'] // fileid from file list required
-  );
-
-  $status[$filename] = send_request('download/status', $statuspost);
-  if ($status[$filename]['meta']['http_code'] === 200) {
-    log_(INFO, "Updated File status to 'Started'");
-    $logonkey = $status[$filename]['body']['logonkey'];
-    $tokenkey = $status[$filename]['body']['tokenkey'];
+  if (!$force_update && file_exists($outfile)) {
+    log_(WARN, "Download file '$lastfilepath' already exists as '$outfile'");
+    continue;
   }
   else {
-    log_(WARN, "Key Expired, Logging in again");
-    $login = login();
-    $logonkey = $login['logonkey'];
-    $tokenkey = $login['tokenkey'];
+    log_(INFO, "Downloaded file will be saved as '$outfile'");
   }
 
-  # Download the file
-  $filepost = array(
-    "logonkey"=>$logonkey, // epf logon key required
-    "tokenkey"=>$tokenkey, // epf security token required
-    "fileid"  =>$download['fileid'] // fileid from file list required
-  );
-
-  $files[$filename] = send_request('download/file', $filepost, $headers);
-  if ($files[$filename]['meta']['http_code'] === 200) {
-    $logonkey = $files[$filename]['meta']['User-Logonkey'];
-    $tokenkey = $files[$filename]['meta']['User-Tokenkey'];
+  if (!epf_status($login_keys, $lastfileid, 'S')) {
+    continue;
+  }
+  $rc = epf_download($login_keys, $lastfileid, $lastfilepath, $outfile);
+  if ($rc) {
+    epf_status($login_keys, $lastfileid, 'C');
+    log_(INFO, "Completed file download for product code=".$product['code'].", id=".$product['id']);
   }
   else {
-    log_(WARN, "Key Expired, Logging in again");
-    $login = login();
-    $logonkey = $login['logonkey'];
-    $tokenkey = $login['tokenkey'];
+    epf_status($login_keys, $lastfileid, 'X');
+    log_(ERROR, "Download failed");
   }
-
-  # Mark the file as downloaded
-  $statuspost = array(
-    "logonkey"=> $logonkey, // epf logon key required
-    "tokenkey"=> $tokenkey, // epf security token required
-    "newstatus"=>'C', // download completed
-    "fileid"  => $download['fileid'] // fileid from file list required
-  );
-  $status[$filename] = send_request('download/status', $statuspost);
-  if ($status[$filename]['meta']['http_code'] === 200) {
-    log_(INFO, "Updated File status to 'Completed'");
-
-    $logonkey = $status[$filename]['body']['logonkey'];
-    $tokenkey = $status[$filename]['body']['tokenkey'];
-  }
-  else {
-    log_(WARN, "Key Expired, Logging in again");
-    $login = login();
-    $logonkey = $login['logonkey'];
-    $tokenkey = $login['tokenkey'];
-  }
-  log_(INFO, "Completed FILE Code:".$value['code'].", ID:".$value['id']);
 }
+
+
+function epf_resp_ok($r)
+{
+  if (isset($r['response']) && $r['response'] === 'success'
+      && isset($r['http_code']) && $r['http_code'] === 200) {
+    return true;
+  }
+  else {
+    return false;
+  }
+} // epf_resp_ok()
+
+
+function epf_version()
+{
+  $resp = send_request('epf/version');
+  if (epf_resp_ok($resp)) {
+    log_(INFO, "Server is online");
+    return $resp['version'];
+  }
+  else {
+    log_(ERROR, "Server is offline (ERROR ".$resp['meta']['http_code'].")");
+    return null;
+  }
+} // epf_version()
 
 
 /**
  * Login to the site and retrieve logonkey & tokenkey
- * @return [array]    login credentials
+ * @return [array] login credentials
  */
-function login($cfg)
+function epf_login($cfg)
 {
-  $loginpost = array(
-    'login'=>$cfg['credentials']['login'],
-    'pword'=>$cfg['credentials']['pword']
-  );
-
-  $login = send_request('epf/login', $loginpost);
-
-  if ($login['body']['response'] === 'success' && $login['meta']['http_code'] == 200) {
-    log_(INFO, 'Login was Successful');
-    return $login['body'];
-  }
-  else {
-    log_(ERROR, "Login Request Failed");
-    var_dump($login);
+  if (!isset($cfg['credentials'])) {
+    log_(ERROR, "Credentials must be specified");
     return null;
   }
-} // login()
 
+  $creds = $cfg['credentials'];
+
+  if (!isset($creds['login']) || !isset($creds['pword'])) {
+    log_(ERROR, "Both login and password must be specified");
+    return null;
+  }
+
+  $params = array(
+    'login' => $creds['login'],
+    'pword' => $creds['pword']
+  );
+
+  $resp = send_request('epf/login', $params);
+
+  if (epf_resp_ok($resp)) {
+    log_(INFO, 'Login was successful');
+    return $resp;
+  }
+  else {
+    log_(ERROR, "Login request failed");
+    var_dump($resp);
+    return null;
+  }
+} // epf_login()
+
+
+function epf_list(&$keys, $product)
+{
+  $pcode = $product['code'];
+  $pid = $product['id'];
+  log_(INFO, "Getting file list for product code=$pcode, id=$pid");
+  $params = array(
+    'logonkey' => $keys['logonkey'],
+    'tokenkey' => $keys['tokenkey'],
+    'productcode' => $pcode,
+    'productid' => $pid,
+    'status' => "NSXC",    // filter by download status - optional
+    // "fulfilled"=>$abc,  // filter by fulfilled date - optional
+  );
+
+  $resp = send_request('download/list', $params);
+
+  if (epf_resp_ok($resp)) {
+    $keys['logonkey'] = $resp['logonkey'];
+    $keys['tokenkey'] = $resp['tokenkey'];
+    if (!empty($resp['fileList'])) {
+      log_(INFO, "Retrieved file list for product code=$pcode, id=$pid");
+      return $resp['fileList'];
+    }
+    else {
+      log_(WARN, "File list was empty; no new files for product");
+      return null;
+    }
+  }
+  else {
+    log_(ERROR, "Unable to retrieve file list for product code=$pcode, id=$pid");
+    return null;
+  }
+} // epf_list()
+
+
+function epf_status(&$keys, $fileid, $status)
+{
+  log_(DEBUG, "Setting status for file $fileid to '$status'");
+
+  $params = array(
+    'logonkey' => $keys['logonkey'],
+    'tokenkey' => $keys['tokenkey'],
+    'newstatus' => $status,
+    'fileid' => $fileid
+  );
+
+  $resp = send_request('download/status', $params);
+
+  if (epf_resp_ok($resp)) {
+    $keys['logonkey'] = $resp['logonkey'];
+    $keys['tokenkey'] = $resp['tokenkey'];
+    log_(INFO, "Updated file status for file $fileid to '$status'");
+    return true;
+  }
+  else {
+    log_(WARN, "Unable to update status to '$status' for file $fileid");
+    return false;
+  }
+} // epf_status()
+
+
+function epf_download(&$keys, $fileid, $filepath, $outfile)
+{
+  log_(INFO, "About to download file '$filepath' (id=$fileid)");
+
+  // set some headers to save & access the file
+  $headers = array(
+    'filepath'  => $filepath,
+    'fileoutput' => $outfile
+  );
+
+  # Download the file
+  $params = array(
+    'logonkey' => $keys['logonkey'],
+    'tokenkey' => $keys['tokenkey'],
+    'fileid' => $fileid
+  );
+
+  $resp = send_request('download/file', $params, $headers);
+
+  // For downloaded files, there is no response body, since the response
+  // is the actual file being saved to disk.
+  if ($resp['http_code'] == 200) {
+    $keys['logonkey'] = $resp['logonkey'];
+    $keys['tokenkey'] = $resp['tokenkey'];
+    log_(INFO, "Downloaded file '$filepath' (id=$fileid)");
+    return true;
+  }
+  else {
+    log_(WARN, "Unable to download file '$filepath' (id=$fileid)");
+    return false;
+  }
+} // epf_download()
 
 ?>
