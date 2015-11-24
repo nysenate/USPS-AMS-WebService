@@ -6,7 +6,7 @@ A Web Service that exposes the functionality of the USPS Address Matching System
 Prerequisites
 -------------
 
-1. Linux, JDK 7, Tomcat 7, Maven, GCC Compiler.
+1. Linux, JDK 8, Tomcat 8, Maven, GCC Compiler.
 
 1.  Obtain the five data folders from the USPS AMS disk
     * ams_comm
