@@ -16,9 +16,9 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/vendor/jquery-ui-1.11.4.custom.css">
     <script>window.contextPath = "${pageContext.request.contextPath}";</script>
-    <script src="${pageContext.request.contextPath}/js/vendor/jquery-1.12.1.min.js" type="text/javascript"></script>
+    <script src="${pageContext.request.contextPath}/js/vendor/jquery-1.12.2.min.js" type="text/javascript"></script>
     <script src="${pageContext.request.contextPath}/js/vendor/jquery-ui-1.11.4.custom.min.js" type="text/javascript"></script>
-    <script>window.jQuery || document.write('<script src="${pageContext.request.contextPath}/js/vendor/jquery-1.12.1.min.js"><\/script>')</script>
+    <script>window.jQuery || document.write('<script src="${pageContext.request.contextPath}/js/vendor/jquery-1.12.2.min.js"><\/script>')</script>
     <script src="${pageContext.request.contextPath}/js/vendor/modernizr-2.6.2.min.js" type="text/javascript"></script>
     <script src="${pageContext.request.contextPath}/js/vendor/angular-1.2.29.min.js" type="text/javascript"></script>
     <script src="${pageContext.request.contextPath}/js/app.js" type="text/javascript"></script>
