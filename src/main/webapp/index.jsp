@@ -14,14 +14,14 @@
 
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/normalize.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/jquery-ui-1.10.3.custom.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/vendor/jquery-ui-1.11.4.custom.css">
     <script>window.contextPath = "${pageContext.request.contextPath}";</script>
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/vendor/jquery-ui-1.10.3.custom.min.js"></script>
-    <script>window.jQuery || document.write('<script src="${pageContext.request.contextPath}/js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
-    <script src="${pageContext.request.contextPath}/js/vendor/modernizr-2.6.2.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/app.js"></script>
+    <script src="${pageContext.request.contextPath}/js/vendor/jquery-1.12.1.min.js" type="text/javascript"></script>
+    <script src="${pageContext.request.contextPath}/js/vendor/jquery-ui-1.11.4.custom.min.js" type="text/javascript"></script>
+    <script>window.jQuery || document.write('<script src="${pageContext.request.contextPath}/js/vendor/jquery-1.12.1.min.js"><\/script>')</script>
+    <script src="${pageContext.request.contextPath}/js/vendor/modernizr-2.6.2.min.js" type="text/javascript"></script>
+    <script src="${pageContext.request.contextPath}/js/vendor/angular-1.2.29.min.js" type="text/javascript"></script>
+    <script src="${pageContext.request.contextPath}/js/app.js" type="text/javascript"></script>
 </head>
 <body>
     <!--[if lt IE 7]>

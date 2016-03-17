@@ -1,8 +1,8 @@
-/*! jQuery UI - v1.10.3 - 2013-11-01
+/*! jQuery UI - v1.11.4 - 2016-03-17
 * http://jqueryui.com
-* Includes: jquery.ui.core.css, jquery.ui.button.css, jquery.ui.theme.css
-* To view and modify this theme, visit http://jqueryui.com/themeroller/?ffDefault=Trebuchet%20MS%2CTahoma%2CVerdana%2CArial%2Csans-serif&fwDefault=bold&fsDefault=1.1em&cornerRadius=4px&bgColorHeader=f6a828&bgTextureHeader=gloss_wave&bgImgOpacityHeader=35&borderColorHeader=e78f08&fcHeader=ffffff&iconColorHeader=ffffff&bgColorContent=eeeeee&bgTextureContent=highlight_soft&bgImgOpacityContent=100&borderColorContent=dddddd&fcContent=333333&iconColorContent=222222&bgColorDefault=f6f6f6&bgTextureDefault=glass&bgImgOpacityDefault=100&borderColorDefault=cccccc&fcDefault=1c94c4&iconColorDefault=ef8c08&bgColorHover=fdf5ce&bgTextureHover=glass&bgImgOpacityHover=100&borderColorHover=fbcb09&fcHover=c77405&iconColorHover=ef8c08&bgColorActive=ffffff&bgTextureActive=glass&bgImgOpacityActive=65&borderColorActive=fbd850&fcActive=eb8f00&iconColorActive=ef8c08&bgColorHighlight=ffe45c&bgTextureHighlight=highlight_soft&bgImgOpacityHighlight=75&borderColorHighlight=fed22f&fcHighlight=363636&iconColorHighlight=228ef1&bgColorError=b81900&bgTextureError=diagonals_thick&bgImgOpacityError=18&borderColorError=cd0a0a&fcError=ffffff&iconColorError=ffd27a&bgColorOverlay=666666&bgTextureOverlay=diagonals_thick&bgImgOpacityOverlay=20&opacityOverlay=50&bgColorShadow=000000&bgTextureShadow=flat&bgImgOpacityShadow=10&opacityShadow=20&thicknessShadow=5px&offsetTopShadow=-5px&offsetLeftShadow=-5px&cornerRadiusShadow=5px
-* Copyright 2013 jQuery Foundation and other contributors; Licensed MIT */
+* Includes: core.css, button.css, theme.css
+* To view and modify this theme, visit http://jqueryui.com/themeroller/?ffDefault=Trebuchet%20MS%2CTahoma%2CVerdana%2CArial%2Csans-serif&fsDefault=13px&fwDefault=bold&cornerRadius=0&bgColorHeader=%23f6a828&bgTextureHeader=flat&borderColorHeader=%23e78f08&fcHeader=%23ffffff&iconColorHeader=%23ffffff&bgColorContent=%23eeeeee&bgTextureContent=flat&borderColorContent=%23dddddd&fcContent=%23333333&iconColorContent=%23222222&bgColorDefault=%23ffffff&bgTextureDefault=flat&borderColorDefault=%23cccccc&fcDefault=%23888888&iconColorDefault=%23ef8c08&bgColorHover=%23eeeeee&bgTextureHover=flat&borderColorHover=%23bbbbbb&fcHover=%23008080&iconColorHover=%23ef8c08&bgColorActive=%23005588&bgTextureActive=flat&borderColorActive=%23555555&fcActive=%23ffffff&iconColorActive=%23ef8c08&bgColorHighlight=%23ffe45c&bgTextureHighlight=flat&borderColorHighlight=%23fed22f&fcHighlight=%23363636&iconColorHighlight=%23228ef1&bgColorError=%23b81900&bgTextureError=flat&borderColorError=%23cd0a0a&fcError=%23ffffff&iconColorError=%23ffd27a&bgColorOverlay=%23666666&bgTextureOverlay=flat&bgImgOpacityOverlay=20&opacityOverlay=50&bgColorShadow=%23000000&bgTextureShadow=flat&bgImgOpacityShadow=10&opacityShadow=20&thicknessShadow=5px&offsetTopShadow=-5px&offsetLeftShadow=-5px&cornerRadiusShadow=5px&bgImgOpacityHeader=35&bgImgOpacityContent=100&bgImgOpacityDefault=100&bgImgOpacityHover=100&bgImgOpacityActive=65&bgImgOpacityHighlight=75&bgImgOpacityError=18
+* Copyright jQuery Foundation and other contributors; Licensed MIT */
 
 /* Layout helpers
 ----------------------------------*/
@@ -48,7 +48,7 @@
 	left: 0;
 	position: absolute;
 	opacity: 0;
-	filter:Alpha(Opacity=0);
+	filter:Alpha(Opacity=0); /* support: IE8 */
 }
 
 .ui-front {
@@ -194,10 +194,11 @@ button.ui-button::-moz-focus-inner {
 /* Component containers
 ----------------------------------*/
 .ui-widget {
+	font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
 	font-size: 13px;
 }
 .ui-widget .ui-widget {
-    font-size: 13px;
+	font-size: 1em;
 }
 .ui-widget input,
 .ui-widget select,
@@ -208,6 +209,7 @@ button.ui-button::-moz-focus-inner {
 }
 .ui-widget-content {
 	border: 1px solid #dddddd;
+	background: #eeeeee;
 	color: #333333;
 }
 .ui-widget-content a {
@@ -215,6 +217,7 @@ button.ui-button::-moz-focus-inner {
 }
 .ui-widget-header {
 	border: 1px solid #e78f08;
+	background: #f6a828;
 	color: #ffffff;
 	font-weight: bold;
 }
@@ -228,13 +231,14 @@ button.ui-button::-moz-focus-inner {
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
 	border: 1px solid #cccccc;
+	background: #ffffff;
 	font-weight: bold;
-	color: #888;
+	color: #888888;
 }
 .ui-state-default a,
 .ui-state-default a:link,
 .ui-state-default a:visited {
-	color: #1c94c4;
+	color: #888888;
 	text-decoration: none;
 }
 .ui-state-hover,
@@ -243,31 +247,34 @@ button.ui-button::-moz-focus-inner {
 .ui-state-focus,
 .ui-widget-content .ui-state-focus,
 .ui-widget-header .ui-state-focus {
-	border: 1px solid #bbb;
+	border: 1px solid #bbbbbb;
+	background: #eeeeee;
 	font-weight: bold;
-	color: teal;
-    background:#eee;
+	color: #008080;
 }
 .ui-state-hover a,
 .ui-state-hover a:hover,
 .ui-state-hover a:link,
-.ui-state-hover a:visited {
-	color: #c77405;
+.ui-state-hover a:visited,
+.ui-state-focus a,
+.ui-state-focus a:hover,
+.ui-state-focus a:link,
+.ui-state-focus a:visited {
+	color: #008080;
 	text-decoration: none;
 }
 .ui-state-active,
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
-	border: 1px solid #555;
+	border: 1px solid #555555;
 	background: #005588;
 	font-weight: bold;
-	color: #fff;
-    box-shadow: inset 0px 0px 20px #004772;
+	color: #ffffff;
 }
 .ui-state-active a,
 .ui-state-active a:link,
 .ui-state-active a:visited {
-	color: #eb8f00;
+	color: #ffffff;
 	text-decoration: none;
 }
 
@@ -277,6 +284,7 @@ button.ui-button::-moz-focus-inner {
 .ui-widget-content .ui-state-highlight,
 .ui-widget-header .ui-state-highlight {
 	border: 1px solid #fed22f;
+	background: #ffe45c;
 	color: #363636;
 }
 .ui-state-highlight a,
@@ -288,6 +296,7 @@ button.ui-button::-moz-focus-inner {
 .ui-widget-content .ui-state-error,
 .ui-widget-header .ui-state-error {
 	border: 1px solid #cd0a0a;
+	background: #b81900;
 	color: #ffffff;
 }
 .ui-state-error a,
@@ -309,38 +318,42 @@ button.ui-button::-moz-focus-inner {
 .ui-widget-content .ui-priority-secondary,
 .ui-widget-header .ui-priority-secondary {
 	opacity: .7;
-	filter:Alpha(Opacity=70);
+	filter:Alpha(Opacity=70); /* support: IE8 */
 	font-weight: normal;
 }
 .ui-state-disabled,
 .ui-widget-content .ui-state-disabled,
 .ui-widget-header .ui-state-disabled {
 	opacity: .35;
-	filter:Alpha(Opacity=35);
+	filter:Alpha(Opacity=35); /* support: IE8 */
 	background-image: none;
 }
 .ui-state-disabled .ui-icon {
-	filter:Alpha(Opacity=35); /* For IE8 - See #6059 */
+	filter:Alpha(Opacity=35); /* support: IE8 - See #6059 */
 }
 
 /* Icons
 ----------------------------------*/
 
-/* states and images */
-.ui-icon {
-	width: 16px;
-	height: 16px;
-}
+/* kz - removed all ui-icon directives, since icons are not being used. */
+
+
+/* Misc visuals
+----------------------------------*/
+
+/* kz - removed all ui-corner directives, since they are not necessary. */
 
 /* Overlays */
 .ui-widget-overlay {
+	background: #666666;
 	opacity: .5;
-	filter: Alpha(Opacity=50);
+	filter: Alpha(Opacity=50); /* support: IE8 */
 }
 .ui-widget-shadow {
 	margin: -5px 0 0 -5px;
 	padding: 5px;
+	background: #000000;
 	opacity: .2;
-	filter: Alpha(Opacity=20);
+	filter: Alpha(Opacity=20); /* support: IE8 */
 	border-radius: 5px;
 }
