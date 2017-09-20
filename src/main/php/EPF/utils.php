@@ -1,9 +1,5 @@
 <?php
 
-date_default_timezone_set('America/New_York');
-
-const USPS_BASE_URL = 'https://epfws.usps.gov/ws/resources';
-
 const FATAL = 0;
 const ERROR = 1;
 const WARN  = 2;
@@ -13,7 +9,7 @@ const DEBUG = 4;
 
 function load_config()
 {
-  $config_file =  realpath(dirname(__FILE__).'/../epf_config.ini');
+  $config_file =  realpath(dirname(__FILE__).'/epf_config.ini');
   if (in_array('BBSTATS_CONFIG', $_ENV)) {
     $config_file = $_ENV['config_file'];
   }
@@ -24,13 +20,13 @@ function load_config()
     return false;
   }
 
-  foreach (array('credentials', 'products', 'output') as $section) {
-    if (!array_key_exists($section, $config)) {
-      echo "$config_file: Invalid config file; [$section] section required\n";
+  // Check for required parameters.
+  foreach (array('api_url', 'username', 'password', 'output_dir') as $param) {
+    if (!array_key_exists($param, $config)) {
+      echo "$config_file: Invalid config file; [$param] param is required\n";
       return false;
     }
   }
-
   return $config;
 } // load_config()
 
@@ -42,44 +38,38 @@ function convert($size)
 } // convert()
 
 
-function send_request($url_suffix, $post = null, $headers = null)
+function send_request($url_suffix, $params = null, $outfile = null)
 {
+  global $g_api_url;
   global $cb_logonkey, $cb_tokenkey;
 
-  $url = USPS_BASE_URL."/$url_suffix";
+  $url = "$g_api_url/$url_suffix";
   $ch = curl_init($url);
   curl_setopt($ch, CURLOPT_FILETIME, true);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-  if (isset($post)) {
-    $json = 'obj='.json_encode($post);
+  if (isset($params)) {
+    $json = 'obj='.json_encode($params);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
 
-    if (isset($headers)) {
+    if (isset($outfile)) {
       $cb_logonkey = $cb_tokenkey = null;
-      curl_setopt($ch, CURLOPT_HTTPHEADER,
-        array(
-          'Content-Type: application/x-www-form-urlencoded',
-          'Akamai-File-Request: '.$headers['filepath'],
-          'logonkey: '.$post['logonkey'],
-          'tokenkey: '.$post['tokenkey'],
-          'fileid: '.$post['fileid']
-        )
-      );
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
       curl_setopt($ch, CURLOPT_HEADERFUNCTION, 'cb_curl_header');
       curl_setopt($ch, CURLOPT_PROGRESSFUNCTION, 'cb_curl_progress');
       curl_setopt($ch, CURLOPT_NOPROGRESS, false);
       // Open a file and write the Curl response to that file.
-      $fp = fopen($headers['fileoutput'], 'w+');
+      $fp = fopen($outfile, 'w+');
       curl_setopt($ch, CURLOPT_FILE, $fp);
       curl_exec($ch);
       fclose($fp);
-      $result = array('logonkey'=>$cb_logonkey, 'tokenkey'=>$cb_tokenkey);
+      $result = array('response' => 'success',
+                      'logonkey' => $cb_logonkey,
+                      'tokenkey' => $cb_tokenkey);
     }
     else {
-      curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
       $result = json_decode(curl_exec($ch), true);
     }
   }
@@ -108,17 +98,18 @@ function cb_curl_header($resource, $data)
 } // cb_curl_header()
 
 
-function cb_curl_progress($resource, $download_size, $downloaded,
-                          $upload_size, $uploaded)
+function cb_curl_progress($resource, $dl_size, $dl, $ul_size, $ul)
 {
   static $n = 0;
-  if ($download_size > 0 && $downloaded > 0) {
-    $perc = round($downloaded / $download_size * 100);
+
+  if ($dl_size > 0 && $dl > 0) {
+    $perc = round($dl / $dl_size * 100);
     if ($n !== $perc) {
-      log_(INFO, "Downloaded ".$perc."%\t(".convert($downloaded)." / ".convert($download_size).")");
+      log_(INFO, "Downloaded $perc%\t(".convert($dl)." / ".convert($dl_size).")");
       $n = $perc;
     }
   }
+
   flush();
   return 0;
 } // cb_curl_progress()
