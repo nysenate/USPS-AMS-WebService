@@ -51,12 +51,15 @@ main(int argc, char** argv)
     usage(argv[0], NULL);
   }
 
+  // Get the library version. The AMS system does not have to be open for this.
+  z4ver(ams_version);
+  printf("Using AMS API code version %s\n", ams_version);
+
   rc = set_config_from_file(cfg_fname, op);
   if (rc) {
     fprintf(stderr, "Error: set_config_from_file() failed\n");
     return 1;
   }
-
   display_config(op);
 
   rc = z4opencfg(op);
@@ -72,19 +75,20 @@ main(int argc, char** argv)
       return 1;
   }
 
-  printf("Opened AMS API using %s\n", msg);
-
   if (rc) {
+    fprintf(stderr, "Failed to properly open AMS API using %s\n", msg);
     printf("Retrieving error [rc=%d]\n", rc);
     Z4_ERROR z4error;
     z4geterror(&z4error);
-    printf("iErrorCode=%d, msg=[%s]\n", z4error.iErrorCode, z4error.strErrorMessage);
+    printf("Error details:\n\tiErrorCode=%d, msg=[%s]\n\tiFileCode=%d, filename=[%s]\n\tdiagnostics=[%s]\n", z4error.iErrorCode, z4error.strErrorMessage, z4error.iFileCode, z4error.strFileName, z4error.strDiagnostics);
     z4close();
     return 1;
   }
+  else {
+    printf("Successfully opened AMS API using %s\n", msg);
+  }
 
   z4date(release_date);
-  z4ver(ams_version);
   printf("Release date: %s\n", release_date);
   printf("Days to expiration of data license: %d\n", z4GetDataExpireDays());
   printf("Days to expiration of code license: %d\n", z4GetCodeExpireDays());
