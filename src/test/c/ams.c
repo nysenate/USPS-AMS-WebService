@@ -27,6 +27,7 @@ main(int argc, char** argv)
   char* in_street = NULL;
   char* in_csz = NULL;
   char* cfg_fname = DEFAULT_CONFIG_FNAME;
+  int verbose = 0;
 
   for (i = 1; i < argc; i++) {
     if (*argv[i] != '-' || strlen(argv[i]) < 2) {
@@ -41,6 +42,9 @@ main(int argc, char** argv)
         break;
       case 'f':
         if (i + 1 < argc) cfg_fname = argv[++i];
+        break;
+      case 'v':
+        verbose = 1;
         break;
       default:
         usage(argv[0], argv[i]);
@@ -60,7 +64,10 @@ main(int argc, char** argv)
     fprintf(stderr, "Error: set_config_from_file() failed\n");
     return 1;
   }
-  display_config(op);
+
+  if (verbose) {
+    display_config(op);
+  }
 
   rc = z4opencfg(op);
   char* msg;
@@ -94,6 +101,10 @@ main(int argc, char** argv)
   printf("Days to expiration of code license: %d\n", z4GetCodeExpireDays());
   printf("Code version: %s\n", ams_version);
 
+  if (verbose) {
+    display_env();
+  }
+
   ZIP4_PARM parm;
   CITY_REC city;
 
@@ -102,7 +113,7 @@ main(int argc, char** argv)
   strcpy(parm.ictyi, in_csz);
   z4adrinq(&parm);
   if (parm.retcc == Z4_SINGLE || parm.retcc == Z4_DEFAULT) {
-    printf("ZIP4 RESPONSE:\n"
+    printf("\nZIP4 RESPONSE:\n"
            "Addr1: %s\n"
            "Addr2: %s\n"
            "Addr3: %s\n"
@@ -118,7 +129,7 @@ main(int argc, char** argv)
 
   z4ctyget(&city, parm.zipc);
 
-  printf("CITY RESPONSE:\n"
+  printf("\nCITY RESPONSE:\n"
          "Zip: %s\n"
          "City: %s\n"
          "City (abbr): %s\n"
@@ -138,6 +149,6 @@ usage(char* prog, char* arg)
   if (arg) {
     fprintf(stderr, "%s: %s: Invalid option\n", prog, arg);
   }
-  fprintf(stderr, "Usage: %s [-f config-file] [-s street] [-c city/state/zip]\n", prog);
+  fprintf(stderr, "Usage: %s [-f config-file] [-s street] [-c city/state/zip] [-v]\n", prog);
   exit(1);
 } /* usage() */

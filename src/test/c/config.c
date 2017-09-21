@@ -21,25 +21,25 @@ set_default_config(Z4OPEN_PARM* p_openparm)
   CONFIG_PARM* cp = &(op->config);
 
   bzero(op, sizeof(Z4OPEN_PARM));
+  cp->abrstpath  = AMS_PATH;
   cp->address1   = AMS_PATH;
   cp->addrindex  = AMS_PATH;
   cp->citystate  = AMS_PATH;
   cp->crossref   = AMS_PATH;
-  cp->fnsnpath   = AMS_PATH;
+  cp->dpvpath    = DPV_PATH;
   cp->elot       = ELOT_PATH;
   cp->elotindex  = ELOT_PATH;
+  cp->fnsnpath   = AMS_PATH;
   cp->llkpath    = LACS_PATH;
-  cp->dpvpath    = DPV_PATH;
   cp->stelnkpath = SUITE_PATH;
-  cp->abrstpath  = AMS_PATH;
   cp->system     = SYSTEM_PATH;
-  op->elotflag = 'Y';
-  op->llkflag = 'Y';
-  op->dpvflag = 'Y';
-  op->ewsflag = 'N';
-  op->systemflag = 'N';
-  op->stelnkflag = 'Y';
   op->abrstflag = 'Y';
+  op->dpvflag = 'Y';
+  op->elotflag = 'Y';
+  op->ewsflag = 'N';
+  op->llkflag = 'Y';
+  op->stelnkflag = 'Y';
+  op->systemflag = 'N';
 } /* set_default_config() */
 
 
@@ -102,6 +102,9 @@ set_config_param(Z4OPEN_PARM* p_openparm, char* name, char* val)
   else if (strcmp(name, "ADDRINDEX") == 0) {
     cp->addrindex = strdup(val);
   }
+  else if (strcmp(name, "CDROM") == 0) {
+    cp->cdrom = strdup(val);
+  }
   else if (strcmp(name, "CITYSTATE") == 0) {
     cp->citystate = strdup(val);
   }
@@ -120,6 +123,9 @@ set_config_param(Z4OPEN_PARM* p_openparm, char* name, char* val)
   else if (strcmp(name, "LLKPATH") == 0) {
     cp->llkpath = strdup(val);
   }
+  else if (strcmp(name, "EWSPATH") == 0) {
+    cp->ewspath = strdup(val);
+  }
   else if (strcmp(name, "DPVPATH") == 0) {
     cp->dpvpath = strdup(val);
   }
@@ -132,26 +138,26 @@ set_config_param(Z4OPEN_PARM* p_openparm, char* name, char* val)
   else if (strcmp(name, "ABRSTPATH") == 0) {
     cp->abrstpath = strdup(val);
   }
+  else if (strcmp(name, "EWSFLAG") == 0) {
+    op->ewsflag = toupper(*val);
+  }
   else if (strcmp(name, "ELOTFLAG") == 0) {
     op->elotflag = toupper(*val);
   }
-  else if (strcmp(name, "EWSFLAG") == 0) {
-    op->ewsflag = toupper(*val);
+  else if (strcmp(name, "LLKFLAG") == 0) {
+    op->llkflag = toupper(*val);
   }
   else if (strcmp(name, "DPVFLAG") == 0) {
     op->dpvflag = toupper(*val);
   }
-  else if (strcmp(name, "LLKFLAG") == 0) {
-    op->llkflag = toupper(*val);
+  else if (strcmp(name, "SYSTEMFLAG") == 0) {
+    op->systemflag = toupper(*val);
   }
   else if (strcmp(name, "SLNKFLAG") == 0) {
     op->stelnkflag = toupper(*val);
   }
   else if (strcmp(name, "ABRSTFLAG") == 0) {
     op->abrstflag = toupper(*val);
-  }
-  else if (strcmp(name, "SYSTEMFLAG") == 0) {
-    op->systemflag = toupper(*val);
   }
 
   return;
@@ -163,30 +169,67 @@ display_config(Z4OPEN_PARM* p_openparm)
 {
   Z4OPEN_PARM* op = p_openparm;
   CONFIG_PARM* cp = &(op->config);
-  fprintf(stderr, "Z4OPEN_PARM printout:\n"
+  fprintf(stderr, "\nZ4OPEN_PARM printout:\n"
+                  "STATUS=%d\n"
+                  "FNAME=%s\n"
+                  "ABRSTPATH=%s\n"
                   "ADDRESS1=%s\n"
                   "ADDRINDEX=%s\n"
                   "CITYSTATE=%s\n"
                   "CROSSREF=%s\n"
-                  "SYSTEM=%s\n"
+                  "DPVPATH=%s\n"
                   "ELOT=%s\n"
                   "ELOTINDEX=%s\n"
-                  "LLKPATH=%s\n"
-                  "DPVPATH=%s\n"
                   "FNSNPATH=%s\n"
+                  "LLKPATH=%s\n"
                   "SLNKPATH=%s\n"
-                  "ABRSTPATH=%s\n"
+                  "SYSTEM=%s\n"
+                  "ABRSTFLAG=%c\n"
+                  "DPVFLAG=%c\n"
                   "ELOTFLAG=%c\n"
                   "EWSFLAG=%c\n"
-                  "DPVFLAG=%c\n"
                   "LLKFLAG=%c\n"
                   "SLNKFLAG=%c\n"
-                  "ABRSTFLAG=%c\n"
                   "SYSTEMFLAG=%c\n",
-                  cp->address1, cp->addrindex, cp->citystate, cp->crossref,
-                  cp->system, cp->elot, cp->elotindex, cp->llkpath,
-                  cp->dpvpath, cp->fnsnpath, cp->stelnkpath, cp->abrstpath,
-                  op->elotflag, op->ewsflag, op->dpvflag, op->llkflag,
-                  op->stelnkflag, op->abrstflag, op->systemflag);
+                  op->status, op->fname,
+                  cp->abrstpath, cp->address1, cp->addrindex, cp->citystate,
+                  cp->crossref, cp->dpvpath, cp->elot, cp->elotindex,
+                  cp->fnsnpath, cp->llkpath, cp->stelnkpath, cp->system,
+                  op->abrstflag, op->dpvflag, op->elotflag, op->ewsflag,
+                  op->llkflag, op->stelnkflag, op->systemflag);
   return;
 } /* display_config() */
+
+
+void
+display_env()
+{
+  Z4_ENV env;
+  z4getenv(&env);
+  fprintf(stderr, "\nZ4_ENV printout:\n"
+                  "strConfigFile=%s\n"
+                  "abrstpath=%s\n"
+                  "address1=%s\n"
+                  "addrindex=%s\n"
+                  "citystate=%s\n"
+                  "crossref=%s\n"
+                  "elot=%s\n"
+                  "elotindex=%s\n"
+                  "ewspath=%s\n"
+                  "fnsnpath=%s\n"
+                  "llkpath=%s\n"
+                  "stelnkpath=%s\n"
+                  "system=%s\n"
+                  "abrstflag=%c\n"
+                  "dpvflag=%c\n"
+                  "elotflag=%c\n"
+                  "ewsflag=%c\n"
+                  "llkflag=%c\n"
+                  "stelnkflag=%c\n",
+                  env.strConfigFile, env.abrstpath, env.address1,
+                  env.addrindex, env.citystate, env.crossref,
+                  env.elot, env.elotindex, env.ewspath,
+                  env.fnsnpath, env.llkpath, env.stelnkpath, env.system,
+                  env.abrstflag, env.dpvflag, env.elotflag, env.ewsflag,
+                  env.llkflag, env.stelnkflag);
+} /* display_env() */

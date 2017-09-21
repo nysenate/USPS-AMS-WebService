@@ -21,6 +21,7 @@ void set_default_config(Z4OPEN_PARM* p_openparm);
 int set_config_from_file(char* filename, Z4OPEN_PARM* p_openparm);
 void set_config_param(Z4OPEN_PARM* p_openparm, char* name, char* val);
 void display_config(Z4OPEN_PARM* p_openparm);
+void display_env();
 
 
 #endif
