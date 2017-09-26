@@ -153,7 +153,7 @@ foreach ($allfiles as $f) {
     continue;
   }
   else {
-    log_(INFO, "Downloaded file '$fname' will be saved as '$outfile'");
+    log_(INFO, "Current file '$fname' will be saved as '$outfile'");
   }
 
   if ($no_download === true) {

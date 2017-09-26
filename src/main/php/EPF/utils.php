@@ -6,6 +6,9 @@ const WARN  = 2;
 const INFO  = 3;
 const DEBUG = 4;
 
+// Set the download progress time interval to 5 seconds.
+const DL_PROGRESS_TIME_INTERVAL = 5;
+
 
 function load_config()
 {
@@ -34,7 +37,7 @@ function load_config()
 function convert($size)
 {
   $unit = array('b','kb','mb','gb','tb','pb');
-  return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
+  return @round($size/pow(1024,($i=floor(log($size,1024)))),1).' '.$unit[$i];
 } // convert()
 
 
@@ -58,7 +61,7 @@ function send_request($url_suffix, $params = null, $outfile = null)
       $cb_logonkey = $cb_tokenkey = null;
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
       curl_setopt($ch, CURLOPT_HEADERFUNCTION, 'cb_curl_header');
-      curl_setopt($ch, CURLOPT_PROGRESSFUNCTION, 'cb_curl_progress');
+      curl_setopt($ch, CURLOPT_PROGRESSFUNCTION, create_progress_closure());
       curl_setopt($ch, CURLOPT_NOPROGRESS, false);
       // Open a file and write the Curl response to that file.
       $fp = fopen($outfile, 'w+');
@@ -98,21 +101,32 @@ function cb_curl_header($resource, $data)
 } // cb_curl_header()
 
 
-function cb_curl_progress($resource, $dl_size, $dl, $ul_size, $ul)
+function create_progress_closure()
 {
-  static $n = 0;
-
-  if ($dl_size > 0 && $dl > 0) {
-    $perc = round($dl / $dl_size * 100);
-    if ($n !== $perc) {
-      log_(INFO, "Downloaded $perc%\t(".convert($dl)." / ".convert($dl_size).")");
-      $n = $perc;
+  $start_time = time();
+  return function($resource, $dl_size, $dl, $ul_size, $ul) use ($start_time) {
+    static $next_time = 0;
+    if ($next_time == 0) {
+      $next_time = $start_time + DL_PROGRESS_TIME_INTERVAL;
     }
-  }
+    if ($dl > 0 && time() >= $next_time) {
+      $elapsed_time = $next_time - $start_time;
+      if ($dl_size > 0) {
+        // If file size is known, then output as a percentage.
+        $pct = round($dl / $dl_size * 100);
+        log_(INFO, "Downloaded $pct% (".convert($dl)." / ".convert($dl_size).") in $elapsed_time seconds");
+      }
+      else {
+        // If file size is not known, then just output number of bytes downloaded.
+        log_(INFO, "Downloaded ".convert($dl)." in $elapsed_time seconds");
+      }
+      $next_time += DL_PROGRESS_TIME_INTERVAL;
+    }
 
-  flush();
-  return 0;
-} // cb_curl_progress()
+    flush();
+    return 0;
+  };
+} // create_curl_progress_closure()
 
 
 function log_($log_level, $message)
