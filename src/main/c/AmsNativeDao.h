@@ -1,4 +1,6 @@
+
 #include <jni.h>
+#include <zip4.h>
 
 /* JNI Header for class gov.nysenate.ams.dao.AmsNativeDao */
 
@@ -52,23 +54,23 @@ extern "C" {
 #define REP15(X) REP9(X) REP6(X)
 
 /* Create global references to class/method IDs */
-void cacheIDs(JNIEnv *);
+void cacheIDs(JNIEnv*);
 
 /* Used to construct AddressInquiryResult object */
-jobject handleAddressInquiryResult(JNIEnv * env, ZIP4_PARM * zip4_parm, int responseCode, int performStd);
+jobject handleAddressInquiryResult(JNIEnv* env, ZIP4_PARM* zip4_parm, int responseCode, int performStd);
 
 /* Method callers */
 
-jobject getObjectFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName, const char * returnType);
-jstring getStringFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName);
-jboolean getBooleanFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName);
-jint getIntFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName);
+jobject getObjectFromMethod(JNIEnv* env, jclass cls, jobject instance, const char* methodName, const char* returnType);
+jstring getStringFromMethod(JNIEnv* env, jclass cls, jobject instance, const char* methodName);
+jboolean getBooleanFromMethod(JNIEnv* env, jclass cls, jobject instance, const char* methodName);
+jint getIntFromMethod(JNIEnv* env, jclass cls, jobject instance, const char* methodName);
 
 /* String helpers */
 
-char * getC_String(JNIEnv * env, const jstring javaString);
-void releaseC_String(JNIEnv * env, const char * cString, const jstring javaString);
-void printJString(JNIEnv * env, const jstring string);
+char* getC_String(JNIEnv* env, const jstring javaString);
+void releaseC_String(JNIEnv* env, const char* cString, const jstring javaString);
+void printJString(JNIEnv* env, const jstring string);
 
 /*
  * Class:     gov_nysenate_ams_dao_AmsNativeDao
@@ -76,7 +78,7 @@ void printJString(JNIEnv * env, const jstring string);
  * Signature: (Lgov/nysenate/ams/model/AmsSettings;)Z
  */
 JNIEXPORT jboolean JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_setupAmsLibrary
-  (JNIEnv *, jobject, jobject);
+  (JNIEnv*, jobject, jobject);
 
 /*
  * Class:     gov_nysenate_ams_dao_AmsNativeDao
@@ -84,7 +86,7 @@ JNIEXPORT jboolean JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_setupAmsLibrar
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_closeAmsLibrary
-  (JNIEnv *, jobject);
+  (JNIEnv*, jobject);
 
 /*
  * Class:     gov_nysenate_ams_dao_AmsNativeDao
@@ -92,7 +94,7 @@ JNIEXPORT jboolean JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_closeAmsLibrar
  * Signature: (Lgov/nysenate/ams/model/Address;)Lgov/nysenate/ams/model/AddressInquiryResult;
  */
 JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_addressInquiry
-  (JNIEnv *, jobject, jobject);
+  (JNIEnv*, jobject, jobject);
 
 /*
  * Class:     gov_nysenate_ams_dao_AmsNativeDao
@@ -100,7 +102,7 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_addressInquiry
  * Signature: (Ljava/lang/String;)Lgov/nysenate/ams/model/CityStateResult;
  */
 JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_cityStateLookup
-  (JNIEnv *, jobject, jstring);
+  (JNIEnv*, jobject, jstring);
 
 /*
  * Class:     gov_nysenate_ams_dao_AmsNativeDao
@@ -108,7 +110,7 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_cityStateLookup
  * Signature: (Ljava/lang/String;)Lgov/nysenate/ams/model/AddressInquiryResult;
  */
 JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_zip9Inquiry
-  (JNIEnv *, jobject, jstring);
+  (JNIEnv*, jobject, jstring);
 
 /*
  * Class:     gov_nysenate_ams_dao_AmsNativeDao
@@ -116,7 +118,7 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_zip9Inquiry
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getAmsVersion
-  (JNIEnv *, jobject);
+  (JNIEnv*, jobject);
 
 /*
  * Class:     gov_nysenate_ams_dao_AmsNativeDao
@@ -124,7 +126,7 @@ JNIEXPORT jstring JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getAmsVersion
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getDataExpireDays
-  (JNIEnv *, jobject);
+  (JNIEnv*, jobject);
 
 /*
  * Class:     gov_nysenate_ams_dao_AmsNativeDao
@@ -132,7 +134,7 @@ JNIEXPORT jint JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getDataExpireDays
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getLibraryExpireDays
-  (JNIEnv *, jobject);
+  (JNIEnv*, jobject);
 
 #ifdef __cplusplus
 }

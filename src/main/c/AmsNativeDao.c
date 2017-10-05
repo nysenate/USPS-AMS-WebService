@@ -1,12 +1,20 @@
-#include <jni.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <zip4.h>
 #include <time.h>
 #include <sys/time.h>
 
+#include <jni.h>
+#include <zip4.h>
+
 #include "AmsNativeDao.h"
+
+/* These sizes should match the ZIP4_PARM sizes in zip4.h */
+#define ADDR_SZ 50
+#define CITY_SZ 50
+#define STATE_SZ 2
+#define ZIP_SZ 10
 
 /* Cached class ids */
 static jclass AmsSettingsCls;
@@ -42,7 +50,7 @@ static jmethodID Address_getZip5;
  * Signature: (Lgov/nysenate/ams/model/AmsSettings;)Z
  */
 JNIEXPORT jboolean JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_setupAmsLibrary
-  (JNIEnv * env, jobject jThis, jobject jAmsSettings)
+  (JNIEnv* env, jobject jThis, jobject jAmsSettings)
 {
     /* Cache all method/constructor ids */
     cacheIDs(env);
@@ -110,7 +118,7 @@ JNIEXPORT jboolean JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_setupAmsLibrar
  * Signature: ()Z
  */
 JNIEXPORT jboolean JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_closeAmsLibrary
-  (JNIEnv * env, jobject jThis)
+  (JNIEnv* env, jobject jThis)
 {
     /* Close The USPS Address Matching System */
     int ret = z4close();
@@ -127,7 +135,7 @@ JNIEXPORT jboolean JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_closeAmsLibrar
  * Signature: (Lgov/nysenate/ams/model/Address;)Lgov/nysenate/ams/model/AddressInquiryResult;
  */
 JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_addressInquiry
-  (JNIEnv * env, jobject jThis, jobject jAddress)
+  (JNIEnv* env, jobject jThis, jobject jAddress)
 {
     jobject inquiryResult;
 
@@ -144,22 +152,27 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_addressInquiry
     zip5 = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_getZip5);
 
     /* Convert jstrings to c style strings */
-    char * cFirmName, * cAddr1, * cAddr2, * cCity, * cState, * cZip5;
-    cFirmName = getC_String(env, firmName);
-    cAddr1 = getC_String(env, addr1);
-    cAddr2 = getC_String(env, addr2);
-    cCity = getC_String(env, city);
-    cState = getC_String(env, state);
-    cZip5 = getC_String(env, zip5);
+    char* cFirmName = getC_String(env, firmName);
+    char* cAddr1 = getC_String(env, addr1);
+    char* cAddr2 = getC_String(env, addr2);
+    char* cCity = getC_String(env, city);
+    char* cState = getC_String(env, state);
+    char* cZip5 = getC_String(env, zip5);
 
     /* Construct the input address struct to pass into the inquiry method. */
-    strcpy(parm.iadl1, cAddr1);
-    strcpy(parm.iadl2, cFirmName);
-    strcpy(parm.iadl3, cAddr2);
-    strcpy(parm.iprurb, "");
-    strcpy(parm.ictyi, cCity);
-    strcpy(parm.istai, cState);
-    strcpy(parm.izipc, cZip5);
+    strncpy(parm.iadl1, cAddr1, ADDR_SZ);
+    parm.iadl1[ADDR_SZ] = '\0';
+    strncpy(parm.iadl2, cFirmName, ADDR_SZ);
+    parm.iadl2[ADDR_SZ] = '\0';
+    strncpy(parm.iadl3, cAddr2, ADDR_SZ);
+    parm.iadl3[ADDR_SZ] = '\0';
+    parm.iprurb[0] = '\0';
+    strncpy(parm.ictyi, cCity, CITY_SZ);
+    parm.ictyi[CITY_SZ] = '\0';
+    strncpy(parm.istai, cState, STATE_SZ);
+    parm.istai[STATE_SZ] = '\0';
+    strncpy(parm.izipc, cZip5, ZIP_SZ);
+    parm.izipc[ZIP_SZ] = '\0';
 
     /* Free the c strings */
     releaseC_String(env, cFirmName, firmName);
@@ -184,13 +197,13 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_addressInquiry
  * Signature: (Ljava/lang/String;)Lgov/nysenate/ams/model/CityStateResult;
  */
 JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_cityStateLookup
-  (JNIEnv * env, jobject jThis, jstring jZip)
+  (JNIEnv* env, jobject jThis, jstring jZip)
 {
     jobject cityStateResultObj;
     jobject cityRecordObj;
 
     CITY_REC city;
-    char * cZip5;
+    char* cZip5;
     cZip5 = getC_String(env, jZip);
     int responseCode;
     responseCode = z4ctyget(&city, cZip5);
@@ -243,16 +256,17 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_cityStateLookup
  * Signature: (Ljava/lang/String;)Lgov/nysenate/ams/model/AddressInquiryResult;
  */
 JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_zip9Inquiry
-  (JNIEnv * env, jobject jThis, jstring jZip9)
+  (JNIEnv* env, jobject jThis, jstring jZip9)
 {
     jobject inquiryResult;
 
     ZIP4_PARM parm;
     memset(&parm, 0, sizeof(ZIP4_PARM));
 
-    char * cZip9;
+    char* cZip9;
     cZip9 = getC_String(env, jZip9);
-    strcpy(parm.iadl1, cZip9);
+    strncpy(parm.iadl1, cZip9, ZIP_SZ);
+    parm.iadl1[ZIP_SZ] = '\0';
     releaseC_String(env, cZip9, jZip9);
 
     /* Call the AMS address inquiry and standardization methods */
@@ -270,7 +284,7 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_zip9Inquiry
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getAmsVersion
-  (JNIEnv * env, jobject jThis)
+  (JNIEnv* env, jobject jThis)
 {
     char ams_version[32];
     z4ver(ams_version);
@@ -284,7 +298,7 @@ JNIEXPORT jstring JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getAmsVersion
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getDataExpireDays
-  (JNIEnv * env, jobject jThis)
+  (JNIEnv* env, jobject jThis)
 {
     return (jint)z4GetDataExpireDays();
 }
@@ -295,7 +309,7 @@ JNIEXPORT jint JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getDataExpireDays
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getLibraryExpireDays
-  (JNIEnv * env, jobject jThis)
+  (JNIEnv* env, jobject jThis)
 {
     return (jint)z4GetCodeExpireDays();
 }
@@ -304,7 +318,7 @@ JNIEXPORT jint JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getLibraryExpireDa
 * After an address inquiry method has been called, this method will create a Java AddressInquiryResult
 * object using the data stored in the ZIP4_PARM struct.
 */
-jobject handleAddressInquiryResult(JNIEnv * env, ZIP4_PARM * parm, int responseCode, int performStd)
+jobject handleAddressInquiryResult(JNIEnv* env, ZIP4_PARM* parm, int responseCode, int performStd)
 {
     jobject inquiryResult;
     jstring firmName, addr1, addr2, city, state, zip5, zip4;
@@ -434,7 +448,7 @@ jobject handleAddressInquiryResult(JNIEnv * env, ZIP4_PARM * parm, int responseC
 * To minimize overhead, all class ids and method ids are retrieved using this method and cached
 * as static global variables. This method should be called during the setup/config stage.
 */
-void cacheIDs(JNIEnv * env)
+void cacheIDs(JNIEnv* env)
 {
     /* Cached class ids */
     jclass tempClassRef = (*env)->FindClass(env, "gov/nysenate/ams/model/AmsSettings");
@@ -491,49 +505,49 @@ void cacheIDs(JNIEnv * env)
     Address_getZip5 = (*env)->GetMethodID(env, AddressCls, "getZip5", NO_ARGS STRING_TYPE);
 }
 
-jobject getObjectFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName, const char * returnType)
+jobject getObjectFromMethod(JNIEnv* env, jclass cls, jobject instance, const char* methodName, const char* returnType)
 {
     jmethodID methodID = (*env)->GetMethodID(env, cls, methodName, returnType);
     return (*env)->CallObjectMethod(env, instance, methodID);
 }
 
-jstring getStringFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName)
+jstring getStringFromMethod(JNIEnv* env, jclass cls, jobject instance, const char* methodName)
 {
     jmethodID methodID = (*env)->GetMethodID(env, cls, methodName, NO_ARGS STRING_TYPE);
     return (jstring)(*env)->CallObjectMethod(env, instance, methodID);
 }
 
-jboolean getBooleanFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName)
+jboolean getBooleanFromMethod(JNIEnv* env, jclass cls, jobject instance, const char* methodName)
 {
     jmethodID methodID = (*env)->GetMethodID(env, cls, methodName, NO_ARGS BOOLEAN_TYPE);
     return (*env)->CallBooleanMethod(env, instance, methodID);
 }
 
-jint getIntFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName)
+jint getIntFromMethod(JNIEnv* env, jclass cls, jobject instance, const char* methodName)
 {
     jmethodID methodID = (*env)->GetMethodID(env, cls, methodName, NO_ARGS INT_TYPE);
     return (*env)->CallIntMethod(env, instance, methodID);
 }
 
-jchar getCharFromMethod(JNIEnv * env, jclass cls, jobject instance, const char * methodName)
+jchar getCharFromMethod(JNIEnv* env, jclass cls, jobject instance, const char* methodName)
 {
     jmethodID methodID = (*env)->GetMethodID(env, cls, methodName, NO_ARGS CHAR_TYPE);
     return (*env)->CallCharMethod(env, instance, methodID);
 }
 
-char * getC_String(JNIEnv * env, const jstring javaString)
+char* getC_String(JNIEnv* env, const jstring javaString)
 {
-    return (*env)->GetStringUTFChars(env, javaString, 0);
+    return (char*)(*env)->GetStringUTFChars(env, javaString, 0);
 }
 
-void releaseC_String(JNIEnv * env, const char * cString, const jstring javaString)
+void releaseC_String(JNIEnv* env, const char* cString, const jstring javaString)
 {
     (*env)->ReleaseStringUTFChars(env, javaString, cString);
 }
 
-void printJString(JNIEnv * env, const jstring string)
+void printJString(JNIEnv* env, const jstring string)
 {
-    const char * nativeString = getC_String(env, string);
+    const char* nativeString = getC_String(env, string);
     printf("%s\n", nativeString);
     releaseC_String(env, nativeString, string);
 }
