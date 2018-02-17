@@ -56,4 +56,14 @@
         <url-pattern>/api/citystate/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <display-name>LibraryInfoController</display-name>
+        <servlet-name>LibraryInfoController</servlet-name>
+        <servlet-class>gov.nysenate.ams.controller.LibraryInfoController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LibraryInfoController</servlet-name>
+        <url-pattern>/api/info/*</url-pattern>
+    </servlet-mapping>
+
 </web-app>
