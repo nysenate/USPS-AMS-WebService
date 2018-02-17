@@ -31,6 +31,8 @@ The API exposes the following methods:
 +-------------+---------------------------------------------+
 | inquiry     | Lookup a matching address given a zip9.     |
 +-------------+---------------------------------------------+
+| info        | Get USPS AMS library information            |
++-------------+---------------------------------------------+
 
 Validate
 ~~~~~~~~
@@ -323,6 +325,29 @@ Usage::
     /api/inquiry?zip5=12180&zip4=1928
 
 The output is exactly identical to the validate method so it won't be reproduced here.
+
+Info
+~~~~
+
+This method returns information about the USPS AMS library underlying the API. Specifically
+
+- `apiVersion`
+- `dataExpireDays`
+- `libraryExpireDays`
+
+There are no query parameters.
+
+Usage::
+
+    /api/info
+
+Output::
+
+    {
+      "apiVersion" : "3.03.05.N",
+      "dataExpireDays" : 103,
+      "libraryExpireDays" : 529
+    }
 
 Batch API Methods
 -----------------
