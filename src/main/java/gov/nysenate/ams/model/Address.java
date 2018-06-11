@@ -1,5 +1,7 @@
 package gov.nysenate.ams.model;
 
+import static gov.nysenate.ams.util.AddressDictionary.stateMap;
+
 /**
  * An immutable representation of a basic address object.
  */
@@ -29,7 +31,12 @@ public class Address
         this.addr1 = (addr1 != null) ? addr1 : "";
         this.addr2 = (addr2 != null) ? addr2 : "";
         this.city = (city != null) ? city : "";
-        this.state = (state != null) ? state : "";
+        if (state != null) {
+            this.state = (stateMap.get(state.toLowerCase()) != null) ? stateMap.get(state.toLowerCase()) : state;
+        }
+        else {
+            this.state = "";
+        }
         this.zip5 = (zip5 != null) ? zip5 : "";
         this.zip4 = (zip4 != null) ? zip4 : "";
     }
