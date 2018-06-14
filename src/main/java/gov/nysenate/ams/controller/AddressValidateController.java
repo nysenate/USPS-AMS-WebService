@@ -80,6 +80,7 @@ public class AddressValidateController extends BaseApiController
         Object responseObj;
 
         Address inputAddress = getAddressFromParams(request);
+        inputAddress.setMerge(Boolean.parseBoolean(request.getParameter("merge")));
         boolean detail = isDetail(request);
         boolean initCaps = isInitCaps(request);
 

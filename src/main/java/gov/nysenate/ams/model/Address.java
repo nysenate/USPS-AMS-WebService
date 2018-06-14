@@ -1,6 +1,5 @@
 package gov.nysenate.ams.model;
 
-import static gov.nysenate.ams.util.AddressDictionary.abbrMap;
 
 /**
  * An immutable representation of a basic address object.
@@ -14,6 +13,7 @@ public class Address
     protected final String state;            // State
     protected final String zip5;             // Zip 5
     protected final String zip4;             // Zip 4
+    protected boolean merge = false;
 
     public Address(String address)
     {
@@ -31,14 +31,31 @@ public class Address
         this.addr1 = (addr1 != null) ? addr1 : "";
         this.addr2 = (addr2 != null) ? addr2 : "";
         this.city = (city != null) ? city : "";
-        if (state != null) {
-            this.state = (abbrMap.get(state.toLowerCase()) != null) ? abbrMap.get(state.toLowerCase()) : state;
-        }
-        else {
-            this.state = "";
-        }
+        this.state = (state !=null) ? state : "";
         this.zip5 = (zip5 != null) ? zip5 : "";
         this.zip4 = (zip4 != null) ? zip4 : "";
+    }
+
+    public Address(String firmName, String addr1, String addr2, String city, String state, String zip5, String zip4, boolean merge)
+    {
+        this.firmName = (firmName != null) ? firmName : "";
+        this.addr1 = (addr1 != null) ? addr1 : "";
+        this.addr2 = (addr2 != null) ? addr2 : "";
+        this.zip5 = (zip5 != null) ? zip5 : "";
+        this.zip4 = (zip4 != null) ? zip4 : "";
+        this.merge = merge;
+        if (state.length() > 2 || merge) {
+            city = (city != null) ? city : "";
+            state = (state !=null) ? state : "";
+            zip5 = (zip5 != null) ? zip5 : "";
+            this.merge = true;
+            this.city = city + ", " + state + ", " + zip5;
+            this.state = "";
+        }
+        else {
+            this.city = (city != null) ? city : "";
+            this.state = (state !=null) ? state : "";
+        }
     }
 
     /**
@@ -86,5 +103,13 @@ public class Address
 
     public String getZip4() {
         return zip4;
+    }
+
+    public boolean isMerge() {
+        return merge;
+    }
+
+    public void setMerge(boolean merge) {
+        this.merge = merge;
     }
 }

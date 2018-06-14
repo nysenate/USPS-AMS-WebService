@@ -79,7 +79,9 @@ public class AmsNativeProvider implements AddressService, LicensingService, Libr
     public AddressInquiryResult addressInquiry(Address address)
     {
         if (address != null && !address.isEmpty()) {
-            return this.amsNativeDao.addressInquiry(address);
+            Address queryAddress = new Address(address.getFirmName(), address.getAddr1() ,address.getAddr2(),
+                    address.getCity(), address.getState(), address.getZip5(), address.getZip4(), address.isMerge());
+            return this.amsNativeDao.addressInquiry(queryAddress);
         }
         else return new AddressInquiryResult(-1, null, StatusCode.INSUFFICIENT_ADDRESS.getCode(), null, null);
     }
