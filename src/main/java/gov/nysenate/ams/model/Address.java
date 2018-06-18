@@ -17,23 +17,17 @@ public class Address
 
     public Address(String address)
     {
-        this("", address, "", "", "", "", "");
+        this("", address, "", "", "", "", "", false);
     }
 
     public Address(String addr1, String addr2, String city, String state, String zip5)
     {
-        this("", addr1, addr2, city, state, zip5, "");
+        this("", addr1, addr2, city, state, zip5, "", false);
     }
 
     public Address(String firmName, String addr1, String addr2, String city, String state, String zip5, String zip4)
     {
-        this.firmName = (firmName != null) ? firmName : "";
-        this.addr1 = (addr1 != null) ? addr1 : "";
-        this.addr2 = (addr2 != null) ? addr2 : "";
-        this.city = (city != null) ? city : "";
-        this.state = (state !=null) ? state : "";
-        this.zip5 = (zip5 != null) ? zip5 : "";
-        this.zip4 = (zip4 != null) ? zip4 : "";
+        this(firmName, addr1, addr2, city, state, zip5, zip4, false);
     }
 
     public Address(String firmName, String addr1, String addr2, String city, String state, String zip5, String zip4, boolean merge)
@@ -43,18 +37,19 @@ public class Address
         this.addr2 = (addr2 != null) ? addr2 : "";
         this.zip5 = (zip5 != null) ? zip5 : "";
         this.zip4 = (zip4 != null) ? zip4 : "";
-        this.merge = merge;
+
         if (state.length() > 2 || merge) {
             city = (city != null) ? city : "";
-            state = (state !=null) ? state : "";
+            state = (state != null) ? state : "";
             zip5 = (zip5 != null) ? zip5 : "";
-            this.merge = true;
             this.city = city + ", " + state + ", " + zip5;
             this.state = "";
+            this.merge = true;
         }
         else {
             this.city = (city != null) ? city : "";
-            this.state = (state !=null) ? state : "";
+            this.state = (state != null) ? state : "";
+            this.merge = false;
         }
     }
 
