@@ -7,3 +7,4 @@ src/test/c/ams
 *.out
 target/
 .idea
+src/resources/*.xml

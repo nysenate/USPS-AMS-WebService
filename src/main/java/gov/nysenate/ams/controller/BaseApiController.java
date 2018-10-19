@@ -3,7 +3,8 @@ package gov.nysenate.ams.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.nysenate.ams.model.Address;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public abstract class BaseApiController extends HttpServlet
 {
-    private static Logger logger = Logger.getLogger(BaseApiController.class);
+    private static Logger logger = LoggerFactory.getLogger(BaseApiController.class);
     private static ObjectMapper mapper = new ObjectMapper();
     public abstract void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
     public abstract void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
@@ -76,8 +77,7 @@ public abstract class BaseApiController extends HttpServlet
             }
         }
         catch(Exception ex) {
-            logger.debug("Invalid batch address payload detected.");
-            logger.trace(ex);
+            logger.debug("Invalid batch address payload detected.", ex);
         }
         return addresses;
     }
@@ -109,8 +109,7 @@ public abstract class BaseApiController extends HttpServlet
             }
         }
         catch (Exception ex) {
-            logger.debug("Invalid zip5 json payload.");
-            logger.trace(ex);
+            logger.debug("Invalid zip5 json payload.", ex);
         }
         return zip5List;
     }
@@ -155,8 +154,7 @@ public abstract class BaseApiController extends HttpServlet
             }
         }
         catch (Exception ex) {
-            logger.debug("Invalid zip9 json payload.");
-            logger.trace(ex);
+            logger.debug("Invalid zip9 json payload.", ex);
         }
         return zip9List;
     }

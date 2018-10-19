@@ -1,6 +1,5 @@
 package gov.nysenate.ams.script;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.nysenate.ams.dao.AmsNativeDao;
 import gov.nysenate.ams.model.Address;
 import gov.nysenate.ams.model.AddressInquiryResult;
@@ -8,11 +7,12 @@ import gov.nysenate.ams.model.AmsSettings;
 import gov.nysenate.ams.util.Application;
 import gov.nysenate.ams.util.OutputUtil;
 import gov.nysenate.util.Config;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 public class AmsTest
 {
-    private static Logger logger = Logger.getLogger(AmsTest.class);
+    private static Logger logger = LoggerFactory.getLogger(AmsTest.class);
 
     public static void main(String args[])
     {

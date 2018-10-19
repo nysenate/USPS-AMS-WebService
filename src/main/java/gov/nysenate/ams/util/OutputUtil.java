@@ -9,7 +9,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -17,7 +18,7 @@ import java.util.Collection;
 
 public class OutputUtil
 {
-    protected static Logger logger = Logger.getLogger(OutputUtil.class);
+    protected static Logger logger = LoggerFactory.getLogger(OutputUtil.class);
     protected static ObjectMapper mapper = new ObjectMapper();
 
     public static String toCamelCase(String s)

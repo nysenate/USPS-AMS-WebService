@@ -44,9 +44,23 @@
   </repositories>
 
   <properties>
-    <log4j.version>1.2.17</log4j.version>
-    <nysenate-java-utils.version>1.0.3</nysenate-java-utils.version>
+    <log4j.version>2.11.1</log4j.version>
+    <nysenate-java-utils.version>1.1</nysenate-java-utils.version>
     <tomcat.version>8.0.21</tomcat.version>
+    <commons-lang3.version>3.1</commons-lang3.version>
+    <commons-io.version>2.4</commons-io.version>
+    <commons-configuration.version>1.9</commons-configuration.version>
+    <httpcore.version>4.2.3</httpcore.version>
+    <fluent-hc.version>4.2.2</fluent-hc.version>
+    <javax.mail.version>1.4.5</javax.mail.version>
+    <jasypt.version>1.9.0</jasypt.version>
+    <xstream.version>1.4.3</xstream.version>
+    <jackson.version>2.9.7</jackson.version>
+    <xmlrpc-client.version>3.1.3</xmlrpc-client.version>
+    <woodstox-core-asl.version>4.0.6</woodstox-core-asl.version>
+    <super-csv.version>2.0.1</super-csv.version>
+    <junit.version>4.11</junit.version>
+
   </properties>
 
   <dependencies>
@@ -70,81 +84,81 @@
 
     <!-- Core Dependencies -->
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j-impl</artifactId>
       <version>${log4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.1</version>
+      <version>${commons-lang3.version}</version>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>2.4</version>
+      <version>${commons-io.version}</version>
     </dependency>
     <dependency>
       <groupId>commons-configuration</groupId>
       <artifactId>commons-configuration</artifactId>
-      <version>1.9</version>
+      <version>${commons-configuration.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpcore</artifactId>
-      <version>4.2.3</version>
+      <version>${httpcore.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>fluent-hc</artifactId>
-      <version>4.2.2</version>
+      <version>${fluent-hc.version}</version>
     </dependency>
     <dependency>
       <groupId>com.sun.mail</groupId>
       <artifactId>javax.mail</artifactId>
-      <version>1.4.5</version>
+      <version>${javax.mail.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jasypt</groupId>
       <artifactId>jasypt</artifactId>
-      <version>1.9.0</version>
+      <version>${jasypt.version}</version>
     </dependency>
 
     <!-- Serializing Dependencies -->
     <dependency>
       <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream</artifactId>
-      <version>1.4.3</version>
+      <version>${xstream.version}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-json-org</artifactId>
-      <version>2.9.7</version>
+      <version>${jackson.version}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.9.7</version>
+      <version>${jackson.version}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-xml</artifactId>
-      <version>2.9.7</version>
+      <version>${jackson.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.xmlrpc</groupId>
       <artifactId>xmlrpc-client</artifactId>
-      <version>3.1.3</version>
+      <version>${xmlrpc-client.version}</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.woodstox</groupId>
       <artifactId>woodstox-core-asl</artifactId>
-      <version>4.0.6</version>
+      <version>${woodstox-core-asl.version}</version>
     </dependency>
     <dependency>
       <groupId>net.sf.supercsv</groupId>
       <artifactId>super-csv</artifactId>
-      <version>2.0.1</version>
+      <version>${super-csv.version}</version>
     </dependency>
 
     <!-- NY Senate Dependencies -->
@@ -158,7 +172,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>${junit.version}</version>
     </dependency>
   </dependencies>
 </project>

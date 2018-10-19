@@ -8,7 +8,8 @@ import gov.nysenate.ams.model.CityStateResult;
 import gov.nysenate.ams.provider.AmsNativeProvider;
 import gov.nysenate.ams.util.Application;
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -22,7 +23,7 @@ public class CityStateController extends BaseApiController
 {
     /* TODO - Implement init caps functionality for city/state */
 
-    private Logger logger = Logger.getLogger(CityStateController.class);
+    private Logger logger = LoggerFactory.getLogger(CityStateController.class);
     private AmsNativeProvider amsNativeProvider;
 
     @Override

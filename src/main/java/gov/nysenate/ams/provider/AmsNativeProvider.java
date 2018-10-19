@@ -6,7 +6,8 @@ import gov.nysenate.ams.service.AddressService;
 import gov.nysenate.ams.service.LibraryService;
 import gov.nysenate.ams.service.LicensingService;
 import gov.nysenate.util.Config;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
  */
 public class AmsNativeProvider implements AddressService, LicensingService, LibraryService
 {
-    private static Logger logger = Logger.getLogger(AmsNativeDao.class);
+    private static Logger logger = LoggerFactory.getLogger(AmsNativeDao.class);
     private final AmsNativeDao amsNativeDao;
     private final Config config;
     private final AmsSettings amsSettings;

@@ -6,14 +6,18 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import gov.nysenate.ams.util.Application;
 import gov.nysenate.util.Config;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 import javax.servlet.*;
 import java.io.IOException;
 
 public class ApiFilter implements Filter
 {
-    private static Logger logger = Logger.getLogger(ApiFilter.class);
+    Marker fatal = MarkerFactory.getMarker("FATAL");
+    private static Logger logger = LoggerFactory.getLogger(ApiFilter.class);
     private static Config config;
 
     private static final String RESPONSE_OBJECT_KEY = "responseObject";
@@ -90,7 +94,7 @@ public class ApiFilter implements Filter
             logger.trace("Completed serialization");
         }
         catch (JsonProcessingException ex) {
-            logger.fatal("Failed to serialize response!", ex);
+            logger.error(fatal, "Failed to serialize response!", ex);
             //request.setAttribute(FORMATTED_RESPONSE_KEY, RESPONSE_SERIALIZATION_ERROR);
         }
     }

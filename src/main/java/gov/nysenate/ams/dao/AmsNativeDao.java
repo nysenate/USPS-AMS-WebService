@@ -4,7 +4,10 @@ import gov.nysenate.ams.model.Address;
 import gov.nysenate.ams.model.AddressInquiryResult;
 import gov.nysenate.ams.model.AmsSettings;
 import gov.nysenate.ams.model.CityStateResult;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 /**
  * JNI wrapper to the C implementation of the USPS AMS Service.
@@ -20,7 +23,8 @@ import org.apache.log4j.Logger;
  */
 public class AmsNativeDao
 {
-    private static Logger logger = Logger.getLogger(AmsNativeDao.class);
+    Marker fatal = MarkerFactory.getMarker("FATAL");
+    private static Logger logger = LoggerFactory.getLogger(AmsNativeDao.class);
 
     /**
      * Loads the AMS wrapper library. In order for this to work the java.library.path environment
@@ -40,7 +44,7 @@ public class AmsNativeDao
             return true;
         }
         catch (UnsatisfiedLinkError ex) {
-            logger.fatal("Failed to load the AMS Native Library!", ex);
+            logger.error(fatal, "Failed to load the AMS Native Library!", ex);
             return false;
         }
     }

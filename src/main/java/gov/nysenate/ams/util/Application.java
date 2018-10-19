@@ -4,11 +4,12 @@ import gov.nysenate.ams.model.AmsSettings;
 import gov.nysenate.ams.provider.AmsNativeProvider;
 import gov.nysenate.util.Config;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 public class Application
 {
-    private static Logger logger = Logger.getLogger(Application.class);
+    private static Logger logger = LoggerFactory.getLogger(Application.class);
 
     private static String DEFAULT_PROPERTY_FILENAME = "app.properties";
     private static String TEST_PROPERTY_FILENAME = "test.app.properties";

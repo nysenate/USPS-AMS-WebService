@@ -8,7 +8,8 @@ import gov.nysenate.ams.model.AddressInquiryResult;
 import gov.nysenate.ams.provider.AmsNativeProvider;
 import gov.nysenate.ams.util.Application;
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class Zip9InquiryController extends BaseApiController
 {
-    private Logger logger = Logger.getLogger(Zip9InquiryController.class);
+    private Logger logger = LoggerFactory.getLogger(Zip9InquiryController.class);
     private AmsNativeProvider amsNativeProvider;
 
     @Override
