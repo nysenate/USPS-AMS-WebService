@@ -44,9 +44,9 @@
   </repositories>
 
   <properties>
-    <log4j.version>2.11.1</log4j.version>
+    <log4j.version>2.12.1</log4j.version>
     <nysenate-java-utils.version>1.1</nysenate-java-utils.version>
-    <tomcat.version>8.0.21</tomcat.version>
+    <tomcat.version>8.5.50</tomcat.version>
     <commons-lang3.version>3.1</commons-lang3.version>
     <commons-io.version>2.4</commons-io.version>
     <commons-configuration.version>1.9</commons-configuration.version>
