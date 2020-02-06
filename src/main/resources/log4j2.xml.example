@@ -1,22 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
-<log4j:configuration>
-    <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
-        <param name="target" value="System.out"/>
-        <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{dd MMM yyyy HH:mm:ss,SSS} %5p %c{1}:%L - %m%n"/>
-        </layout>
-    </appender>
-
-    <appender name="stderr" class="org.apache.log4j.ConsoleAppender">
-        <param name="target" value="System.err"/>
-        <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{dd MMM yyyy HH:mm:ss,SSS} %5p %c{1}:%L - %m%n"/>
-        </layout>
-    </appender>
-    <root>
-        <priority value="info"></priority>
-        <appender-ref ref="stdout"/>
-    </root>
-
-</log4j:configuration>
+<Configuration status="warn" strict="true">
+    <Properties>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss,SSS} %5p %t %c{2}:%L - %m%n</Property>
+        <Property name="LOG_DIR">${sys:catalina.base}/logs</Property>
+        <Property name="LOG_FILENAME">${LOG_DIR}/webapp.log</Property>
+        <Property name="LOG_ROLLNAME">${LOG_FILENAME}.%i</Property>
+    </Properties>
+    <Appenders>
+        <Appender type="Console" name="stdout" target="SYSTEM_OUT">
+            <Layout type="PatternLayout" pattern="${LOG_PATTERN}"/>
+        </Appender>
+        <Appender type="RollingFile" name="file" fileName="${LOG_FILENAME}" filePattern="${LOG_ROLLNAME}">
+            <Layout type="PatternLayout" pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="50MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </Appender>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="stdout"/>
+        </Root>
+        <logger name="org.apache.log4j" level="info"/>
+        <logger name="org.apache.commons" level="info"/>
+        <logger name="com.mchange.v2.c3p0.impl" level="WARN"/>
+        <logger name="org.springframework.web.servlet.mvc.method.annotation" level="WARN" additivity="false"/>
+        <logger name="org.springframework.web.servlet.handler" level="WARN" additivity="false"/>
+        <logger name="org.springframework.context.support" level="WARN" additivity="false"/>
+        <logger name="org.springframework.beans.factory.annotation" level="WARN" additivity="false"/>
+        <logger name="org.springframework.context.annotation.AnnotationConfigApplicationContext" level="WARN" additivity="false"/>
+        <logger name="org.springframework.test.context.transaction" level="WARN" additivity="false"/>
+        <logger name="org.springframework.test.context.support" level="WARN" additivity="false"/>
+    </Loggers>
+</Configuration>
