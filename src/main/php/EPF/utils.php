@@ -65,12 +65,17 @@ function send_request($url_suffix, $params = null, $outfile = null)
       curl_setopt($ch, CURLOPT_NOPROGRESS, false);
       // Open a file and write the Curl response to that file.
       $fp = fopen($outfile, 'w+');
-      curl_setopt($ch, CURLOPT_FILE, $fp);
-      curl_exec($ch);
-      fclose($fp);
-      $result = array('response' => 'success',
-                      'logonkey' => $cb_logonkey,
-                      'tokenkey' => $cb_tokenkey);
+      if ($fp) {
+        curl_setopt($ch, CURLOPT_FILE, $fp);
+        curl_exec($ch);
+        fclose($fp);
+        $result = array('response' => 'success',
+                        'logonkey' => $cb_logonkey,
+                        'tokenkey' => $cb_tokenkey);
+      }
+      else {
+        $result = array('response' => 'failure');
+      }
     }
     else {
       $result = json_decode(curl_exec($ch), true);
