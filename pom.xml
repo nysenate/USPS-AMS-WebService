@@ -48,7 +48,7 @@
     <nysenate-java-utils.version>1.1</nysenate-java-utils.version>
     <tomcat.version>8.5.50</tomcat.version>
     <commons-lang3.version>3.1</commons-lang3.version>
-    <commons-io.version>2.4</commons-io.version>
+    <commons-io.version>2.7</commons-io.version>
     <commons-configuration.version>1.9</commons-configuration.version>
     <httpcore.version>4.2.3</httpcore.version>
     <fluent-hc.version>4.2.2</fluent-hc.version>
