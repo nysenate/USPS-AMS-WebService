@@ -2,7 +2,7 @@ package gov.nysenate.ams.model;
 
 
 /**
- * An immutable representation of a basic address object.
+ * A mostly immutable representation of a basic address object.
  */
 public class Address
 {
@@ -13,6 +13,8 @@ public class Address
     protected final String state;            // State
     protected final String zip5;             // Zip 5
     protected final String zip4;             // Zip 4
+
+    protected Integer id;
     protected boolean merge = false;
 
     public Address(String address)
@@ -28,6 +30,33 @@ public class Address
     public Address(String firmName, String addr1, String addr2, String city, String state, String zip5, String zip4)
     {
         this(firmName, addr1, addr2, city, state, zip5, zip4, false);
+    }
+
+
+    public Address(String addr1, String addr2, String city, String state, String zip5, Integer id)
+    {
+        this.firmName = "";
+        this.addr1 = addr1;
+        this.addr2 = addr2;
+        this.city = city;
+        this.state = state;
+        this.zip5 = zip5;
+        this.zip4 = "";
+        this.id = id;
+        this.merge = false;
+    }
+
+    public Address(String firmName, String addr1, String addr2, String city, String state, String zip5, String zip4, Integer id)
+    {
+        this.firmName = firmName;
+        this.addr1 = addr1;
+        this.addr2 = addr2;
+        this.city = city;
+        this.state = state;
+        this.zip5 = zip5;
+        this.zip4 = zip4;
+        this.id = id;
+        this.merge = false;
     }
 
     public Address(String firmName, String addr1, String addr2, String city, String state, String zip5, String zip4, boolean merge)
@@ -106,5 +135,13 @@ public class Address
 
     public void setMerge(boolean merge) {
         this.merge = merge;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

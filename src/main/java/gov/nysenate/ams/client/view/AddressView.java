@@ -15,6 +15,7 @@ public class AddressView
     protected String state = "";
     protected String zip5 = "";
     protected String zip4 = "";
+    protected Integer id = null;
 
     public AddressView(Address address, boolean initCaps)
     {
@@ -26,6 +27,7 @@ public class AddressView
             this.state = address.getState();
             this.zip5 = address.getZip5();
             this.zip4 = address.getZip4();
+            this.id = address.getId();
 
             if (initCaps) {
                 this.city = (this.city != null && !this.city.isEmpty()) ? WordUtils.capitalizeFully(this.city.toLowerCase()) : "";
@@ -100,4 +102,6 @@ public class AddressView
     public String getZip4() {
         return zip4;
     }
+
+    public Integer getId() { return id; }
 }
