@@ -96,10 +96,10 @@ function cb_curl_header($resource, $data)
 {
   global $cb_logonkey, $cb_tokenkey;
 
-  if (strncmp($data, 'User-Logonkey:', 14) === 0) {
+  if (strncasecmp($data, 'User-Logonkey:', 14) === 0) {
     $cb_logonkey = trim(substr($data, 14));
   }
-  else if (strncmp($data, 'User-Tokenkey:', 14) === 0) {
+  else if (strncasecmp($data, 'User-Tokenkey:', 14) === 0) {
     $cb_tokenkey = trim(substr($data, 14));
   }
   return strlen($data);
