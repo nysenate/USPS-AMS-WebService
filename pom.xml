@@ -51,12 +51,15 @@
     <httpcore.version>4.2.3</httpcore.version>
     <jackson.version>2.16.1</jackson.version>
     <jasypt.version>1.9.0</jasypt.version>
-    <javax.mail.version>1.4.5</javax.mail.version>
     <junit.version>4.13.2</junit.version>
     <log4j.version>2.22.1</log4j.version>
-    <nysenate-java-utils.version>1.1</nysenate-java-utils.version>
+    <jakarta.mail.version>2.0.1</jakarta.mail.version>
+    <jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
+    <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
+    <jakarata.xml.bind-api.version>4.0.2</jakarata.xml.bind-api.version>
+    <nysenate-java-utils.version>1.2</nysenate-java-utils.version>
     <super-csv.version>2.0.1</super-csv.version>
-    <tomcat.version>9.0.84</tomcat.version>
+    <tomcat.version>10.1.39</tomcat.version>
     <woodstox-core-asl.version>4.0.6</woodstox-core-asl.version>
     <xmlrpc-client.version>3.1.3</xmlrpc-client.version>
     <xstream.version>1.4.19</xstream.version>
@@ -79,6 +82,35 @@
       <artifactId>tomcat-servlet-api</artifactId>
       <version>${tomcat.version}</version>
       <scope>provided</scope>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>${jakarta.servlet-api.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/jakarta.annotation/jakarta.annotation-api -->
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+      <version>${jakarta.annotation-api.version}</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/com.sun.mail/jakarta.mail -->
+    <dependency>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>jakarta.mail</artifactId>
+      <version>${jakarta.mail.version}</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>${jakarata.xml.bind-api.version}</version>
     </dependency>
 
     <!-- Core Dependencies -->
@@ -112,11 +144,7 @@
       <artifactId>fluent-hc</artifactId>
       <version>${fluent-hc.version}</version>
     </dependency>
-    <dependency>
-      <groupId>com.sun.mail</groupId>
-      <artifactId>javax.mail</artifactId>
-      <version>${javax.mail.version}</version>
-    </dependency>
+
     <dependency>
       <groupId>org.jasypt</groupId>
       <artifactId>jasypt</artifactId>

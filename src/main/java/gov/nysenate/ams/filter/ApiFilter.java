@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
-import javax.servlet.*;
+import jakarta.servlet.*;
 import java.io.IOException;
 
 public class ApiFilter implements Filter
