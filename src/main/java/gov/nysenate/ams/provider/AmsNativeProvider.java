@@ -9,9 +9,6 @@ import gov.nysenate.util.Config;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Serves as a wrapper to the AmsNativeDao class and holds references to
  * the configuration dependencies.
@@ -104,36 +101,6 @@ public class AmsNativeProvider implements AddressService, LicensingService, Libr
             return this.amsNativeDao.zip9Inquiry(zip9);
         }
         else return new AddressInquiryResult(-1, null, StatusCode.INSUFFICIENT_ZIP9.getCode(), null, null);
-    }
-
-    @Override
-    public List<AddressInquiryResult> addressInquiry(List<Address> addresses)
-    {
-        List<AddressInquiryResult> addressInquiryResults = new ArrayList<>();
-        for (Address address : addresses) {
-            addressInquiryResults.add(addressInquiry(address));
-        }
-        return addressInquiryResults;
-    }
-
-    @Override
-    public List<CityStateResult> cityStateLookup(List<String> zip5List)
-    {
-        List<CityStateResult> cityStateResults = new ArrayList<>();
-        for (String zip5 : zip5List) {
-            cityStateResults.add(cityStateLookup(zip5));
-        }
-        return cityStateResults;
-    }
-
-    @Override
-    public List<AddressInquiryResult> zip9Inquiry(List<String> zip9List)
-    {
-        List<AddressInquiryResult> addressInquiryResults = new ArrayList<>();
-        for (String zip9 : zip9List) {
-            addressInquiryResults.add(zip9Inquiry(zip9));
-        }
-        return addressInquiryResults;
     }
 
     /** LicensingService implementation

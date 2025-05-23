@@ -17,40 +17,46 @@ public interface AddressService
      * @param address Address to addressInquiry.
      * @return AddressInquiryResult.
      */
-    public AddressInquiryResult addressInquiry(Address address);
+    AddressInquiryResult addressInquiry(Address address);
 
     /**
      * Batch addressInquiry.
      * @param addresses List of input addresses.
      * @return  List of AddressInquiryResult.
      */
-    public List<AddressInquiryResult> addressInquiry(List<Address> addresses);
+    default List<AddressInquiryResult> addressInquiry(List<Address> addresses) {
+        return addresses.stream().map(this::addressInquiry).toList();
+    }
 
     /**
      * Performs city/state lookup using a zip5 code as the search key.
      * @param zip5 5 digit zip code string.
      * @return CityStateResult.
      */
-    public CityStateResult cityStateLookup(String zip5);
+    CityStateResult cityStateLookup(String zip5);
 
     /**
      * Batch cityStateLookup.
      * @param zip5List List of input zip5s.
      * @return List of CityStateResult.
      */
-    public List<CityStateResult> cityStateLookup(List<String> zip5List);
+    default List<CityStateResult> cityStateLookup(List<String> zip5List) {
+        return zip5List.stream().map(this::cityStateLookup).toList();
+    }
 
     /**
      * Performs a standardized address inquiry using a 9 digit zip5.
      * @param zip9 9 digit zip5 code string. Any hyphens will be removed.
      * @return AddressInquiryResult.
      */
-    public AddressInquiryResult zip9Inquiry(String zip9);
+    AddressInquiryResult zip9Inquiry(String zip9);
 
     /**
      * Batch zip9Inquiry.
      * @param zip9List List of input zip9s.
      * @return List of AddressInquiryResult.
      */
-    public List<AddressInquiryResult> zip9Inquiry(List<String> zip9List);
+    default List<AddressInquiryResult> zip9Inquiry(List<String> zip9List) {
+        return zip9List.stream().map(this::zip9Inquiry).toList();
+    }
 }
