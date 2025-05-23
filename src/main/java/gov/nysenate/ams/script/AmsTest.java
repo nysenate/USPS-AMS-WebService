@@ -27,7 +27,7 @@ public class AmsTest
             logger.info("Setup AMS successfully!");
         }
 
-        Address inputAddress = new Address("Fairlawn Ave", "", "Albany", "NY", "12203");
+        Address inputAddress = new Address("", "Fairlawn Ave", "", "Albany", "NY", "12203", "", false);
         AddressInquiryResult res = amsNativeDao.addressInquiry(inputAddress);
         OutputUtil.printObject(res);
 

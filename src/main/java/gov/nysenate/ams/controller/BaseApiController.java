@@ -33,19 +33,19 @@ public abstract class BaseApiController extends HttpServlet
      */
     public static Address getAddressFromParams(HttpServletRequest request)
     {
-        Address address = null;
-        if (request != null){
-            if (request.getParameter("addr") != null) {
-                address = new Address(request.getParameter("addr"));
-            }
-            else {
-                address = new Address(request.getParameter("firm"),  request.getParameter("addr1"),
-                                      request.getParameter("addr2"), request.getParameter("city"),
-                                      request.getParameter("state"), request.getParameter("zip5"),
-                                      request.getParameter("zip4"));
-            }
+        if (request == null) {
+            return null;
         }
-        return address;
+        boolean merge = Boolean.parseBoolean(request.getParameter("merge"));
+        if (request.getParameter("addr") != null) {
+            return new Address(request.getParameter("addr"), merge);
+        }
+        else {
+            return new Address(request.getParameter("firm"), request.getParameter("addr1"),
+                    request.getParameter("addr2"), request.getParameter("city"),
+                    request.getParameter("state"), request.getParameter("zip5"),
+                    request.getParameter("zip4"), merge);
+        }
     }
 
     /**
