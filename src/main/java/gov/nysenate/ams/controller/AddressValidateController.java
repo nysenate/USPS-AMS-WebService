@@ -1,98 +1,78 @@
 package gov.nysenate.ams.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import gov.nysenate.ams.client.response.BaseAddressInquiryResponse;
-import gov.nysenate.ams.client.response.BatchResponse;
 import gov.nysenate.ams.client.response.DetailAddressInquiryResponse;
-import gov.nysenate.ams.filter.ApiFilter;
 import gov.nysenate.ams.model.Address;
 import gov.nysenate.ams.model.AddressInquiryResult;
-import gov.nysenate.ams.provider.AmsNativeProvider;
-import gov.nysenate.ams.util.Application;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Servlet to handle address validation requests.
  */
-public class AddressValidateController extends BaseApiController
-{
-    private Logger logger = LoggerFactory.getLogger(AddressValidateController.class);
-    private AmsNativeProvider amsNativeProvider;
-
+public class AddressValidateController extends BaseApiController<Address, AddressInquiryResult> {
+    /**
+     * Constructs a new Address object using the query parameters of the supplied HttpServletRequest.
+     * This method exists to provide consistency among the different controllers when retrieving an
+     * address from the query string.
+     * @param request HttpServletRequest object
+     * @return new Address instance if request was valid
+     *         null if request was null
+     */
     @Override
-    public void init(ServletConfig config) throws ServletException
-    {
-        this.amsNativeProvider = Application.getAmsNativeProvider();
-        logger.debug("Initialized AddressValidateController.");
-    }
-
-    @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        Object responseObj;
-
-        boolean batch = isBatch(request);
-        boolean detail = isDetail(request);
-        boolean initCaps = isInitCaps(request);
-
-        if (batch) {
-            String json = IOUtils.toString(request.getInputStream(), "UTF-8");
-            List<Address> inputAddresses = getAddressesFromJson(json);
-            List<AddressInquiryResult> results = new ArrayList<>();
-            if (inputAddresses != null && inputAddresses.size() > 0) {
-                results = amsNativeProvider.addressInquiry(inputAddresses);
-            }
-            List<BaseAddressInquiryResponse> baseResponses = new ArrayList<>();
-            List<DetailAddressInquiryResponse> detailResponses = new ArrayList<>();
-            for (AddressInquiryResult result : results) {
-                if (!detail) {
-                    baseResponses.add(new BaseAddressInquiryResponse(result, initCaps));
-                }
-                else {
-                    detailResponses.add(new DetailAddressInquiryResponse(result, initCaps));
-                }
-            }
-            if (!detail) {
-                responseObj = new BatchResponse<>(baseResponses);
-            }
-            else {
-                responseObj = new BatchResponse<>(detailResponses);
-            }
-
-            ApiFilter.setApiResponse(responseObj, request);
+    protected Address getInputFromParams(HttpServletRequest request) {
+        if (request == null) {
+            return null;
+        }
+        boolean merge = Boolean.parseBoolean(request.getParameter("merge"));
+        if (request.getParameter("addr") != null) {
+            return new Address(request.getParameter("addr"), merge);
         }
         else {
-            doGet(request, response);
+            return new Address(request.getParameter("firm"), request.getParameter("addr1"),
+                    request.getParameter("addr2"), request.getParameter("city"),
+                    request.getParameter("state"), request.getParameter("zip5"),
+                    request.getParameter("zip4"), merge);
         }
     }
 
+    /**
+     * Constructs an Address object using the given JSON, which must be an array containing a collection of
+     * address component objects, e.g.
+     * <code>
+     *  [{"addr1":"", "addr2":"", "city":"", "state":"","zip5":"", "zip4":""} .. ]
+     * </code>
+     * @param node JSON payload
+     * @return Address
+     */
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        Object responseObj;
+    protected Address getInputFromJson(JsonNode node) {
+        String firm = getOrEmpty(node, "firm");
+        String addr1 = getOrEmpty(node, "addr1");
+        String addr2 = getOrEmpty(node, "addr2");
+        String city = getOrEmpty(node, "city");
+        String state = getOrEmpty(node, "state");
+        String zip5 = getOrEmpty(node, "zip5");
+        String zip4 = getOrEmpty(node, "zip4");
+        Integer id = node.has("id") ? node.get("id").asInt() : null;
+        return new Address(firm, addr1, addr2, city, state, zip5, zip4, id);
+    }
 
-        Address inputAddress = getAddressFromParams(request);
-        boolean detail = isDetail(request);
-        boolean initCaps = isInitCaps(request);
+    @Override
+    protected AddressInquiryResult getResult(Address input) {
+        return amsNativeProvider.addressInquiry(input);
+    }
 
-        AddressInquiryResult result = amsNativeProvider.addressInquiry(inputAddress);
-
-        if (!detail) {
-            responseObj = new BaseAddressInquiryResponse(result, initCaps);
+    @Override
+    protected Object getResponse(boolean detail, boolean initCaps, AddressInquiryResult result) {
+        if (detail) {
+            return new DetailAddressInquiryResponse(result, initCaps);
         }
-        else {
-            responseObj = new DetailAddressInquiryResponse(result, initCaps);
-        }
+        return new BaseAddressInquiryResponse(result, initCaps);
+    }
 
-        ApiFilter.setApiResponse(responseObj, request);
+    private static String getOrEmpty(JsonNode baseNode, String fieldName) {
+        return baseNode.has(fieldName) ? baseNode.get(fieldName).asText() : "";
     }
 }
