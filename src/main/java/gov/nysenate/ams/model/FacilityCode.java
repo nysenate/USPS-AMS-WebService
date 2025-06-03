@@ -1,7 +1,6 @@
 package gov.nysenate.ams.model;
 
-public enum FacilityCode
-{
+public enum FacilityCode {
     A ("Airport mail facility"),
     B ("Branch"),
     C ("Community post office"),
@@ -16,7 +15,7 @@ public enum FacilityCode
     S ("Station"),
     U ("Urbanization");
 
-    private String desc;
+    private final String desc;
 
     FacilityCode(String desc) {
         this.desc = desc;

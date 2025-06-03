@@ -19,25 +19,24 @@ public class BaseAddressInquiryResponse
 
     public BaseAddressInquiryResponse(AddressInquiryResult result, boolean initCaps)
     {
-        if (result != null) {
-            StatusCode statusCode = result.getStatusCode();
-            USPSAddress uspsAddress = result.getUspsAddress();
-            if (statusCode != null) {
-                if (statusCode.equals(StatusCode.EXACT_MATCH) || statusCode.equals(StatusCode.DEFAULT_MATCH)) {
-                    this.validated = true;
-                }
-                this.status = new StatusCodeView(result.getStatusCode());
-            }
-            else {
-                this.status = new StatusCodeView(StatusCode.UNKNOWN_ERROR);
-            }
-            if (uspsAddress != null) {
-                this.address = new AddressView(uspsAddress.getValidatedAddress(), initCaps);
-            }
-            if (result.getFootnotes() != null && !result.getFootnotes().isEmpty()) {
-                for (Footnote footnote : result.getFootnotes()) {
-                    this.footnotes.add(new FootnoteView(footnote));
-                }
+        if (result == null) {
+            return;
+        }
+        StatusCode statusCode = result.statusCode();
+        if (statusCode == null) {
+            statusCode = StatusCode.UNKNOWN_ERROR;
+        }
+        if (statusCode == StatusCode.EXACT_MATCH || statusCode == StatusCode.DEFAULT_MATCH) {
+            this.validated = true;
+        }
+        this.status = new StatusCodeView(statusCode);
+        USPSAddress uspsAddress = result.uspsAddress();
+        if (uspsAddress != null) {
+            this.address = new AddressView(uspsAddress.getValidatedAddress(), initCaps);
+        }
+        if (result.footnotes() != null && !result.footnotes().isEmpty()) {
+            for (Footnote footnote : result.footnotes()) {
+                this.footnotes.add(new FootnoteView(footnote));
             }
         }
     }

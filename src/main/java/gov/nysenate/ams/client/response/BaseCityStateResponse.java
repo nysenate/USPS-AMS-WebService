@@ -1,5 +1,6 @@
 package gov.nysenate.ams.client.response;
 
+import gov.nysenate.ams.model.CityRecord;
 import gov.nysenate.ams.model.CityStateResult;
 import org.apache.commons.lang.WordUtils;
 
@@ -9,35 +10,31 @@ import org.apache.commons.lang.WordUtils;
  * Date: 10/17/13
  * Time: 2:47 PM
  */
-public class BaseCityStateResponse
-{
+public class BaseCityStateResponse {
     protected boolean success;
     protected String cityName;
     protected String cityAbbr;
     protected String zipCode;
     protected String stateAbbr;
 
-    public BaseCityStateResponse(CityStateResult result, boolean initCaps)
-    {
-        if(result != null)
-        {
-            this.success = result.isSuccess();
-            if (result.getCityRecord() != null) {
-                if(initCaps)
-                {
-                    this.cityName = WordUtils.capitalizeFully(result.getCityRecord().getCityName());
-                    this.cityAbbr = WordUtils.capitalizeFully(result.getCityRecord().getCityAbbrev());
-                }
-                else
-                {
-                    this.cityName = result.getCityRecord().getCityName();
-                    this.cityAbbr = result.getCityRecord().getCityAbbrev();
-                }
-                this.zipCode = result.getCityRecord().getZipCode();
-                this.stateAbbr = result.getCityRecord().getStateAbbr();
-
-            }
+    public BaseCityStateResponse(CityStateResult result, boolean initCaps) {
+        if (result == null) {
+            return;
         }
+        this.success = result.isSuccess();
+        CityRecord cityRecord = result.cityRecord();
+        if (cityRecord == null) {
+            return;
+        }
+        if (initCaps) {
+            this.cityName = WordUtils.capitalizeFully(cityRecord.cityName());
+            this.cityAbbr = WordUtils.capitalizeFully(cityRecord.cityAbbrev());
+        } else {
+            this.cityName = cityRecord.cityName();
+            this.cityAbbr = cityRecord.cityAbbrev();
+        }
+        this.zipCode = cityRecord.zipCode();
+        this.stateAbbr = cityRecord.stateAbbr();
     }
 
     public boolean isSuccess() {

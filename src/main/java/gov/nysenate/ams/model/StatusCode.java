@@ -6,18 +6,17 @@ import java.util.Map;
 /**
  * Represents the return codes returned by the AmsNativeProvider API.
  */
-public enum StatusCode
-{
+public enum StatusCode {
     /* Web API specific status codes */
+    UNKNOWN_ERROR(-1, "There was an unexpected error while handling your request. This may be a result of " +
+            "an expired license and/or data. Please notify Senate Tech if you received this error."),
+
     INSUFFICIENT_ADDRESS(2,
         "The input address must contain at minimum the following address components: (addr1, city, state) " +
         "or (addr1, zip5)"),
 
     INSUFFICIENT_ZIP9(3,
         "The API method requires a Zip9 code"),
-
-    UNKNOWN_ERROR(-1, "There was an unexpected error while handling your request. This may be a result of " +
-            "an expired license and/or data. Please notify Senate Tech if you received this error."),
 
     /* AMS specific status codes */
     INVALID_DUAL_ADDRESS (10,
@@ -63,10 +62,10 @@ public enum StatusCode
     }
 
     /** Numerical return code. */
-    private int code = 0;
+    private final int code;
 
     /** Description of return code and possible corrective actions. */
-    private String message = "";
+    private final String message;
 
     StatusCode(int code, String message) {
         this.code = code;

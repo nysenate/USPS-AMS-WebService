@@ -2,116 +2,26 @@ package gov.nysenate.ams.model;
 
 /**
  * Represents a City/State record that is populated during a city/state request.
+ * "city" in these variable names actually refer to "city/state".
+ * Some notes on the fields:
+ * cityKey, lastLineName, uniqueZipInd: not currently populated
+ * lastLineNum: preferred last line key
  */
-public class CityRecord
-{
-    protected final char detailCode;           // Copyright Detail Code
-    protected final String zipCode;            // Zip code
-    protected final String cityKey;            // City/state key
-    protected final ZipClassCode zipClassCode;
-    protected final String cityName;           // City/state name
-    protected final String cityAbbrev;         // City/state name abbrev
-    protected final FacilityCode facilityCd;
-    protected final char mailingNameInd;       // Mailing name indicator:
-                                               // Y = Mailing name
-                                               // N = Non-mailing name
-    protected final String lastLineNum;        // Preferred last line key
-    protected final String preferredCity;       // Preferred city name
-    protected final char cityDelvInd;
-    protected final char autoZoneInd;
-    protected final char uniqueZipInd;
-    protected final String stateAbbr;          // State abbreviation
-    protected final String countyNum;          // County number
-    protected final String countyName;         // County name
+public record CityRecord(char detailCode, String zipCode, String cityKey, ZipClassCode zipClassCode,
+                         String cityName, String cityAbbrev, FacilityCode facilityCd,
+                         MailingNameIndicator mailingNameInd, String lastLineNum, String lastLineName,
+                         char cityDelvInd, char autoZoneInd, char uniqueZipInd, String stateAbbr,
+                         String countyNum, String countyName) {
 
-    public CityRecord(String countyName, String stateAbbr, String zipCode,  String preferredCity, String lastLineNum,
-                      String cityAbbrev, String cityName,String cityKey, String countyNum, char zipClassCode,
+    // C constructor
+    public CityRecord(String countyName, String stateAbbr, String zipCode,  String lastLineName, String lastLineNum,
+                      String cityAbbrev, String cityName, String cityKey, String countyNum, char zipClassCode,
                       char mailingNameInd,  char detailCode, char facilityCd, char cityDelvInd, char autoZoneind,
-                      char uniqueZipInd)
-    {
-        if(countyName != null)
-        {
-            this.countyName = countyName.trim();
-        }
-        else {this.countyName = "";}
-        this.countyNum = countyNum;
-        this.stateAbbr = stateAbbr;
-        this.preferredCity = preferredCity;
-        this.lastLineNum = lastLineNum;
-        this.mailingNameInd = mailingNameInd;
-        this.facilityCd = FacilityCode.valueOf(Character.toString(facilityCd));
-        this.cityAbbrev = cityAbbrev;
-        this.cityName = cityName;
-        this.zipClassCode = ZipClassCode.getValue(Character.toString(zipClassCode));
-        this.cityKey = cityKey;
-        this.zipCode = zipCode;
-        this.detailCode = detailCode;
-        this.cityDelvInd = cityDelvInd;
-        this.autoZoneInd = autoZoneind;
-        this.uniqueZipInd = uniqueZipInd;
-    }
-
-    public char getDetailCode() {
-        return detailCode;
-    }
-
-    public String getZipCode() {
-        return zipCode;
-    }
-
-    public String getCityKey() {
-        return cityKey;
-    }
-
-    public ZipClassCode getZipClassCode() {
-        return zipClassCode;
-    }
-
-    public String getCityName() {
-        return cityName;
-    }
-
-    public String getCityAbbrev() {
-        return cityAbbrev;
-    }
-
-    public FacilityCode getFacilityCd() {
-        return facilityCd;
-    }
-
-    public char getMailingNameInd() {
-        return mailingNameInd;
-    }
-
-    public String getLastLineNum() {
-        return lastLineNum;
-    }
-
-    public String getPreferredCity() {
-        return preferredCity;
-    }
-
-    public String getStateAbbr() {
-        return stateAbbr;
-    }
-
-    public String getCountyNum() {
-        return countyNum;
-    }
-
-    public String getCountyName() {
-        return countyName;
-    }
-
-    public char getCityDelvInd() {
-        return cityDelvInd;
-    }
-
-    public char getAutoZoneInd() {
-        return autoZoneInd;
-    }
-
-    public char getUniqueZipInd() {
-        return uniqueZipInd;
+                      char uniqueZipInd) {
+        this(detailCode, zipCode, cityKey, ZipClassCode.getValue(Character.toString(zipClassCode)),
+                cityName, cityAbbrev, FacilityCode.valueOf(Character.toString(facilityCd)),
+                MailingNameIndicator.valueOf(String.valueOf(mailingNameInd)),
+                lastLineNum, lastLineName, cityDelvInd, autoZoneind, uniqueZipInd, stateAbbr, countyNum,
+                countyName == null ? "" : countyName.trim());
     }
 }

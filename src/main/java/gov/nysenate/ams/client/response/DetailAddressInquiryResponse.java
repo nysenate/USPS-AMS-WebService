@@ -8,18 +8,15 @@ import gov.nysenate.ams.model.AddressRecord;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetailAddressInquiryResponse extends BaseAddressInquiryResponse
-{
+public class DetailAddressInquiryResponse extends BaseAddressInquiryResponse {
     protected USPSDetailView detail;
-    protected int recordCount;
     protected List<AddressRecordView> records = new ArrayList<>();
 
     public DetailAddressInquiryResponse(AddressInquiryResult result, boolean initCaps) {
         super(result, initCaps);
         if (result != null) {
-            this.detail = new USPSDetailView(result.getUspsAddress());
-            this.recordCount = result.getRecords().size();
-            for (AddressRecord addressRecord : result.getRecords()) {
+            this.detail = new USPSDetailView(result.uspsAddress());
+            for (AddressRecord addressRecord : result.records()) {
                 this.records.add(new AddressRecordView(addressRecord));
             }
         }
@@ -30,7 +27,7 @@ public class DetailAddressInquiryResponse extends BaseAddressInquiryResponse
     }
 
     public int getRecordCount() {
-        return recordCount;
+        return records.size();
     }
 
     public List<AddressRecordView> getRecords() {

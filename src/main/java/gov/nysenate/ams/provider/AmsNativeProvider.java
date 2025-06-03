@@ -15,7 +15,7 @@ import org.slf4j.Logger;
  */
 public class AmsNativeProvider implements AddressService, LicensingService, LibraryService
 {
-    private static Logger logger = LoggerFactory.getLogger(AmsNativeDao.class);
+    private static final Logger logger = LoggerFactory.getLogger(AmsNativeDao.class);
     private final AmsNativeDao amsNativeDao;
     private final Config config;
     private final AmsSettings amsSettings;
@@ -78,7 +78,7 @@ public class AmsNativeProvider implements AddressService, LicensingService, Libr
     {
         if (address != null && !address.isEmpty()) {
             AddressInquiryResult result = this.amsNativeDao.addressInquiry(address);
-            result.getUspsAddress().getValidatedAddress().setId(address.getId());
+            result.uspsAddress().getValidatedAddress().setId(address.getId());
             return result;
         }
         else return new AddressInquiryResult(-1, null, StatusCode.INSUFFICIENT_ADDRESS.getCode(), null, null);

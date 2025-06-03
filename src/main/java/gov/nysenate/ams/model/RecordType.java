@@ -3,8 +3,7 @@ package gov.nysenate.ams.model;
 /**
  * Represents the type of record associated with an entry in an address record stack.
  */
-public enum RecordType
-{
+public enum RecordType {
     F ("Firm",
         "This is a match to a Firm Record, which is the finest level of match available for an address."),
 
@@ -24,8 +23,8 @@ public enum RecordType
     S ("Street Record",
         "This is a match to a Street record containing a valid primary number range.");
 
-    private String shortDesc;
-    private String longDesc;
+    private final String shortDesc;
+    private final String longDesc;
 
     RecordType(String shortDesc, String longDesc) {
         this.shortDesc = shortDesc;

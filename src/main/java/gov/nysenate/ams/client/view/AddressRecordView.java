@@ -29,28 +29,28 @@ public class AddressRecordView
     public AddressRecordView(AddressRecord addressRecord)
     {
         if (addressRecord != null) {
-            this.recordId = addressRecord.getRecordID();
-            RecordType rType =  addressRecord.getRecordType();
+            this.recordId = addressRecord.recordID();
+            RecordType rType =  addressRecord.recordType();
             if (rType != null) {
                 this.recordType = rType.name();
                 this.recordTypeDesc = rType.getShortDesc();
             }
-            this.primaryLow = OutputUtil.trimLeadingZeroes(addressRecord.getPrimaryLow());
-            this.primaryHigh = OutputUtil.trimLeadingZeroes(addressRecord.getPrimaryHigh());
-            this.primaryParity = Character.toString(addressRecord.getPrimaryParity());
-            this.preDir = addressRecord.getPreDir();
-            this.streetName = addressRecord.getStreetName();
-            this.streetSuffix = addressRecord.getSuffix();
-            this.postDir = addressRecord.getPostDir();
-            this.unit = addressRecord.getUnit();
-            this.secondaryLow = OutputUtil.trimLeadingZeroes(addressRecord.getSecLow());
-            this.secondaryHigh = OutputUtil.trimLeadingZeroes(addressRecord.getSecHigh());
-            this.secondaryParity = Character.toString(addressRecord.getSecCode());
-            this.zip5 = addressRecord.getZip();
-            this.zip4Low = addressRecord.getAddonLow();
-            this.zip4High = addressRecord.getAddonHigh();
-            this.financeCode = addressRecord.getFinanceCode();
-            this.fipsCounty = addressRecord.getCountyNum();
+            this.primaryLow = OutputUtil.trimLeadingZeroes(addressRecord.primaryLow());
+            this.primaryHigh = OutputUtil.trimLeadingZeroes(addressRecord.primaryHigh());
+            this.primaryParity = Character.toString(addressRecord.primaryParity());
+            this.preDir = addressRecord.preDir();
+            this.streetName = addressRecord.streetName();
+            this.streetSuffix = addressRecord.suffix();
+            this.postDir = addressRecord.postDir();
+            this.unit = addressRecord.unit();
+            this.secondaryLow = OutputUtil.trimLeadingZeroes(addressRecord.secLow());
+            this.secondaryHigh = OutputUtil.trimLeadingZeroes(addressRecord.secHigh());
+            this.secondaryParity = Character.toString(addressRecord.secCode());
+            this.zip5 = addressRecord.zip();
+            this.zip4Low = addressRecord.addonLow();
+            this.zip4High = addressRecord.addonHigh();
+            this.financeCode = addressRecord.financeCode();
+            this.fipsCounty = addressRecord.countyNum();
         }
     }
 
