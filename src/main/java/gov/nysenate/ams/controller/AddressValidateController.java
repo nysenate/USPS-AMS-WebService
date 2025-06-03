@@ -27,7 +27,8 @@ public class AddressValidateController extends BaseApiController<Address, Addres
         }
         boolean merge = Boolean.parseBoolean(request.getParameter("merge"));
         if (request.getParameter("addr") != null) {
-            return new Address(request.getParameter("addr"), merge);
+            return new Address("", request.getParameter("addr"), "",
+                    "", "", "", "", merge);
         }
         else {
             return new Address(request.getParameter("firm"), request.getParameter("addr1"),
