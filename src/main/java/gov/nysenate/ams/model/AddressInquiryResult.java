@@ -7,9 +7,17 @@ import java.util.*;
  */
 public record AddressInquiryResult(int responseCode, USPSAddress uspsAddress, StatusCode statusCode,
                                    Set<Footnote> footnotes, List<AddressRecord> records) {
+
+    // C constructor
+    @SuppressWarnings("unused")
     public AddressInquiryResult(int responseCode, USPSAddress uspsAddress, int statusCode,
                                 String footnotes, AddressRecord[] records) {
-        this(responseCode, uspsAddress, StatusCode.getByCode(statusCode), parseFootnotes(footnotes), records == null ? List.of() : List.of(records));
+        this(responseCode, uspsAddress, StatusCode.getByCode(statusCode), parseFootnotes(footnotes),
+                records == null ? List.of() : List.of(records));
+    }
+
+    public AddressInquiryResult(StatusCode errorCode) {
+        this(-1, null, errorCode, Set.of(), List.of());
     }
 
     private static Set<Footnote> parseFootnotes(String footnotes) {

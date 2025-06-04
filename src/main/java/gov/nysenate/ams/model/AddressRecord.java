@@ -11,11 +11,12 @@ public record AddressRecord(int recordID, String zip, RecordType recordType,
                             String congressionalDist, String municipality, String urbanization, String lastLine) {
 
     // C constructor
+    @SuppressWarnings("unused")
     public AddressRecord(int recordID, String zip, String preDir, String streetName, String suffix, String postDir,
                          String primaryLow, String primaryHigh,  String bldgFirmName, String unit,
-                         String secLow, String secHigh,  String addonLow, String addonHigh, String financeCode,
+                         String secLow, String secHigh, String addonLow, String addonHigh, String financeCode,
                          String stateAbbr, String countyNum, String congressionalDist, String municipality,
-                         String urbanization, String lastLine,char primaryParity, char secCode, char recordType) {
+                         String urbanization, String lastLine, char primaryParity, char secCode, char recordType) {
         this(recordID, zip, RecordType.valueOf(Character.toString(recordType).toUpperCase()),
                 preDir, streetName, suffix, postDir, primaryLow, primaryHigh, primaryParity,
                 bldgFirmName, unit, secLow, secHigh, secCode, addonLow, addonHigh, financeCode,

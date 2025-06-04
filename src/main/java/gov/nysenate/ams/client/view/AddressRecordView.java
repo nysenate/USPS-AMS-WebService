@@ -2,10 +2,8 @@ package gov.nysenate.ams.client.view;
 
 import gov.nysenate.ams.model.AddressRecord;
 import gov.nysenate.ams.model.RecordType;
-import gov.nysenate.ams.util.OutputUtil;
 
-public class AddressRecordView
-{
+public class AddressRecordView {
     protected int recordId;
     protected String recordType;
     protected String recordTypeDesc;
@@ -35,16 +33,16 @@ public class AddressRecordView
                 this.recordType = rType.name();
                 this.recordTypeDesc = rType.getShortDesc();
             }
-            this.primaryLow = OutputUtil.trimLeadingZeroes(addressRecord.primaryLow());
-            this.primaryHigh = OutputUtil.trimLeadingZeroes(addressRecord.primaryHigh());
+            this.primaryLow = trimLeadingZeroes(addressRecord.primaryLow());
+            this.primaryHigh = trimLeadingZeroes(addressRecord.primaryHigh());
             this.primaryParity = Character.toString(addressRecord.primaryParity());
             this.preDir = addressRecord.preDir();
             this.streetName = addressRecord.streetName();
             this.streetSuffix = addressRecord.suffix();
             this.postDir = addressRecord.postDir();
             this.unit = addressRecord.unit();
-            this.secondaryLow = OutputUtil.trimLeadingZeroes(addressRecord.secLow());
-            this.secondaryHigh = OutputUtil.trimLeadingZeroes(addressRecord.secHigh());
+            this.secondaryLow = trimLeadingZeroes(addressRecord.secLow());
+            this.secondaryHigh = trimLeadingZeroes(addressRecord.secHigh());
             this.secondaryParity = Character.toString(addressRecord.secCode());
             this.zip5 = addressRecord.zip();
             this.zip4Low = addressRecord.addonLow();
@@ -128,5 +126,12 @@ public class AddressRecordView
 
     public String getFipsCounty() {
         return fipsCounty;
+    }
+
+    private static String trimLeadingZeroes(String s) {
+        if (s != null) {
+            return s.replaceFirst("^0+(?!$)", "");
+        }
+        return "";
     }
 }

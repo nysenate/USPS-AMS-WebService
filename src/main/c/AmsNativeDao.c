@@ -37,12 +37,12 @@ static jmethodID CityRecordConstr;
 static jmethodID CityStateResultConstr;
 
 /* Cached methods */
-static jmethodID Address_getFirmName;
-static jmethodID Address_getAddr1;
-static jmethodID Address_getAddr2;
-static jmethodID Address_getCity;
-static jmethodID Address_getState;
-static jmethodID Address_getZip5;
+static jmethodID Address_firmName;
+static jmethodID Address_addr1;
+static jmethodID Address_addr2;
+static jmethodID Address_city;
+static jmethodID Address_state;
+static jmethodID Address_zip5;
 
 /*
  * Class:     gov_nysenate_ams_dao_AmsNativeDao
@@ -144,12 +144,12 @@ JNIEXPORT jobject JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_addressInquiry
 
     /* Retrieve fields from input address. */
     jstring firmName, addr1, addr2, city, state, zip5;
-    firmName = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_getFirmName);
-    addr1 = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_getAddr1);
-    addr2 = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_getAddr2);
-    city = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_getCity);
-    state = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_getState);
-    zip5 = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_getZip5);
+    firmName = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_firmName);
+    addr1 = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_addr1);
+    addr2 = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_addr2);
+    city = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_city);
+    state = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_state);
+    zip5 = (jstring)(*env)->CallObjectMethod(env, jAddress, Address_zip5);
 
     /* Convert jstrings to c style strings */
     char* cFirmName = getC_String(env, firmName);
@@ -497,12 +497,12 @@ void cacheIDs(JNIEnv* env)
     CityStateResultConstr = (*env)->GetMethodID(env, CityStateResultCls, "<init>", "("INT_TYPE CITY_RECORD_TYPE")V");
 
     /* Cached Methods */
-    Address_getFirmName = (*env)->GetMethodID(env, AddressCls, "getFirmName", NO_ARGS STRING_TYPE);
-    Address_getAddr1 = (*env)->GetMethodID(env, AddressCls, "getAddr1", NO_ARGS STRING_TYPE);
-    Address_getAddr2 = (*env)->GetMethodID(env, AddressCls, "getAddr2", NO_ARGS STRING_TYPE);
-    Address_getCity = (*env)->GetMethodID(env, AddressCls, "getCity", NO_ARGS STRING_TYPE);
-    Address_getState = (*env)->GetMethodID(env, AddressCls, "getState", NO_ARGS STRING_TYPE);
-    Address_getZip5 = (*env)->GetMethodID(env, AddressCls, "getZip5", NO_ARGS STRING_TYPE);
+    Address_firmName = (*env)->GetMethodID(env, AddressCls, "firmName", NO_ARGS STRING_TYPE);
+    Address_addr1 = (*env)->GetMethodID(env, AddressCls, "addr1", NO_ARGS STRING_TYPE);
+    Address_addr2 = (*env)->GetMethodID(env, AddressCls, "addr2", NO_ARGS STRING_TYPE);
+    Address_city = (*env)->GetMethodID(env, AddressCls, "city", NO_ARGS STRING_TYPE);
+    Address_state = (*env)->GetMethodID(env, AddressCls, "state", NO_ARGS STRING_TYPE);
+    Address_zip5 = (*env)->GetMethodID(env, AddressCls, "zip5", NO_ARGS STRING_TYPE);
 }
 
 jobject getObjectFromMethod(JNIEnv* env, jclass cls, jobject instance, const char* methodName, const char* returnType)

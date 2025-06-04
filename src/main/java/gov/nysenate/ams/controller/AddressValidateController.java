@@ -25,16 +25,15 @@ public class AddressValidateController extends BaseApiController<Address, Addres
         if (request == null) {
             return null;
         }
-        boolean merge = Boolean.parseBoolean(request.getParameter("merge"));
         if (request.getParameter("addr") != null) {
             return new Address("", request.getParameter("addr"), "",
-                    "", "", "", "", merge);
+                    "", "", "", "");
         }
         else {
             return new Address(request.getParameter("firm"), request.getParameter("addr1"),
                     request.getParameter("addr2"), request.getParameter("city"),
                     request.getParameter("state"), request.getParameter("zip5"),
-                    request.getParameter("zip4"), merge);
+                    request.getParameter("zip4"));
         }
     }
 
@@ -56,8 +55,7 @@ public class AddressValidateController extends BaseApiController<Address, Addres
         String state = getOrEmpty(node, "state");
         String zip5 = getOrEmpty(node, "zip5");
         String zip4 = getOrEmpty(node, "zip4");
-        Integer id = node.has("id") ? node.get("id").asInt() : null;
-        return new Address(firm, addr1, addr2, city, state, zip5, zip4, id);
+        return new Address(firm, addr1, addr2, city, state, zip5, zip4);
     }
 
     @Override

@@ -13,8 +13,7 @@ import org.slf4j.Logger;
  * Serves as a wrapper to the AmsNativeDao class and holds references to
  * the configuration dependencies.
  */
-public class AmsNativeProvider implements AddressService, LicensingService, LibraryService
-{
+public class AmsNativeProvider implements AddressService, LicensingService, LibraryService {
     private static final Logger logger = LoggerFactory.getLogger(AmsNativeDao.class);
     private final AmsNativeDao amsNativeDao;
     private final Config config;
@@ -22,8 +21,7 @@ public class AmsNativeProvider implements AddressService, LicensingService, Libr
 
     private static boolean LIBRARY_LOADED = false;
 
-    public AmsNativeProvider(Config config, AmsSettings amsSettings)
-    {
+    public AmsNativeProvider(Config config, AmsSettings amsSettings) {
         this.amsNativeDao = new AmsNativeDao();
         this.config = config;
         this.amsSettings = amsSettings;
@@ -38,8 +36,7 @@ public class AmsNativeProvider implements AddressService, LicensingService, Libr
      * @return true if the library was successfully loaded, false otherwise.
      */
     @Override
-    public boolean load()
-    {
+    public boolean load() {
         String libraryName = config.getValue("shared.library.name", "amsnative");
         if (!LIBRARY_LOADED) {
             LIBRARY_LOADED = amsNativeDao.loadAmsLibrary(libraryName);
@@ -52,75 +49,62 @@ public class AmsNativeProvider implements AddressService, LicensingService, Libr
      * @return true if success, false otherwise. Note: returns false if AMS is already configured.
      */
     @Override
-    public boolean setup()
-    {
-        boolean success = false;
+    public boolean setup() {
         try {
-            success = this.amsNativeDao.setupAmsLibrary(this.amsSettings);
+            return amsNativeDao.setupAmsLibrary(amsSettings);
         }
         catch (Exception ex) {
             logger.debug("Failed to setup AMS using the supplied configuration settings!", ex);
+            return false;
         }
-        return success;
     }
 
     @Override
-    public boolean shutDown()
-    {
-        return this.amsNativeDao.closeAmsLibrary();
+    public boolean shutDown() {
+        return amsNativeDao.closeAmsLibrary();
     }
 
-    /** AddressService implementation
-     * -------------------------------*/
+    /** AddressService implementation */
 
     @Override
-    public AddressInquiryResult addressInquiry(Address address)
-    {
+    public AddressInquiryResult addressInquiry(Address address) {
         if (address != null && !address.isEmpty()) {
-            AddressInquiryResult result = this.amsNativeDao.addressInquiry(address);
-            result.uspsAddress().getValidatedAddress().setId(address.getId());
-            return result;
+            return amsNativeDao.addressInquiry(address);
         }
-        else return new AddressInquiryResult(-1, null, StatusCode.INSUFFICIENT_ADDRESS.getCode(), null, null);
+        return new AddressInquiryResult(StatusCode.INSUFFICIENT_ADDRESS);
     }
 
     @Override
-    public CityStateResult cityStateLookup(String zip5)
-    {
+    public CityStateResult cityStateLookup(String zip5) {
         if (zip5 != null && !zip5.isEmpty()) {
-            return this.amsNativeDao.cityStateLookup(zip5);
+            return amsNativeDao.cityStateLookup(zip5);
         }
-        else return new CityStateResult(-1, null);
+        return new CityStateResult(-1, null);
 
     }
 
     @Override
-    public AddressInquiryResult zip9Inquiry(String zip9)
-    {
+    public AddressInquiryResult zip9Inquiry(String zip9) {
         if (zip9 != null && !zip9.isEmpty()) {
-            return this.amsNativeDao.zip9Inquiry(zip9);
+            return amsNativeDao.zip9Inquiry(zip9);
         }
-        else return new AddressInquiryResult(-1, null, StatusCode.INSUFFICIENT_ZIP9.getCode(), null, null);
+        return new AddressInquiryResult(StatusCode.INSUFFICIENT_ZIP9);
     }
 
-    /** LicensingService implementation
-     * -------------------------------*/
+    /** LicensingService implementation */
 
     @Override
-    public String getApiVersion()
-    {
+    public String getApiVersion() {
         return amsNativeDao.getAmsVersion();
     }
 
     @Override
-    public int getDataExpireDays()
-    {
+    public int getDataExpireDays() {
         return amsNativeDao.getDataExpireDays();
     }
 
     @Override
-    public int getLibraryExpireDays()
-    {
+    public int getLibraryExpireDays() {
         return amsNativeDao.getLibraryExpireDays();
     }
 }

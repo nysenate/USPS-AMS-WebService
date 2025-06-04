@@ -1,5 +1,6 @@
 package gov.nysenate.ams.client.view;
 
+import gov.nysenate.ams.model.ParsedAddress;
 import gov.nysenate.ams.model.USPSAddress;
 
 public class USPSDetailView
@@ -10,16 +11,18 @@ public class USPSDetailView
     protected String deliveryBarCode;
     protected String carrierRoute;
     protected int fipsCounty;
+    protected ParsedAddress parsedAddress;
 
     public USPSDetailView(USPSAddress uspsAddress)
     {
         if (uspsAddress != null) {
-            this.standardCityAbbr = uspsAddress.getStandardCityAbbr();
-            this.postOfficeCity = uspsAddress.getPostOfficeCity();
-            this.postOfficeState = uspsAddress.getPostOfficeState();
-            this.deliveryBarCode = uspsAddress.getDeliveryBarCode();
-            this.carrierRoute = uspsAddress.getCarrierRoute();
-            this.fipsCounty = uspsAddress.getFipsCounty();
+            this.standardCityAbbr = uspsAddress.standardCityAbbr();
+            this.postOfficeCity = uspsAddress.postOfficeCity();
+            this.postOfficeState = uspsAddress.postOfficeState();
+            this.deliveryBarCode = uspsAddress.deliveryBarCode();
+            this.carrierRoute = uspsAddress.carrierRoute();
+            this.fipsCounty = uspsAddress.fipsCounty();
+            this.parsedAddress = uspsAddress.parsedInputAddress();
         }
     }
 
@@ -45,5 +48,9 @@ public class USPSDetailView
 
     public int getFipsCounty() {
         return fipsCounty;
+    }
+
+    public ParsedAddress getParsedAddress() {
+        return parsedAddress;
     }
 }

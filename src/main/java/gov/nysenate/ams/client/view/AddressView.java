@@ -17,17 +17,15 @@ public class AddressView
     protected String zip4 = "";
     protected Integer id = null;
 
-    public AddressView(Address address, boolean initCaps)
-    {
+    public AddressView(Address address, boolean initCaps) {
         if (address != null) {
-            this.firm = address.getFirmName();
-            this.addr1 = address.getAddr1();
-            this.addr2 = address.getAddr2();
-            this.city = address.getCity();
-            this.state = address.getState();
-            this.zip5 = address.getZip5();
-            this.zip4 = address.getZip4();
-            this.id = address.getId();
+            this.firm = address.firmName();
+            this.addr1 = address.addr1();
+            this.addr2 = address.addr2();
+            this.city = address.city();
+            this.state = address.state();
+            this.zip5 = address.zip5();
+            this.zip4 = address.zip4();
 
             if (initCaps) {
                 this.city = (this.city != null && !this.city.isEmpty()) ? WordUtils.capitalizeFully(this.city.toLowerCase()) : "";

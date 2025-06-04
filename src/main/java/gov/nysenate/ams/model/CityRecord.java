@@ -2,7 +2,7 @@ package gov.nysenate.ams.model;
 
 /**
  * Represents a City/State record that is populated during a city/state request.
- * "city" in these variable names actually refer to "city/state".
+ * "city" in these variable names actually refers to "city/state".
  * Some notes on the fields:
  * cityKey, lastLineName, uniqueZipInd: not currently populated
  * lastLineNum: preferred last line key
@@ -14,6 +14,7 @@ public record CityRecord(char detailCode, String zipCode, String cityKey, ZipCla
                          String countyNum, String countyName) {
 
     // C constructor
+    @SuppressWarnings("unused")
     public CityRecord(String countyName, String stateAbbr, String zipCode,  String lastLineName, String lastLineNum,
                       String cityAbbrev, String cityName, String cityKey, String countyNum, char zipClassCode,
                       char mailingNameInd,  char detailCode, char facilityCd, char cityDelvInd, char autoZoneind,

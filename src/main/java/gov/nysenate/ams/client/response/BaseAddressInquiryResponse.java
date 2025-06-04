@@ -32,7 +32,7 @@ public class BaseAddressInquiryResponse
         this.status = new StatusCodeView(statusCode);
         USPSAddress uspsAddress = result.uspsAddress();
         if (uspsAddress != null) {
-            this.address = new AddressView(uspsAddress.getValidatedAddress(), initCaps);
+            this.address = new AddressView(uspsAddress.validatedAddress(), initCaps);
         }
         if (result.footnotes() != null && !result.footnotes().isEmpty()) {
             for (Footnote footnote : result.footnotes()) {
