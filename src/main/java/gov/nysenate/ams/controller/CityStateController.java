@@ -1,7 +1,6 @@
 package gov.nysenate.ams.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import gov.nysenate.ams.client.response.BaseCityStateResponse;
 import gov.nysenate.ams.client.response.DetailCityStateResponse;
 import gov.nysenate.ams.model.CityStateResult;
 
@@ -26,10 +25,7 @@ public class CityStateController extends BaseApiController<String, CityStateResu
     }
 
     @Override
-    protected Object getResponse(boolean detail, boolean initCaps, CityStateResult result) {
-        if (detail) {
-            return new DetailCityStateResponse(result, initCaps);
-        }
-        return new BaseCityStateResponse(result, initCaps);
+    protected Object getResponse(CityStateResult result) {
+        return new DetailCityStateResponse(result);
     }
 }

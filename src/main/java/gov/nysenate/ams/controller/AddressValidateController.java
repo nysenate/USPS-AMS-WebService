@@ -1,7 +1,6 @@
 package gov.nysenate.ams.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import gov.nysenate.ams.client.response.BaseAddressInquiryResponse;
 import gov.nysenate.ams.client.response.DetailAddressInquiryResponse;
 import gov.nysenate.ams.model.Address;
 import gov.nysenate.ams.model.AddressInquiryResult;
@@ -22,19 +21,10 @@ public class AddressValidateController extends BaseApiController<Address, Addres
      */
     @Override
     protected Address getInputFromParams(HttpServletRequest request) {
-        if (request == null) {
-            return null;
-        }
-        if (request.getParameter("addr") != null) {
-            return new Address("", request.getParameter("addr"), "",
-                    "", "", "", "");
-        }
-        else {
-            return new Address(request.getParameter("firm"), request.getParameter("addr1"),
-                    request.getParameter("addr2"), request.getParameter("city"),
-                    request.getParameter("state"), request.getParameter("zip5"),
-                    request.getParameter("zip4"));
-        }
+        return new Address(request.getParameter("firm"), request.getParameter("addr1"),
+                request.getParameter("addr2"), request.getParameter("city"),
+                request.getParameter("state"), request.getParameter("zip5"),
+                request.getParameter("zip4"));
     }
 
     /**
@@ -64,11 +54,8 @@ public class AddressValidateController extends BaseApiController<Address, Addres
     }
 
     @Override
-    protected Object getResponse(boolean detail, boolean initCaps, AddressInquiryResult result) {
-        if (detail) {
-            return new DetailAddressInquiryResponse(result, initCaps);
-        }
-        return new BaseAddressInquiryResponse(result, initCaps);
+    protected Object getResponse(AddressInquiryResult result) {
+        return DetailAddressInquiryResponse.getResponse(result);
     }
 
     private static String getOrEmpty(JsonNode baseNode, String fieldName) {

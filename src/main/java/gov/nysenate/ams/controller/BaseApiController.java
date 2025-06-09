@@ -27,15 +27,6 @@ public abstract class BaseApiController<InputType, ResultType> extends HttpServl
     protected AmsNativeProvider amsNativeProvider;
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // TODO: a POST request should always be processed the same way
-        boolean batch = Boolean.parseBoolean(request.getParameter("batch"));
-        if (!batch) {
-            doGet(request, response);
-            return;
-        }
-
-        boolean detail = isDetail(request);
-        boolean initCaps = isInitCaps(request);
         String json = IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8);
 
         List<InputType> inputs = new ArrayList<>();
@@ -50,17 +41,15 @@ public abstract class BaseApiController<InputType, ResultType> extends HttpServl
         }
 
         List<Object> responses = inputs.stream().map(this::getResult)
-                .map(result -> getResponse(detail, initCaps, result)).toList();
+                .map(result -> getResponse(result)).toList();
         var batchResponse = new BatchResponse<>(responses);
         ApiFilter.setApiResponse(batchResponse, request);
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
         InputType input = getInputFromParams(request);
-        boolean detail = isDetail(request);
-        boolean initCaps = isInitCaps(request);
         ResultType result = getResult(input);
-        ApiFilter.setApiResponse(getResponse(detail, initCaps, result), request);
+        ApiFilter.setApiResponse(getResponse(result), request);
     }
 
     public void init(ServletConfig config) {
@@ -73,7 +62,7 @@ public abstract class BaseApiController<InputType, ResultType> extends HttpServl
 
     protected abstract ResultType getResult(InputType input);
 
-    protected abstract Object getResponse(boolean detail, boolean initCaps, ResultType result);
+    protected abstract Object getResponse(ResultType result);
 
     /**
      * Retrieve zip5 value from query parameter.
@@ -82,24 +71,5 @@ public abstract class BaseApiController<InputType, ResultType> extends HttpServl
      */
     protected static String getZip5FromParams(HttpServletRequest request) {
         return StringUtils.defaultIfEmpty(request.getParameter("zip5"), "");
-    }
-
-    /**
-     * Indicate if detail = true in the query parameters.
-     * @param request HttpServletRequest object.
-     * @return true if detail = true, false otherwise.
-     */
-    private static boolean isDetail(HttpServletRequest request) {
-        return Boolean.parseBoolean(request.getParameter("detail"));
-    }
-
-    /**
-     * Indicate if initCaps = true in the query parameters.
-     * @param request HttpServletRequest object.
-     * @return true if initCaps = true, false otherwise.
-     */
-    private static boolean isInitCaps(HttpServletRequest request) {
-        return Boolean.parseBoolean(request.getParameter("initCaps")) ||
-               Boolean.parseBoolean(request.getParameter("initcaps"));
     }
 }

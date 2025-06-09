@@ -14,7 +14,7 @@ import org.slf4j.Logger;
  * the configuration dependencies.
  */
 public class AmsNativeProvider implements AddressService, LicensingService, LibraryService {
-    private static final Logger logger = LoggerFactory.getLogger(AmsNativeDao.class);
+    private static final Logger logger = LoggerFactory.getLogger(AmsNativeProvider.class);
     private final AmsNativeDao amsNativeDao;
     private final Config config;
     private final AmsSettings amsSettings;
@@ -27,8 +27,7 @@ public class AmsNativeProvider implements AddressService, LicensingService, Libr
         this.amsSettings = amsSettings;
     }
 
-    /** LibraryService implementation
-     * -------------------------------*/
+    // LibraryService implementation
 
     /**
      * Loads the shared AMS Native library wrapper. The library name is indicated by SHARED_LIBRARY_NAME.
@@ -68,27 +67,26 @@ public class AmsNativeProvider implements AddressService, LicensingService, Libr
 
     @Override
     public AddressInquiryResult addressInquiry(Address address) {
-        if (address != null && !address.isEmpty()) {
-            return amsNativeDao.addressInquiry(address);
+        if (address.isEmpty()) {
+            return new AddressInquiryResult(StatusCode.INSUFFICIENT_ADDRESS);
         }
-        return new AddressInquiryResult(StatusCode.INSUFFICIENT_ADDRESS);
+        return amsNativeDao.addressInquiry(address);
     }
 
     @Override
     public CityStateResult cityStateLookup(String zip5) {
-        if (zip5 != null && !zip5.isEmpty()) {
-            return amsNativeDao.cityStateLookup(zip5);
+        if (zip5.isEmpty()) {
+            return new CityStateResult(-1, null);
         }
-        return new CityStateResult(-1, null);
-
+        return amsNativeDao.cityStateLookup(zip5);
     }
 
     @Override
     public AddressInquiryResult zip9Inquiry(String zip9) {
-        if (zip9 != null && !zip9.isEmpty()) {
-            return amsNativeDao.zip9Inquiry(zip9);
+        if (zip9.isEmpty()) {
+            return new AddressInquiryResult(StatusCode.INSUFFICIENT_ZIP9);
         }
-        return new AddressInquiryResult(StatusCode.INSUFFICIENT_ZIP9);
+        return amsNativeDao.zip9Inquiry(zip9);
     }
 
     /** LicensingService implementation */

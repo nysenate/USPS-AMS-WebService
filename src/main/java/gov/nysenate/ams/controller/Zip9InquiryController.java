@@ -1,7 +1,6 @@
 package gov.nysenate.ams.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import gov.nysenate.ams.client.response.BaseAddressInquiryResponse;
 import gov.nysenate.ams.client.response.DetailAddressInquiryResponse;
 import gov.nysenate.ams.model.AddressInquiryResult;
 import org.apache.commons.lang3.StringUtils;
@@ -27,10 +26,7 @@ public class Zip9InquiryController extends BaseApiController<String, AddressInqu
     }
 
     @Override
-    protected Object getResponse(boolean detail, boolean initCaps, AddressInquiryResult result) {
-        if (detail) {
-            return new DetailAddressInquiryResponse(result, initCaps);
-        }
-        return new BaseAddressInquiryResponse(result, initCaps);
+    protected Object getResponse(AddressInquiryResult result) {
+        return DetailAddressInquiryResponse.getResponse(result);
     }
 }
