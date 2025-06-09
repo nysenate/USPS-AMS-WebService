@@ -13,16 +13,16 @@ public record AddressInquiryResult(int responseCode, USPSAddress uspsAddress, St
     public AddressInquiryResult(int responseCode, USPSAddress uspsAddress, int statusCode,
                                 String footnotes, AddressRecord[] records) {
         this(responseCode, uspsAddress, StatusCode.getByCode(statusCode), parseFootnotes(footnotes),
-                records == null ? List.of() : List.of(records));
+                records == null ? null : List.of(records));
     }
 
     public AddressInquiryResult(StatusCode errorCode) {
-        this(-1, null, errorCode, Set.of(), List.of());
+        this(-1, null, errorCode, null, null);
     }
 
     private static Set<Footnote> parseFootnotes(String footnotes) {
         if (footnotes == null) {
-            return Set.of();
+            return null;
         }
         var footnoteSet = new HashSet<Footnote>();
         for (char c : footnotes.toCharArray()) {

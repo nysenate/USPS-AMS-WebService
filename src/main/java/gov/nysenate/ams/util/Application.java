@@ -7,12 +7,10 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
-public class Application
-{
-    private static Logger logger = LoggerFactory.getLogger(Application.class);
+public class Application {
+    private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
-    private static String DEFAULT_PROPERTY_FILENAME = "app.properties";
-    private static String TEST_PROPERTY_FILENAME = "test.app.properties";
+    private static final String DEFAULT_PROPERTY_FILENAME = "app.properties";
 
     public static String AMS_VERSION = "";
 
@@ -21,11 +19,10 @@ public class Application
     private AmsNativeProvider amsNativeProvider;
 
     /** Singleton instance */
-    private static Application INSTANCE = new Application();
+    private static final Application INSTANCE = new Application();
     private Application() {}
 
-    public static boolean bootstrap()
-    {
+    public static boolean bootstrap() {
         try {
             INSTANCE.config = new Config(DEFAULT_PROPERTY_FILENAME);
             INSTANCE.amsSettings = new AmsSettings(INSTANCE.config);
@@ -45,8 +42,7 @@ public class Application
         return false;
     }
 
-    public static boolean shutdown()
-    {
+    public static boolean shutdown() {
         logger.info("Shutting down AMS application");
         if (INSTANCE.amsNativeProvider != null && INSTANCE.amsNativeProvider.shutDown()) {
             logger.info("Closed the AMS instance.");
@@ -55,13 +51,11 @@ public class Application
         return false;
     }
 
-    public static Config getConfig()
-    {
+    public static Config getConfig() {
         return INSTANCE.config;
     }
 
-    public static AmsNativeProvider getAmsNativeProvider()
-    {
+    public static AmsNativeProvider getAmsNativeProvider() {
         return INSTANCE.amsNativeProvider;
     }
 
