@@ -63,7 +63,7 @@ public class AmsNativeProvider implements AddressService, LicensingService, Libr
         return amsNativeDao.closeAmsLibrary();
     }
 
-    /** AddressService implementation */
+    // AddressService implementation
 
     @Override
     public AddressInquiryResult addressInquiry(Address address) {
@@ -80,7 +80,7 @@ public class AmsNativeProvider implements AddressService, LicensingService, Libr
         return amsNativeDao.zip9Inquiry(zip9);
     }
 
-    /** LicensingService implementation */
+    // LicensingService implementation
 
     @Override
     public String getApiVersion() {

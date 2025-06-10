@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class Zip9InquiryController extends BaseApiController<String, AddressInquiryResult> {
+public class Zip9InquiryController extends BaseApiController<String> {
     @Override
     protected String getInputFromParams(HttpServletRequest request) {
         return getZip5FromParams(request) + StringUtils.defaultIfEmpty(request.getParameter("zip4"), "");
@@ -21,12 +21,8 @@ public class Zip9InquiryController extends BaseApiController<String, AddressInqu
     }
 
     @Override
-    protected AddressInquiryResult getResult(String input) {
-        return amsNativeProvider.zip9Inquiry(input);
-    }
-
-    @Override
-    protected Object getResponse(AddressInquiryResult result) {
+    protected Object getResponse(String input) {
+        AddressInquiryResult result = amsNativeProvider.zip9Inquiry(input);
         return AddressInquiryResponse.getResponse(result);
     }
 }

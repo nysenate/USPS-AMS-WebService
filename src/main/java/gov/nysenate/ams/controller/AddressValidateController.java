@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Servlet to handle address validation requests.
  */
-public class AddressValidateController extends BaseApiController<Address, AddressInquiryResult> {
+public class AddressValidateController extends BaseApiController<Address> {
     /**
      * Constructs a new Address object using the query parameters of the supplied HttpServletRequest.
      * This method exists to provide consistency among the different controllers when retrieving an
@@ -49,12 +49,8 @@ public class AddressValidateController extends BaseApiController<Address, Addres
     }
 
     @Override
-    protected AddressInquiryResult getResult(Address input) {
-        return amsNativeProvider.addressInquiry(input);
-    }
-
-    @Override
-    protected Object getResponse(AddressInquiryResult result) {
+    protected Object getResponse(Address input) {
+        AddressInquiryResult result = amsNativeProvider.addressInquiry(input);
         return AddressInquiryResponse.getResponse(result);
     }
 

@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseApiController<InputType, ResultType> extends HttpServlet {
+public abstract class BaseApiController<InputType> extends HttpServlet {
     private static final Logger logger = LoggerFactory.getLogger(BaseApiController.class);
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -40,15 +40,14 @@ public abstract class BaseApiController<InputType, ResultType> extends HttpServl
             logger.error("Invalid JSON payload in {}", getClass(), ex);
         }
 
-        List<Object> responses = inputs.stream().map(this::getResult).map(this::getResponse).toList();
+        List<Object> responses = inputs.stream().map(this::getResponse).toList();
         var batchResponse = new BatchResponse<>(responses);
         ApiFilter.setApiResponse(batchResponse, request);
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
         InputType input = getInputFromParams(request);
-        ResultType result = getResult(input);
-        ApiFilter.setApiResponse(getResponse(result), request);
+        ApiFilter.setApiResponse(getResponse(input), request);
     }
 
     public void init(ServletConfig config) {
@@ -59,9 +58,7 @@ public abstract class BaseApiController<InputType, ResultType> extends HttpServl
 
     protected abstract InputType getInputFromJson(JsonNode node);
 
-    protected abstract ResultType getResult(InputType input);
-
-    protected abstract Object getResponse(ResultType result);
+    protected abstract Object getResponse(InputType input);
 
     /**
      * Retrieve zip5 value from query parameter.

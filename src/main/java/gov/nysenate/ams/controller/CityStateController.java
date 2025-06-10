@@ -6,7 +6,7 @@ import gov.nysenate.ams.model.CityStateResult;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class CityStateController extends BaseApiController<String, CityStateResult> {
+public class CityStateController extends BaseApiController<String> {
     @Override
     protected String getInputFromParams(HttpServletRequest request) {
         return getZip5FromParams(request);
@@ -18,12 +18,8 @@ public class CityStateController extends BaseApiController<String, CityStateResu
     }
 
     @Override
-    protected CityStateResult getResult(String input) {
-        return amsNativeProvider.cityStateLookup(input);
-    }
-
-    @Override
-    protected Object getResponse(CityStateResult result) {
+    protected Object getResponse(String input) {
+        CityStateResult result = amsNativeProvider.cityStateLookup(input);;
         return CityStateResponse.from(result);
     }
 }
