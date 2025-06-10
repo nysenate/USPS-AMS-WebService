@@ -1,24 +1,11 @@
 package gov.nysenate.ams.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Represents the return codes returned by the AmsNativeProvider API.
  */
 public enum StatusCode {
-    /* Web API specific status codes */
-    UNKNOWN_ERROR(-1, "There was an unexpected error while handling your request. This may be a result of " +
-            "an expired license and/or data. Please notify Senate Tech if you received this error."),
+    ENGINE_DISABLED (0, "The engine is disabled. Check to see if DPV or LACS has been locked."),
 
-    INSUFFICIENT_ADDRESS(2,
-        "The input address must contain at minimum the following address components: (addr1, city, state) " +
-        "or (addr1, zip5)"),
-
-    INSUFFICIENT_ZIP9(3,
-        "The API method requires a Zip9 code"),
-
-    /* AMS specific status codes */
     INVALID_DUAL_ADDRESS (10,
         "Information presented could not be processed in current format. Corrective action is needed. Be sure that " +
         "the address line components are correct. For example, the input address line may contain more than one " +
@@ -53,14 +40,6 @@ public enum StatusCode {
         "A match was made to a default record in the national ZIP+4 file. A more specific match may be available if " +
         "a secondary number (i.e., apartment, suite, etc.) exists.");
 
-    /** Used for lookups by code. */
-    private static final Map<Integer, String> codeMap = new HashMap<>();
-    static {
-        for (StatusCode rc : StatusCode.values()) {
-            codeMap.put(rc.code, rc.name());
-        }
-    }
-
     /** Numerical return code. */
     private final int code;
 
@@ -86,8 +65,10 @@ public enum StatusCode {
      * @return StatusCode if code matches, null otherwise.
      */
     public static StatusCode getByCode(int code) {
-        if (codeMap.containsKey(code)) {
-            return StatusCode.valueOf(codeMap.get(code));
+        for (StatusCode statusCode : values()) {
+            if (statusCode.code == code) {
+                return statusCode;
+            }
         }
         return null;
     }

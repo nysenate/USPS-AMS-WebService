@@ -195,8 +195,8 @@
                                 <p><label class='dd'>Mailing Name Indicator:</label> {{result.mailingNameInd}}</p>
                                 <p><label class='dd'>Preferred City:</label> {{result.preferredCity}}</p>
                                 <p><label class='dd'>County Name:</label> {{result.countyName}}</p>
-                                <p><label class='dd'>Zip Class Code:</label> {{result.zipClass.desc}}</p>
-                                <p><label class='dd'>Facility Code:</label> {{result.facility.desc}}</p>
+                                <p><label class='dd'>Zip Class Code:</label> {{result.zipClassDesc}}</p>
+                                <p><label class='dd'>Facility Code:</label> {{result.facility}}</p>
                             </div>
                         </div>
                     </div>
@@ -275,6 +275,7 @@
                                     <td>{{record.recordType}}</td>
                                     <td>{{record.primaryLow}}</td>
                                     <td>{{record.primaryHigh}}</td>
+                                    <comment>TODO: what does parityFilter do?</comment>
                                     <td>{{record.primaryParity | parityFilter}}</td>
                                     <td>{{record.preDir}}</td>
                                     <td>{{record.streetName}}</td>

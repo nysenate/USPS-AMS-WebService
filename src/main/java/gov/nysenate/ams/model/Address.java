@@ -29,15 +29,6 @@ public record Address(String firmName, String addr1, String addr2, String city, 
         }
     }
 
-    /**
-     * Indicates if the address object is empty.
-     * @return true if all the address fields are empty.
-     */
-    public boolean isEmpty() {
-        return addr1.isBlank() && addr2.isBlank() && city.isBlank() &&
-                state.isBlank() && zip5.isBlank();
-    }
-
     private static String nonNull(String str) {
         return str == null ? "" : str;
     }

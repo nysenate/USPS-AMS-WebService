@@ -67,25 +67,16 @@ public class AmsNativeProvider implements AddressService, LicensingService, Libr
 
     @Override
     public AddressInquiryResult addressInquiry(Address address) {
-        if (address.isEmpty()) {
-            return new AddressInquiryResult(StatusCode.INSUFFICIENT_ADDRESS);
-        }
         return amsNativeDao.addressInquiry(address);
     }
 
     @Override
     public CityStateResult cityStateLookup(String zip5) {
-        if (zip5.isEmpty()) {
-            return new CityStateResult(-1, null);
-        }
         return amsNativeDao.cityStateLookup(zip5);
     }
 
     @Override
     public AddressInquiryResult zip9Inquiry(String zip9) {
-        if (zip9.isEmpty()) {
-            return new AddressInquiryResult(StatusCode.INSUFFICIENT_ZIP9);
-        }
         return amsNativeDao.zip9Inquiry(zip9);
     }
 

@@ -40,8 +40,7 @@ public abstract class BaseApiController<InputType, ResultType> extends HttpServl
             logger.error("Invalid JSON payload in {}", getClass(), ex);
         }
 
-        List<Object> responses = inputs.stream().map(this::getResult)
-                .map(result -> getResponse(result)).toList();
+        List<Object> responses = inputs.stream().map(this::getResult).map(this::getResponse).toList();
         var batchResponse = new BatchResponse<>(responses);
         ApiFilter.setApiResponse(batchResponse, request);
     }

@@ -16,10 +16,6 @@ public record AddressInquiryResult(int responseCode, USPSAddress uspsAddress, St
                 records == null ? null : List.of(records));
     }
 
-    public AddressInquiryResult(StatusCode errorCode) {
-        this(-1, null, errorCode, null, null);
-    }
-
     private static Set<Footnote> parseFootnotes(String footnotes) {
         if (footnotes == null) {
             return null;

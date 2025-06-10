@@ -1,14 +1,12 @@
 package gov.nysenate.ams.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import gov.nysenate.ams.client.response.DetailCityStateResponse;
+import gov.nysenate.ams.client.response.CityStateResponse;
 import gov.nysenate.ams.model.CityStateResult;
 
 import javax.servlet.http.HttpServletRequest;
 
 public class CityStateController extends BaseApiController<String, CityStateResult> {
-    /* TODO - Implement init caps functionality for city/state */
-
     @Override
     protected String getInputFromParams(HttpServletRequest request) {
         return getZip5FromParams(request);
@@ -26,6 +24,6 @@ public class CityStateController extends BaseApiController<String, CityStateResu
 
     @Override
     protected Object getResponse(CityStateResult result) {
-        return new DetailCityStateResponse(result);
+        return CityStateResponse.from(result);
     }
 }

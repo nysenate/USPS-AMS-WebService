@@ -1,7 +1,7 @@
 package gov.nysenate.ams.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import gov.nysenate.ams.client.response.DetailAddressInquiryResponse;
+import gov.nysenate.ams.client.response.AddressInquiryResponse;
 import gov.nysenate.ams.model.Address;
 import gov.nysenate.ams.model.AddressInquiryResult;
 
@@ -55,7 +55,7 @@ public class AddressValidateController extends BaseApiController<Address, Addres
 
     @Override
     protected Object getResponse(AddressInquiryResult result) {
-        return DetailAddressInquiryResponse.getResponse(result);
+        return AddressInquiryResponse.getResponse(result);
     }
 
     private static String getOrEmpty(JsonNode baseNode, String fieldName) {
