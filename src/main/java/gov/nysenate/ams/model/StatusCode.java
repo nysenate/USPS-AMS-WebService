@@ -70,6 +70,6 @@ public enum StatusCode {
                 return statusCode;
             }
         }
-        return null;
+        throw new IllegalArgumentException("No StatusCode with code " + code + " found.");
     }
 }

@@ -18,14 +18,14 @@ public record AddressInquiryResponse(boolean validated, AddressView address, Sta
             addressView = new AddressView(uspsAddress.validatedAddress());
         }
         return new AddressInquiryResponse(validated, addressView, new StatusCodeView(statusCode),
-                parseFootnotes(result.footnotes()), new USPSDetailView(result.uspsAddress()),
+                parseFootnotes(result.footnotes()), uspsAddress == null ? null : new USPSDetailView(uspsAddress),
                 parseRecords(result.records()));
     }
 
     // Used in the frontend.
     @SuppressWarnings("unused")
-    public Integer getRecordCount() {
-        return records == null ? null : records.size();
+    public boolean isEmpty() {
+        return records == null || records.isEmpty();
     }
 
     private static List<FootnoteView> parseFootnotes(String footnotes) {

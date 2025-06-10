@@ -236,7 +236,7 @@
                             </div>
                             <hr/>
                         </div>
-                        <div id='address-records-container' ng-show='result.recordCount > 0'>
+                        <div id='address-records-container' ng-hide='result.empty'>
                             <div class='section-row'>
                                 <p><span style='font-size:13px;font-weight:bold;color:#058;'>Matching Address Records</span></p>
                             </div>

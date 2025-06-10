@@ -6,25 +6,16 @@ import gov.nysenate.ams.model.AmsSettings;
 import gov.nysenate.ams.model.CityStateResult;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
-import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
 /**
- * JNI wrapper to the C implementation of the USPS AMS Service.
- *
- * The goal of this class is to serve as the bridge between the native C API for the USPS AMS
- * service. Since the AMS library is closed source, a C wrapper was written to interface with it.
- * The C wrapper has methods to perform configuration/address inquiries and they are delegated
- * to by the native methods of this class.
- *
- * The C wrapper code will be found under the c section of the src directory.
- *
- * View the AMS library documentation at: https://ribbs.usps.gov/index.cfm?page=amsapi
+ * JNI wrapper over some C code to use the closed-source AMS API.
+ * The C code (which can be found in the "c" directory) has methods to perform configuration/address inquiries,
+ * which are delegated to by the native methods of this class.
+ * View the AMS library documentation at: <a href="https://ribbs.usps.gov/index.cfm?page=amsapi">...</a>
  */
-public class AmsNativeDao
-{
-    Marker fatal = MarkerFactory.getMarker("FATAL");
-    private static Logger logger = LoggerFactory.getLogger(AmsNativeDao.class);
+public class AmsNativeDao {
+    private static final Logger logger = LoggerFactory.getLogger(AmsNativeDao.class);
 
     /**
      * Loads the AMS wrapper library. In order for this to work the java.library.path environment
@@ -36,15 +27,14 @@ public class AmsNativeDao
      * @param libraryName If the shared library is called 'libamswrapper.so', libraryName will be 'amswrapper'.
      * @return true if library loaded successfully, false otherwise.
      */
-    public boolean loadAmsLibrary(String libraryName)
-    {
+    public boolean loadAmsLibrary(String libraryName) {
         try {
             System.loadLibrary(libraryName);
             logger.info("Loaded AMS Native Library successfully.");
             return true;
         }
         catch (UnsatisfiedLinkError ex) {
-            logger.error(fatal, "Failed to load the AMS Native Library!", ex);
+            logger.error(MarkerFactory.getMarker("FATAL"), "Failed to load the AMS Native Library!", ex);
             return false;
         }
     }
@@ -66,23 +56,20 @@ public class AmsNativeDao
 
     /**
      * Wrapper to the AMS z4adrinq() method using {address} as input.
-     *
      * @param address Input Address
      * @return AddressInquiryResult
      */
     public synchronized native AddressInquiryResult addressInquiry(Address address);
 
     /**
-     * Wrapper to the AMS z4ctyget() method using the {zip5} as the search key.
-     *
+     * Wrapper to the AMS z4ctyget() method using the {zip5} as input.
      * @param zip Zip5 or Zip9 code. String should just contain numbers.
      * @return CityStateResult
      */
     public synchronized native CityStateResult cityStateLookup(String zip);
 
     /**
-     * Wrapper to the AMS z4xrfinq() method using the supplied {zip9} as the search key.
-     *
+     * Wrapper to the AMS z4xrfinq() method using the supplied {zip9} as input.
      * @param zip9 9 digit zip5 code.
      * @return AddressInquiryResult
      */
@@ -90,21 +77,18 @@ public class AmsNativeDao
 
     /**
      * Wrapper to the AMS z4ver() method.
-     *
      * @return String
      */
     public synchronized native String getAmsVersion();
 
     /**
      * Wrapper to the AMS z4GetDataExpireDays() method.
-     *
      * @return int
      */
     public synchronized native int getDataExpireDays();
 
     /**
      * Wrapper to the AMS z4GetCodeExpireDays() method.
-     *
      * @return int
      */
     public synchronized native int getLibraryExpireDays();
