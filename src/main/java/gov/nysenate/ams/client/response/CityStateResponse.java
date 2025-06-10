@@ -9,7 +9,7 @@ public record CityStateResponse(boolean success, String cityName, String cityAbb
 
     public static CityStateResponse from(CityStateResult result) {
         CityRecord cityRecord = result.cityRecord();
-        return new CityStateResponse(result.isSuccess(), cityRecord.cityName(), cityRecord.cityAbbrev(),
+        return new CityStateResponse(result.responseCode() == 0, cityRecord.cityName(), cityRecord.cityAbbrev(),
                 cityRecord.zipCode(), cityRecord.stateAbbr(), cityRecord.mailingNameInd().name().charAt(0),
                 cityRecord.lastLineName(), cityRecord.countyName(),
                 cityRecord.zipClassCode().getDesc(), cityRecord.facilityCd().getDesc());

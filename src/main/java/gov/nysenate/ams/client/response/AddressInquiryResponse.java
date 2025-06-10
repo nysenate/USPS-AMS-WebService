@@ -1,20 +1,16 @@
 package gov.nysenate.ams.client.response;
 
 import gov.nysenate.ams.client.view.*;
-import gov.nysenate.ams.model.AddressInquiryResult;
-import gov.nysenate.ams.model.StatusCode;
-import gov.nysenate.ams.model.USPSAddress;
+import gov.nysenate.ams.model.*;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.function.Function;
+import java.util.*;
 
 public record AddressInquiryResponse(boolean validated, AddressView address, StatusCodeView status,
                                      List<FootnoteView> footnotes, USPSDetailView detail,
                                      List<AddressRecordView> records) {
 
     public static AddressInquiryResponse getResponse(AddressInquiryResult result) {
-        StatusCode statusCode = result.statusCode();
+        StatusCode statusCode = StatusCode.getByCode(result.statusCode());
         boolean validated = (statusCode == StatusCode.EXACT_MATCH || statusCode == StatusCode.DEFAULT_MATCH);
         USPSAddress uspsAddress = result.uspsAddress();
         AddressView addressView = null;
@@ -22,18 +18,35 @@ public record AddressInquiryResponse(boolean validated, AddressView address, Sta
             addressView = new AddressView(uspsAddress.validatedAddress());
         }
         return new AddressInquiryResponse(validated, addressView, new StatusCodeView(statusCode),
-                toViewList(result.footnotes(), FootnoteView::new), new USPSDetailView(result.uspsAddress()),
-                toViewList(result.records(), AddressRecordView::from));
+                parseFootnotes(result.footnotes()), new USPSDetailView(result.uspsAddress()),
+                parseRecords(result.records()));
     }
 
+    // Used in the frontend.
+    @SuppressWarnings("unused")
     public Integer getRecordCount() {
         return records == null ? null : records.size();
     }
 
-    private static <T, V> List<V> toViewList(Collection<T> list, Function<T, V> mapper) {
-        if (list == null) {
+    private static List<FootnoteView> parseFootnotes(String footnotes) {
+        if (footnotes == null) {
             return null;
         }
-        return list.stream().map(mapper).toList();
+        var footnoteViews = new ArrayList<FootnoteView>();
+        for (char c : footnotes.toCharArray()) {
+            try {
+                Footnote footnote = Footnote.valueOf(String.valueOf(c).toUpperCase());
+                footnoteViews.add(new FootnoteView(footnote));
+            }
+            catch (IllegalArgumentException ignored) {}
+        }
+        return footnoteViews;
+    }
+
+    private static List<AddressRecordView> parseRecords(AddressRecord[] records) {
+        if (records == null) {
+            return null;
+        }
+        return Arrays.stream(records).map(AddressRecordView::from).toList();
     }
 }
