@@ -25,7 +25,7 @@ public class Application {
     public static boolean bootstrap() {
         try {
             INSTANCE.config = new Config(DEFAULT_PROPERTY_FILENAME);
-            INSTANCE.amsSettings = new AmsSettings(INSTANCE.config);
+            INSTANCE.amsSettings = AmsSettings.fromConfig(INSTANCE.config);
 
             /* Setup the native AMS provider. */
             INSTANCE.amsNativeProvider = new AmsNativeProvider(INSTANCE.config, INSTANCE.amsSettings);
@@ -33,7 +33,6 @@ public class Application {
             INSTANCE.amsNativeProvider.setup();
 
             AMS_VERSION = INSTANCE.amsNativeProvider.getApiVersion();
-
             return true;
         }
         catch (ConfigurationException ex) {

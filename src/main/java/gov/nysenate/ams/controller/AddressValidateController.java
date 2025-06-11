@@ -21,7 +21,7 @@ public class AddressValidateController extends BaseApiController<Address> {
      */
     @Override
     protected Address getInputFromParams(HttpServletRequest request) {
-        return new Address(request.getParameter("firm"), request.getParameter("addr1"),
+        return new Address(request.getParameter("addr1"),
                 request.getParameter("addr2"), request.getParameter("city"),
                 request.getParameter("state"), request.getParameter("zip5"),
                 request.getParameter("zip4"));
@@ -38,14 +38,13 @@ public class AddressValidateController extends BaseApiController<Address> {
      */
     @Override
     protected Address getInputFromJson(JsonNode node) {
-        String firm = getOrEmpty(node, "firm");
         String addr1 = getOrEmpty(node, "addr1");
         String addr2 = getOrEmpty(node, "addr2");
         String city = getOrEmpty(node, "city");
         String state = getOrEmpty(node, "state");
         String zip5 = getOrEmpty(node, "zip5");
         String zip4 = getOrEmpty(node, "zip4");
-        return new Address(firm, addr1, addr2, city, state, zip5, zip4);
+        return new Address(addr1, addr2, city, state, zip5, zip4);
     }
 
     @Override

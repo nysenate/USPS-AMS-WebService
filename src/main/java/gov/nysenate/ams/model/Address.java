@@ -8,7 +8,12 @@ package gov.nysenate.ams.model;
 public record Address(String firmName, String addr1, String addr2, String city, String state,
                       String zip5, String zip4) {
 
-    // Also the C constructor
+    public Address(String addr1, String addr2, String city, String state,
+                   String zip5, String zip4) {
+        this("", addr1, addr2, city, state, zip5, zip4);
+    }
+
+    // The C constructor
     public Address(String firmName, String addr1, String addr2, String city, String state,
                    String zip5, String zip4) {
         this.firmName = nonNull(firmName);
@@ -27,6 +32,12 @@ public record Address(String firmName, String addr1, String addr2, String city, 
             this.city = city;
             this.state = state;
         }
+    }
+
+    // Used in C
+    @SuppressWarnings("unused")
+    public String zip9() {
+        return zip5 + zip4;
     }
 
     private static String nonNull(String str) {
