@@ -3,14 +3,11 @@
 #include <zip4.h>
 
 /* JNI Header for class gov.nysenate.ams.dao.AmsNativeDao */
-
 #ifndef _Included_AmsNativeDao_Wrapper
 #define _Included_AmsNativeDao_Wrapper
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#define ARRAY_LENGTH(x) sizeof(x)/sizeof(x[0])
 
 /* JNI Type mappings */
 #define STRING_TYPE "Ljava/lang/String;"
@@ -38,6 +35,15 @@ typedef struct {
     jmethodID constr;
 } ClassData;
 
+/* Used to simplify passing array information into functions. */
+typedef struct {
+    char* chars;
+    unsigned int length;
+} CharArray;
+
+#define ARRAY_LENGTH(x) sizeof(x)/sizeof(x[0])
+#define TO_CHAR_FIELD(x) (CharArray) {x, ARRAY_LENGTH(x)}
+
 /* Create global references to class/method IDs */
 void cacheIDs(JNIEnv*);
 
@@ -45,12 +51,13 @@ void cacheIDs(JNIEnv*);
 jobject handleAddressInquiryResult(JNIEnv* env, ZIP4_PARM* zip4_parm, int responseCode);
 
 /* Helpers */
-char* getC_StringFromSettings(JNIEnv* env, jobject instance, const char* methodName);
-char getFlagFromSettings(JNIEnv* env, jobject instance, const char* methodName);
 ClassData getConstructorData(JNIEnv* env, const char* classLocation, const char* signature);
-void setAddrField(JNIEnv* env, jobject jAddress, jmethodID method, char* field, unsigned int length);
-void setField(JNIEnv* env, jstring javaString, char* field, unsigned int length);
-char* getC_String(JNIEnv* env, const jstring javaString);
+char* getPath(JNIEnv* env, jobject settingsObj, const char* methodName);
+char getFlag(JNIEnv* env, jobject settingsObj, const char* methodName);
+void setAddrField(JNIEnv* env, jobject jAddress, jmethodID method, CharArray charArray);
+void setField(JNIEnv* env, jstring javaString, CharArray charArray);
+jstring getJavaString(JNIEnv* env, const char* cString);
+jobject getUspsAddress(JNIEnv* env, ZIP4_PARM* parm);
 
 /*
  * Class:     gov_nysenate_ams_dao_AmsNativeDao
