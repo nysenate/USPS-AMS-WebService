@@ -203,13 +203,13 @@
 
                     <div ng-controller='ValidateResponseController'
                          ng-show="(activeResponseView == 'validate') || (activeResponseView == 'inquiry')">
-                        <h3 class='section-title' ng-class='statusClass'>{{result.status.code | statusNameFilter}}</h3>
+                        <h3 class='section-title' ng-class='statusClass'>{{result.status.desc}}</h3>
                         <hr class='section-title-hr'/>
                         <div class='section-row f13px-333' style='padding-right:20px;'>
                             <p>{{result.status.desc}}</p>
                         </div>
                         <hr/>
-                        <div ng-show='result.validated'>
+                        <div ng-show='result.success'>
                             <div class='section-row f16px-333'>
                                 <p>{{result.address.addr1}}<br/>
                                     {{result.address.city}}, {{result.address.state}} {{result.address.zip5}}<span ng-show="result.address.zip4">-{{result.address.zip4}}</span>
@@ -217,7 +217,7 @@
                             </div>
                             <hr/>
                         </div>
-                        <div ng-show='result.validated'>
+                        <div ng-show='result.success'>
                             <div class='section-row f13px-333'>
                                 <p><label class='dd'>City Abbreviation:</label> {{result.detail.standardCityAbbr || result.address.city}}</p>
                                 <p><label class='dd'>FIPS County:</label> {{result.detail.fipsCounty}}</p>
@@ -230,8 +230,8 @@
                         <div ng-show='result.footnotes.length > 0'>
                             <div class='section-row' style='font-size:13px;'>
                                 <div ng-repeat='footnote in result.footnotes'>
-                                    <p style='color:#ff4500'><strong>{{footnote.name}}</strong></p>
-                                    <p>{{footnote.desc}}</p>
+                                    <p style='color:#ff4500'><strong>{{footnote.shortDesc}}</strong></p>
+                                    <p>{{footnote.longDesc}}</p>
                                 </div>
                             </div>
                             <hr/>
@@ -275,8 +275,7 @@
                                     <td>{{record.recordType}}</td>
                                     <td>{{record.primaryLow}}</td>
                                     <td>{{record.primaryHigh}}</td>
-                                    <comment>TODO: what does parityFilter do?</comment>
-                                    <td>{{record.primaryParity | parityFilter}}</td>
+                                    <td>{{record.primaryParity}}</td>
                                     <td>{{record.preDir}}</td>
                                     <td>{{record.streetName}}</td>
                                     <td>{{record.streetSuffix}}</td>
@@ -284,7 +283,7 @@
                                     <td>{{record.unit}}</td>
                                     <td>{{record.secondaryLow}}</td>
                                     <td>{{record.secondaryHigh}}</td>
-                                    <td>{{record.secondaryParity | parityFilter}}</td>
+                                    <td>{{record.secondaryParity}}</td>
                                     <td>{{record.zip5}}</td>
                                     <td>{{record.zip4Low}}</td>
                                     <td>{{record.zip4High}}</td>

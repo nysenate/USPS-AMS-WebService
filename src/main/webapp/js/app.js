@@ -1,27 +1,5 @@
 var ams = angular.module('ams', []);
-
-var baseApi = contextPath + '/api';
-var validateApi = '/validate';
-var cityStateApi = '/citystate';
-var inquiryApi = '/inquiry';
-
-ams.filter('statusNameFilter', function(){
-    return function(statusCode) {
-        switch (statusCode) {
-            case 2  : return 'Missing Address';
-            case 3  : return 'Missing Zip 9';
-            case 10 : return 'Dual Address';
-            case 11 : return 'Invalid Address';
-            case 12 : return 'Invalid State';
-            case 13 : return 'Invalid City';
-            case 21 : return 'No Match';
-            case 22 : return 'Multiple Matches';
-            case 31 : return 'Exact Match';
-            case 32 : return 'Default Match';
-            default : return 'Error';
-        }
-    };
-});
+var baseApi = contextPath + '/api/';
 
 ams.filter('statusClassFilter', function(){
     return function(statusCode) {
@@ -35,17 +13,6 @@ ams.filter('statusClassFilter', function(){
     };
 });
 
-ams.filter('parityFilter', function(){
-    return function(parityCode) {
-        switch(parityCode) {
-            case 'O' : return 'ODD';
-            case 'E' : return 'EVEN';
-            case 'B' : return 'BOTH';
-            default : return '';
-        }
-    }
-});
-
 ams.filter('foundFilter', function(){
     return function(success) {
         return (success) ? 'success-indication' : 'error-indication';
@@ -53,9 +20,9 @@ ams.filter('foundFilter', function(){
 });
 
 ams.controller('ApiController', function($scope, $http) {
-    $scope.validateUrl = baseApi + validateApi + "?detail=true&";
-    $scope.cityStateUrl = baseApi + cityStateApi + "?detail=true&";
-    $scope.inquiryUrl = baseApi + inquiryApi + "?detail=true&";
+    $scope.validateUrl = baseApi + 'validate?';
+    $scope.cityStateUrl = baseApi + 'citystate?';
+    $scope.inquiryUrl = baseApi + 'inquiry?';
     $scope.$responseContainer = $('#api-response-container');
 
     $scope.validateInput = {

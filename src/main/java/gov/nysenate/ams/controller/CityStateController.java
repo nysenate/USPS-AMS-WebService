@@ -1,6 +1,7 @@
 package gov.nysenate.ams.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import gov.nysenate.ams.client.response.BaseResponse;
 import gov.nysenate.ams.client.response.CityStateResponse;
 import gov.nysenate.ams.model.CityStateResult;
 
@@ -18,8 +19,8 @@ public class CityStateController extends BaseApiController<String> {
     }
 
     @Override
-    protected Object getResponse(String input) {
-        CityStateResult result = amsNativeProvider.cityStateLookup(input);;
+    protected BaseResponse getResponse(String input) {
+        CityStateResult result = amsNativeProvider.cityStateLookup(input);
         return CityStateResponse.from(result);
     }
 }

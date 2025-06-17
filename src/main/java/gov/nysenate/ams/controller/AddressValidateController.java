@@ -2,6 +2,7 @@ package gov.nysenate.ams.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import gov.nysenate.ams.client.response.AddressInquiryResponse;
+import gov.nysenate.ams.client.response.BaseResponse;
 import gov.nysenate.ams.model.Address;
 import gov.nysenate.ams.model.AddressInquiryResult;
 
@@ -48,7 +49,7 @@ public class AddressValidateController extends BaseApiController<Address> {
     }
 
     @Override
-    protected Object getResponse(Address input) {
+    protected BaseResponse getResponse(Address input) {
         AddressInquiryResult result = amsNativeProvider.addressInquiry(input);
         return AddressInquiryResponse.getResponse(result);
     }
