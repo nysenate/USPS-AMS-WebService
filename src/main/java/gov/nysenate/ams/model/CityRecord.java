@@ -9,7 +9,7 @@ package gov.nysenate.ams.model;
  */
 public record CityRecord(char detailCode, String zipCode, String cityKey, ZipClassCode zipClassCode,
                          String cityName, String cityAbbrev, FacilityCode facilityCd,
-                         MailingNameIndicator mailingNameInd, String lastLineNum, String lastLineName,
+                         char mailingNameInd, String lastLineNum, String lastLineName,
                          char cityDelvInd, char autoZoneInd, char uniqueZipInd, String stateAbbr,
                          String countyNum, String countyName) {
 
@@ -21,8 +21,7 @@ public record CityRecord(char detailCode, String zipCode, String cityKey, ZipCla
                       char uniqueZipInd) {
         this(detailCode, zipCode, cityKey, ZipClassCode.getValue(Character.toString(zipClassCode)),
                 cityName, cityAbbrev, FacilityCode.valueOf(Character.toString(facilityCd)),
-                MailingNameIndicator.valueOf(String.valueOf(mailingNameInd)),
-                lastLineNum, lastLineName, cityDelvInd, autoZoneind, uniqueZipInd, stateAbbr, countyNum,
+                mailingNameInd, lastLineNum, lastLineName, cityDelvInd, autoZoneind, uniqueZipInd, stateAbbr, countyNum,
                 countyName == null ? "" : countyName.trim());
     }
 }

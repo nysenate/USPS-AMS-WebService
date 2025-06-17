@@ -16,10 +16,10 @@ public record AddressRecordView(int recordId, String recordType, String recordTy
         RecordType rType =  addressRecord.recordType();
         return new AddressRecordView(addressRecord.recordID(), rType.name(), rType.getShortDesc(),
                 trimLeadingZeroes(addressRecord.primaryLow()), trimLeadingZeroes(addressRecord.primaryHigh()),
-                Character.toString(addressRecord.primaryParity()), addressRecord.preDir(), addressRecord.streetName(),
+                getParity(addressRecord.primaryParity()), addressRecord.preDir(), addressRecord.streetName(),
                 addressRecord.suffix(), addressRecord.postDir(), addressRecord.unit(),
                 trimLeadingZeroes(addressRecord.secLow()), trimLeadingZeroes(addressRecord.secHigh()),
-                Character.toString(addressRecord.secCode()), addressRecord.zip(),
+                getParity(addressRecord.secCode()), addressRecord.zip(),
                 addressRecord.addonLow(), addressRecord.addonHigh());
     }
 
@@ -28,5 +28,14 @@ public record AddressRecordView(int recordId, String recordType, String recordTy
             return s.replaceFirst("^0+(?!$)", "");
         }
         return "";
+    }
+
+    private static String getParity(char parityCode) {
+        return switch (parityCode) {
+            case 'E' -> "EVEN";
+            case 'O' -> "ODD";
+            case 'B' -> "BOTH";
+            default -> "";
+        };
     }
 }
