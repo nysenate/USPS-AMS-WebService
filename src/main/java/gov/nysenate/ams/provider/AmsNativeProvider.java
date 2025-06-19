@@ -45,16 +45,14 @@ public class AmsNativeProvider implements AddressService, LicensingService, Libr
 
     /**
      * Sets up AMS using the configuration settings.
-     * @return true if success, false otherwise. Note: returns false if AMS is already configured.
      */
     @Override
-    public boolean setup() {
+    public void setup() {
         try {
-            return amsNativeDao.setupAmsLibrary(amsSettings);
+            amsNativeDao.setupAmsLibrary(amsSettings);
         }
         catch (Exception ex) {
             logger.debug("Failed to setup AMS using the supplied configuration settings!", ex);
-            return false;
         }
     }
 
@@ -90,10 +88,5 @@ public class AmsNativeProvider implements AddressService, LicensingService, Libr
     @Override
     public int getDataExpireDays() {
         return amsNativeDao.getDataExpireDays();
-    }
-
-    @Override
-    public int getLibraryExpireDays() {
-        return amsNativeDao.getLibraryExpireDays();
     }
 }

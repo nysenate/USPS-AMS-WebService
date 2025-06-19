@@ -9,7 +9,6 @@
     <hr/>
     <p>Api Version: <%= Application.getAmsNativeProvider().getApiVersion() %></p>
     <p>Days Until Data Expires: <%= Application.getAmsNativeProvider().getDataExpireDays() %></p>
-    <p>Days Until Library Expires: <%= Application.getAmsNativeProvider().getLibraryExpireDays() %></p>
     <br/>
     <h3>Environment Info</h3>
     <hr/>

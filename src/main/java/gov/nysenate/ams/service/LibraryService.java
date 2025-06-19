@@ -1,7 +1,6 @@
 package gov.nysenate.ams.service;
 
-public interface LibraryService
-{
+public interface LibraryService {
     /**
      * Loads the necessary libraries (shared/web-apis) before any requests can be made.
      * @return true if all necessary dependencies were loaded, false otherwise.
@@ -11,9 +10,8 @@ public interface LibraryService
     /**
      * Once the dependencies are loaded, the setup method should be invoked to configure
      * the library.
-     * @return true if the configuration step was successful, false otherwise.
      */
-    boolean setup();
+    void setup();
 
     /**
      * Unloads the library and perform any necessary cleanup.

@@ -115,14 +115,6 @@ JNIEXPORT jstring JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getAmsVersion
 JNIEXPORT jint JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getDataExpireDays
   (JNIEnv*, jobject);
 
-/*
- * Class:     gov_nysenate_ams_dao_AmsNativeDao
- * Method:    getLibraryExpireDays
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getLibraryExpireDays
-  (JNIEnv*, jobject);
-
 #ifdef __cplusplus
 }
 #endif

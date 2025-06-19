@@ -12,8 +12,6 @@ public class Application {
 
     private static final String DEFAULT_PROPERTY_FILENAME = "app.properties";
 
-    public static String AMS_VERSION = "";
-
     private Config config;
     private AmsSettings amsSettings;
     private AmsNativeProvider amsNativeProvider;
@@ -32,7 +30,6 @@ public class Application {
             INSTANCE.amsNativeProvider.load();
             INSTANCE.amsNativeProvider.setup();
 
-            AMS_VERSION = INSTANCE.amsNativeProvider.getApiVersion();
             return true;
         }
         catch (ConfigurationException ex) {
@@ -41,6 +38,8 @@ public class Application {
         return false;
     }
 
+    @SuppressWarnings("unused")
+    // This method is somehow called during shutdown.
     public static boolean shutdown() {
         logger.info("Shutting down AMS application");
         if (INSTANCE.amsNativeProvider != null && INSTANCE.amsNativeProvider.shutDown()) {
@@ -57,5 +56,4 @@ public class Application {
     public static AmsNativeProvider getAmsNativeProvider() {
         return INSTANCE.amsNativeProvider;
     }
-
 }

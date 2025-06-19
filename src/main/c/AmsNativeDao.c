@@ -189,16 +189,6 @@ JNIEXPORT jint JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getDataExpireDays(
     return (jint) z4GetDataExpireDays();
 }
 
-/*
- * Class:     gov_nysenate_ams_dao_AmsNativeDao
- * Method:    getLibraryExpireDays
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_gov_nysenate_ams_dao_AmsNativeDao_getLibraryExpireDays(JNIEnv* env, jobject jThis) {
-    // TODO: deprecated
-    return (jint) z4GetCodeExpireDays();
-}
-
 /**
 * After an address inquiry method has been called, this method will create a Java AddressInquiryResult
 * object using the data stored in the ZIP4_PARM struct.

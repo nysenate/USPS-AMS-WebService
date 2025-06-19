@@ -14,9 +14,9 @@ public class AmsTest {
     private static final Logger logger = LoggerFactory.getLogger(AmsTest.class);
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         Application.bootstrap();
-        logger.info("Library Path: " + System.getProperty("java.library.path"));
+        logger.info("Library Path: {}", System.getProperty("java.library.path"));
 
         Config config = Application.getConfig();
         AmsNativeDao amsNativeDao = new AmsNativeDao();

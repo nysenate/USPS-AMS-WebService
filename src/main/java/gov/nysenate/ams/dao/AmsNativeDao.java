@@ -86,10 +86,4 @@ public class AmsNativeDao {
      * @return int
      */
     public synchronized native int getDataExpireDays();
-
-    /**
-     * Wrapper to the AMS z4GetCodeExpireDays() method.
-     * @return int
-     */
-    public synchronized native int getLibraryExpireDays();
 }
