@@ -5,7 +5,7 @@ import gov.nysenate.ams.model.CityStateResult;
 
 public record CityStateResponse(String cityName, String cityAbbr, String zipCode,
                                 String stateAbbr, char mailingNameInd, String preferredCity, String countyName,
-                                String zipClassDesc, String facility) implements BaseResponse{
+                                String zipClassDesc, String facility) implements BaseResponse {
 
     public static BaseResponse from(CityStateResult result) {
         CityRecord cityRecord = result.cityRecord();
@@ -19,7 +19,7 @@ public record CityStateResponse(String cityName, String cityAbbr, String zipCode
     }
 
     @Override
-    public boolean isSuccess() {
+    public boolean success() {
         return true;
     }
 }

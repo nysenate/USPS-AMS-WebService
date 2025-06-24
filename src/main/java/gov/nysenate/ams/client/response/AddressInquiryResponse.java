@@ -7,35 +7,22 @@ import java.util.*;
 
 public record AddressInquiryResponse(AddressView address, ResponseCodeView status,
                                      List<FootnoteView> footnotes, USPSDetailView detail,
-                                     List<AddressRecordView> records) implements BaseResponse {
+                                     List<AddressRecordView> records, boolean success) implements BaseResponse {
 
     public static BaseResponse getResponse(AddressInquiryResult result) {
         ResponseCode responseCode = ResponseCode.getByCode(result.responseCode());
-        USPSAddress uspsAddress = result.uspsAddress();
         var responseCodeView = new ResponseCodeView(responseCode);
-        if (uspsAddress == null) {
-            return new BaseResponse() {
-                @Override
-                public boolean isSuccess() {
-                    return false;
-                }
-
-                // Used in the frontend.
-                @SuppressWarnings("unused")
-                public ResponseCodeView status() {
-                    return responseCodeView;
-                }
-            };
+        USPSAddress uspsAddress = result.uspsAddress();
+        AddressView addressView = null;
+        USPSDetailView detailView = null;
+        if (uspsAddress != null) {
+            addressView = new AddressView(uspsAddress.validatedAddress());
+            detailView = new USPSDetailView(uspsAddress);
         }
-        AddressView addressView = new AddressView(uspsAddress.validatedAddress());
         return new AddressInquiryResponse(addressView, responseCodeView,
-                parseFootnotes(result.footnotes()), new USPSDetailView(uspsAddress),
-                Arrays.stream(result.records()).map(AddressRecordView::from).toList());
-    }
-
-    @Override
-    public boolean isSuccess() {
-        return true;
+                parseFootnotes(result.footnotes()), detailView,
+                Arrays.stream(result.records()).map(AddressRecordView::from).toList(),
+                uspsAddress != null && responseCode.isSuccess());
     }
 
     private static List<FootnoteView> parseFootnotes(String footnotes) {

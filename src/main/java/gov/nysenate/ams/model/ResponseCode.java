@@ -74,4 +74,8 @@ public enum ResponseCode {
         }
         throw new IllegalArgumentException("No StatusCode with code " + code + " found.");
     }
+
+    public boolean isSuccess() {
+        return this == MULTI_RESPONSE || this == EXACT_MATCH || this == DEFAULT_MATCH;
+    }
 }
