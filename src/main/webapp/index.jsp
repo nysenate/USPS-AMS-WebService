@@ -203,10 +203,10 @@
 
                     <div ng-controller='ValidateResponseController'
                          ng-show="(activeResponseView == 'validate') || (activeResponseView == 'inquiry')">
-                        <h3 class='section-title' ng-class='statusClass'>{{result.status.desc}}</h3>
+                        <h3 class='section-title' ng-class='statusClass'>{{result.status.shortDesc}}</h3>
                         <hr class='section-title-hr'/>
                         <div class='section-row f13px-333' style='padding-right:20px;'>
-                            <p>{{result.status.desc}}</p>
+                            <p>{{result.status.longDesc}}</p>
                         </div>
                         <hr/>
                         <div ng-show='result.success'>

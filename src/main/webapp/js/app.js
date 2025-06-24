@@ -2,12 +2,12 @@ var ams = angular.module('ams', []);
 var baseApi = contextPath + '/api/';
 
 ams.filter('statusClassFilter', function(){
-    return function(statusCode) {
-        switch (statusCode) {
-            case 21 : return 'empty-indication';
-            case 22 :
-            case 32 : return 'warning-indication';
-            case 31 : return 'success-indication';
+    return function(shortDesc) {
+        switch (shortDesc) {
+            case "No Match" : return 'empty-indication';
+            case "Multiple Matches" :
+            case "Default Match" : return 'warning-indication';
+            case "Exact Match" : return 'success-indication';
             default : return 'error-indication';
         }
     };
@@ -102,7 +102,7 @@ ams.controller('ValidateResponseController', function($scope, $http, $filter) {
     $scope.$on('validateResponse', function(event, data) {
         $scope.result = data;
         if ($scope.result != null) {
-            $scope.statusClass = $filter('statusClassFilter')($scope.result.status.code);
+            $scope.statusClass = $filter('statusClassFilter')($scope.result.status.shortDesc);
         }
         $scope.replayAnimation();
     });
@@ -117,7 +117,7 @@ ams.controller('CityStateResponseController', function($scope, $http, $filter) {
         $scope.result = data;
         if ($scope.result != null) {
             $scope.statusClass = $filter('foundFilter')($scope.result.success);
-            $scope.messageResponse =($scope.result.success) ? 'Success' : 'Failure';
+            $scope.messageResponse = ($scope.result.success) ? 'Success' : 'Failure';
             $scope.message = ($scope.result.success) ?
                 'The zip code was matched to a city and state.' : 'The zip code was not matched to a city and state.';
         }
@@ -131,7 +131,7 @@ ams.controller('InquiryResponseController', function($scope, $http, $filter) {
     $scope.$on('validateResponse', function(event, data) {
         $scope.result = data;
         if ($scope.result != null) {
-            $scope.statusClass = $filter('statusClassFilter')($scope.result.status.code);
+            $scope.statusClass = $filter('statusClassFilter')($scope.result.status.shortDesc);
         }
         $scope.replayAnimation();
     });
