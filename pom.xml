@@ -46,7 +46,7 @@
   <properties>
     <commons-configuration.version>1.10</commons-configuration.version>
     <commons-io.version>2.15.1</commons-io.version>
-    <commons-lang3.version>3.14.0</commons-lang3.version>
+    <commons-lang3.version>3.18.0</commons-lang3.version>
     <fluent-hc.version>4.2.2</fluent-hc.version>
     <httpcore.version>4.2.3</httpcore.version>
     <jackson.version>2.16.1</jackson.version>
