@@ -13,11 +13,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CityStateController extends BaseApiController
+public class CityStateController extends BaseApiController<String>
 {
     /* TODO - Implement init caps functionality for city/state */
-
-public class CityStateController extends BaseApiController<String> {
     @Override
     protected String getInputFromParams(HttpServletRequest request) {
         return getZip5FromParams(request);
