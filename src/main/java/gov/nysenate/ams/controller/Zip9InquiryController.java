@@ -1,15 +1,10 @@
 package gov.nysenate.ams.controller;
 
-import gov.nysenate.ams.client.response.BaseAddressInquiryResponse;
-import gov.nysenate.ams.client.response.BatchResponse;
-import gov.nysenate.ams.client.response.DetailAddressInquiryResponse;
-import gov.nysenate.ams.filter.ApiFilter;
+import com.fasterxml.jackson.databind.JsonNode;
+import gov.nysenate.ams.client.response.AddressInquiryResponse;
+import gov.nysenate.ams.client.response.BaseResponse;
 import gov.nysenate.ams.model.AddressInquiryResult;
-import gov.nysenate.ams.provider.AmsNativeProvider;
-import gov.nysenate.ams.util.Application;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
+import org.apache.commons.lang3.StringUtils;
 
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -19,75 +14,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Zip9InquiryController extends BaseApiController
-{
-    private Logger logger = LoggerFactory.getLogger(Zip9InquiryController.class);
-    private AmsNativeProvider amsNativeProvider;
-
+public class Zip9InquiryController extends BaseApiController<String> {
     @Override
-    public void init(ServletConfig config) throws ServletException
-    {
-        this.amsNativeProvider = Application.getAmsNativeProvider();
-        logger.debug("Initialized Zip9InquiryController.");
+    protected String getInputFromParams(HttpServletRequest request) {
+        return getZip5FromParams(request) + StringUtils.defaultIfEmpty(request.getParameter("zip4"), "");
     }
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        Object responseObj;
-
-        boolean batch = isBatch(request);
-        boolean detail = isDetail(request);
-        boolean initCaps = isInitCaps(request);
-
-        if (batch) {
-            String json = IOUtils.toString(request.getInputStream(), "UTF-8");
-            List<String> zip9List = getZip9ListFromJson(json);
-            List<AddressInquiryResult> results = new ArrayList<>();
-            if (zip9List != null && zip9List.size() > 0) {
-                results = amsNativeProvider.zip9Inquiry(zip9List);
-            }
-            List<BaseAddressInquiryResponse> baseResponses = new ArrayList<>();
-            List<DetailAddressInquiryResponse> detailResponses = new ArrayList<>();
-            for (AddressInquiryResult result : results) {
-                if (!detail) {
-                    baseResponses.add(new BaseAddressInquiryResponse(result, initCaps));
-                }
-                else {
-                    detailResponses.add(new DetailAddressInquiryResponse(result, initCaps));
-                }
-            }
-            if (!detail) {
-                responseObj = new BatchResponse<>(baseResponses);
-            }
-            else {
-                responseObj = new BatchResponse<>(detailResponses);
-            }
-            ApiFilter.setApiResponse(responseObj, request);
-        }
-        else {
-            doGet(request, response);
-        }
+    protected String getInputFromJson(JsonNode node) {
+        String zip5 = node.hasNonNull("zip5") ? node.get("zip5").asText() : "";
+        String zip4 = node.hasNonNull("zip4") ? node.get("zip4").asText() : "";
+        return zip5 + zip4;
     }
 
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-    {
-        Object responseObj;
-
-        boolean detail = isDetail(request);
-        String zip9 = getZip9FromParams(request);
-        boolean initCaps = isInitCaps(request);
-
-        AddressInquiryResult result = amsNativeProvider.zip9Inquiry(zip9);
-
-        if (!detail) {
-            responseObj = new BaseAddressInquiryResponse(result, initCaps);
-        }
-        else {
-            responseObj = new DetailAddressInquiryResponse(result, initCaps);
-        }
-
-        ApiFilter.setApiResponse(responseObj, request);
+    protected BaseResponse getResponse(String input) {
+        AddressInquiryResult result = amsNativeProvider.zip9Inquiry(input);
+        return AddressInquiryResponse.getResponse(result);
     }
 }

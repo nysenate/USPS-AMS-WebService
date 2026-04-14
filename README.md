@@ -6,16 +6,16 @@ A Web Service that exposes the functionality of the USPS Address Matching System
 Prerequisites
 -------------
 
-1. Linux, JDK 8, Tomcat 8, Maven, GCC Compiler.
+1. Linux, JDK 17, Tomcat 9, Maven, GCC Compiler.
 
-1.  Obtain the five data folders from the USPS AMS disk
+2. Obtain the five data folders from the USPS AMS disk
     * ams_comm
     * ams_dpv
     * ams_elot
     * lacslink
     * suitelink
 
-1. Have the necessary library files from the AMS disk (shared objects and headers).
+3. Have the necessary library files from the AMS disk (shared objects and headers).
    The filenames listed here are not exact.
     * libabbrst.so
     * libkeymgr.so
@@ -26,7 +26,7 @@ Prerequisites
     * zip4.h
     * z4dpv.h
 
-1. Have access to the date/time log file
+4. Have access to the date/time log file
     * z4cxlog.dat
 
 Setup
@@ -34,19 +34,19 @@ Setup
 
 1. Place the data folders in */data/usps_ams*.
 
-1. Place the library files in */opt/usps_ams*.
+2. Place the library files in */opt/usps_ams*.
 
-1. Edit the ldconf (/etc/ld.so.conf) and add an entry for */opt/usps_ams*.
+3. Edit the ldconf (/etc/ld.so.conf) and add an entry for */opt/usps_ams*.
 
-1. Navigate to your src/main/c directory and run *make* to obtain *libamsnative.so*. If you
+4. Navigate to your src/main/c directory and run *make* to obtain *libamsnative.so*. If you
    are running into problems, edit the Makefile and ensure that the java paths are set correctly.
 
-1. Tomcat must be able to load the *amsnative* shared library.
+5. Tomcat must be able to load the *amsnative* shared library.
 The *java.library.path* environment variable contains a listing of the search directories.
 Either modify your Tomcat startup and set -Djava.library.path to the location of *libamsnative.so* or place
 *libamsnative.so* into one of the default library folders that Tomcat looks in (e.g. /usr/lib/).
 
-1. Create app.properties in /src/main/resources using app.example.properties as a template.
+6. Create app.properties in /src/main/resources using app.example.properties as a template.
 
     * ams.cfg.system.path should point to the directory where the z4cxlog.dat file is located (/opt/usps_ams).
     * If you have stored the ams data folders in an alternate location adjust the other file paths accordingly.

@@ -3,8 +3,7 @@ package gov.nysenate.ams.model;
 /**
  * Various footnote flags are used to denote a response condition.
  */
-public enum Footnote
-{
+public enum Footnote {
     A ("ZIP Code Corrected",
         "The address was found to have a different 5-digit ZIP Code than given in the submitted list. The correct " +
         "ZIP Code is shown in the output address."),
@@ -108,8 +107,8 @@ public enum Footnote
         "input address matches to a ZIP + 4 record which the ZIPMOVE product indicates as having moved, the " +
         "search is performed again in the new ZIP Code. ");
 
-    private String shortDesc;
-    private String longDesc;
+    private final String shortDesc;
+    private final String longDesc;
     
     Footnote (String shortDesc, String longDesc) {
         this.shortDesc = shortDesc;

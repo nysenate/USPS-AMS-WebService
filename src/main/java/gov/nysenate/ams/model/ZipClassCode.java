@@ -1,13 +1,12 @@
 package gov.nysenate.ams.model;
 
-public enum ZipClassCode
-{
+public enum ZipClassCode {
     M ("APO/FPO Military Zip5"),
     P ("PO BOX Zip5"),
     U ("Unique Zip5"),
     B ("Non-Unique Zip5");
 
-    private String desc;
+    private final String desc;
 
     ZipClassCode(String desc) {
         this.desc = desc;
@@ -17,9 +16,8 @@ public enum ZipClassCode
         return desc;
     }
 
-    public static ZipClassCode getValue(String p)
-    {
-        if( p != null && !p.isEmpty() && !p.equals(" ") ) {
+    public static ZipClassCode getValue(String p) {
+        if (p != null && !p.isEmpty() && !p.equals(" ")) {
             try {
                 return ZipClassCode.valueOf(p.toUpperCase());
             }
@@ -29,5 +27,4 @@ public enum ZipClassCode
         }
         else return ZipClassCode.B;
     }
-
 }
