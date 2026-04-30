@@ -52,7 +52,7 @@
     <jackson.version>2.16.1</jackson.version>
     <junit.version>4.13.2</junit.version>
     <log4j.version>2.22.1</log4j.version>
-    <jakarta.mail.version>2.0.1</jakarta.mail.version>
+    <jakarta.mail.version>2.0.2</jakarta.mail.version>
     <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
     <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
     <jakarata.xml.bind-api.version>4.0.2</jakarata.xml.bind-api.version>
