@@ -58,7 +58,7 @@
     <jakarata.xml.bind-api.version>4.0.2</jakarata.xml.bind-api.version>
     <nysenate-java-utils.version>1.2</nysenate-java-utils.version>
     <super-csv.version>2.0.1</super-csv.version>
-    <tomcat.version>10.1.39</tomcat.version>
+    <tomcat.version>11.0.22</tomcat.version>
     <woodstox-core-asl.version>4.0.6</woodstox-core-asl.version>
     <xmlrpc-client.version>3.1.3</xmlrpc-client.version>
     <xstream.version>1.4.19</xstream.version>
