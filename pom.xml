@@ -47,62 +47,19 @@
     <commons-configuration.version>1.10</commons-configuration.version>
     <commons-io.version>2.15.1</commons-io.version>
     <commons-lang3.version>3.14.0</commons-lang3.version>
-    <fluent-hc.version>4.2.2</fluent-hc.version>
-    <httpcore.version>4.2.3</httpcore.version>
     <jackson.version>2.16.1</jackson.version>
-    <junit.version>4.13.2</junit.version>
     <log4j.version>2.22.1</log4j.version>
-    <jakarta.mail.version>2.0.1</jakarta.mail.version>
     <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
-    <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
-    <jakarata.xml.bind-api.version>4.0.2</jakarata.xml.bind-api.version>
     <nysenate-java-utils.version>1.2</nysenate-java-utils.version>
-    <super-csv.version>2.0.1</super-csv.version>
-    <tomcat.version>11.0.22</tomcat.version>
-    <woodstox-core-asl.version>4.0.6</woodstox-core-asl.version>
-    <xmlrpc-client.version>3.1.3</xmlrpc-client.version>
-    <xstream.version>1.4.19</xstream.version>
   </properties>
 
   <dependencies>
-    <!-- Context Server Dependencies -->
-    <dependency>
-      <groupId>org.apache.tomcat</groupId>
-      <artifactId>tomcat-juli</artifactId>
-      <version>${tomcat.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.tomcat</groupId>
-      <artifactId>tomcat-dbcp</artifactId>
-      <version>${tomcat.version}</version>
-    </dependency>
     <!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
     <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
       <version>${jakarta.servlet-api.version}</version>
       <scope>provided</scope>
-    </dependency>
-
-    <!-- https://mvnrepository.com/artifact/jakarta.annotation/jakarta.annotation-api -->
-    <dependency>
-      <groupId>jakarta.annotation</groupId>
-      <artifactId>jakarta.annotation-api</artifactId>
-      <version>${jakarta.annotation-api.version}</version>
-    </dependency>
-
-    <!-- https://mvnrepository.com/artifact/com.sun.mail/jakarta.mail -->
-    <dependency>
-      <groupId>com.sun.mail</groupId>
-      <artifactId>jakarta.mail</artifactId>
-      <version>${jakarta.mail.version}</version>
-    </dependency>
-
-    <!-- https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
-    <dependency>
-      <groupId>jakarta.xml.bind</groupId>
-      <artifactId>jakarta.xml.bind-api</artifactId>
-      <version>${jakarata.xml.bind-api.version}</version>
     </dependency>
 
     <!-- Core Dependencies -->
@@ -126,28 +83,8 @@
       <artifactId>commons-configuration</artifactId>
       <version>${commons-configuration.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpcore</artifactId>
-      <version>${httpcore.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>fluent-hc</artifactId>
-      <version>${fluent-hc.version}</version>
-    </dependency>
 
     <!-- Serializing Dependencies -->
-    <dependency>
-      <groupId>com.thoughtworks.xstream</groupId>
-      <artifactId>xstream</artifactId>
-      <version>${xstream.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-json-org</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
@@ -158,34 +95,12 @@
       <artifactId>jackson-dataformat-xml</artifactId>
       <version>${jackson.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.xmlrpc</groupId>
-      <artifactId>xmlrpc-client</artifactId>
-      <version>${xmlrpc-client.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.woodstox</groupId>
-      <artifactId>woodstox-core-asl</artifactId>
-      <version>${woodstox-core-asl.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>net.sf.supercsv</groupId>
-      <artifactId>super-csv</artifactId>
-      <version>${super-csv.version}</version>
-    </dependency>
 
     <!-- NY Senate Dependencies -->
     <dependency>
       <groupId>gov.nysenate</groupId>
       <artifactId>nysenate-java-utils</artifactId>
       <version>${nysenate-java-utils.version}</version>
-    </dependency>
-
-    <!-- Testing Dependencies -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
     </dependency>
   </dependencies>
 </project>
