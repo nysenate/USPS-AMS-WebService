@@ -1,6 +1,7 @@
 package gov.nysenate.ams.model;
 
 import gov.nysenate.util.Config;
+import org.apache.commons.lang3.StringUtils;
 
 public record AmsSettings(String systemPath, String address1Path, String addrIndexPath, String cityStatePath,
                           String crossRefPath, String elotPath, String elotIndexPath, String lacsLinkPath,
@@ -34,5 +35,10 @@ public record AmsSettings(String systemPath, String address1Path, String addrInd
 
     private static boolean getFlag(Config config, String field) {
         return Boolean.parseBoolean(config.getValue(field));
+    }
+
+    public boolean pathsSet() {
+        return StringUtils.isNoneBlank(systemPath, address1Path, addrIndexPath, cityStatePath, crossRefPath, elotPath, elotIndexPath,
+                lacsLinkPath, dpvPath, fnsPath, suiteLinkPath, abrstPath);
     }
 }

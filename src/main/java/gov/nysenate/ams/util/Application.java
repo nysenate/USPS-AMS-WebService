@@ -24,13 +24,14 @@ public class Application {
         try {
             INSTANCE.config = new Config(DEFAULT_PROPERTY_FILENAME);
             INSTANCE.amsSettings = AmsSettings.fromConfig(INSTANCE.config);
+            if (!INSTANCE.amsSettings.pathsSet()) {
+                logger.error("Did not pull in all file paths from {}!", DEFAULT_PROPERTY_FILENAME);
+                return false;
+            }
 
-            /* Setup the native AMS provider. */
+            /* Set up the native AMS provider. */
             INSTANCE.amsNativeProvider = new AmsNativeProvider(INSTANCE.config, INSTANCE.amsSettings);
-            INSTANCE.amsNativeProvider.load();
-            INSTANCE.amsNativeProvider.setup();
-
-            return true;
+            return INSTANCE.amsNativeProvider.load();
         }
         catch (ConfigurationException ex) {
             logger.error("Failed to load configuration.", ex);

@@ -2,9 +2,6 @@ package gov.nysenate.ams.provider;
 
 import gov.nysenate.ams.dao.AmsNativeDao;
 import gov.nysenate.ams.model.*;
-import gov.nysenate.ams.service.AddressService;
-import gov.nysenate.ams.service.LibraryService;
-import gov.nysenate.ams.service.LicensingService;
 import gov.nysenate.util.Config;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -13,7 +10,7 @@ import org.slf4j.Logger;
  * Serves as a wrapper to the AmsNativeDao class and holds references to
  * the configuration dependencies.
  */
-public class AmsNativeProvider implements AddressService, LicensingService, LibraryService {
+public class AmsNativeProvider {
     private static final Logger logger = LoggerFactory.getLogger(AmsNativeProvider.class);
     private final AmsNativeDao amsNativeDao;
     private final Config config;
@@ -27,65 +24,66 @@ public class AmsNativeProvider implements AddressService, LicensingService, Libr
         this.amsSettings = amsSettings;
     }
 
-    // LibraryService implementation
-
     /**
-     * Loads the shared AMS Native library wrapper. The library name is indicated by SHARED_LIBRARY_NAME.
-     * @see LibraryService, AmsNativeDao
-     * @return true if the library was successfully loaded, false otherwise.
+     * Loads the shared AMS Native library wrapper, and configures the library.
+     * @return true if all necessary dependencies were loaded, false otherwise.
      */
-    @Override
     public boolean load() {
         String libraryName = config.getValue("shared.library.name", "amsnative");
         if (!LIBRARY_LOADED) {
             LIBRARY_LOADED = amsNativeDao.loadAmsLibrary(libraryName);
         }
-        return LIBRARY_LOADED;
-    }
-
-    /**
-     * Sets up AMS using the configuration settings.
-     */
-    @Override
-    public void setup() {
         try {
             amsNativeDao.setupAmsLibrary(amsSettings);
         }
         catch (Exception ex) {
             logger.debug("Failed to setup AMS using the supplied configuration settings!", ex);
+            return false;
         }
+        return LIBRARY_LOADED;
     }
 
-    @Override
+    /**
+     * Unloads the library and perform any necessary cleanup.
+     * @return true if shutdown completed successfully, false otherwise.
+     */
     public boolean shutDown() {
         return amsNativeDao.closeAmsLibrary();
     }
 
-    // AddressService implementation
-
-    @Override
+    /**
+     * Performs a standardized address inquiry using an address and city/state/zip5 information.
+     * @param address Address to addressInquiry.
+     * @return AddressInquiryResult.
+     */
     public AddressInquiryResult addressInquiry(Address address) {
         return amsNativeDao.addressInquiry(address);
     }
 
-    @Override
+    /**
+     * Performs city/state lookup using a zip5 code as the search key.
+     * @param zip5 5 digit zip code string.
+     * @return CityStateResult.
+     */
     public CityStateResult cityStateLookup(String zip5) {
         return amsNativeDao.cityStateLookup(zip5);
     }
 
-    @Override
+    /**
+     * Performs a standardized address inquiry using a 9 digit zip5.
+     * @param zip9 9 digit zip5 code string. Any hyphens will be removed.
+     * @return AddressInquiryResult.
+     */
     public AddressInquiryResult zip9Inquiry(String zip9) {
         return amsNativeDao.zip9Inquiry(zip9);
     }
 
-    // LicensingService implementation
-
-    @Override
+    /** Get the Version of the API code. */
     public String getApiVersion() {
         return amsNativeDao.getAmsVersion();
     }
 
-    @Override
+    /** Get the number of days after which the data expires. */
     public int getDataExpireDays() {
         return amsNativeDao.getDataExpireDays();
     }
