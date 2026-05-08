@@ -1,11 +1,11 @@
 package gov.nysenate.ams.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import gov.nysenate.ams.client.response.BaseResponse;
 import gov.nysenate.ams.client.response.CityStateResponse;
 import gov.nysenate.ams.model.CityStateResult;
 
 import jakarta.servlet.http.HttpServletRequest;
+import tools.jackson.databind.JsonNode;
 
 public class CityStateController extends BaseApiController<String> {
     /* TODO - Implement init caps functionality for city/state */
@@ -16,7 +16,7 @@ public class CityStateController extends BaseApiController<String> {
 
     @Override
     protected String getInputFromJson(JsonNode node) {
-        return node.asText();
+        return node.asString();
     }
 
     @Override

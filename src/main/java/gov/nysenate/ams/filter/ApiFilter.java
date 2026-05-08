@@ -1,13 +1,14 @@
 package gov.nysenate.ams.filter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 import jakarta.servlet.*;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.dataformat.xml.XmlMapper;
+
 import java.io.IOException;
 
 public class ApiFilter implements Filter {
@@ -17,17 +18,13 @@ public class ApiFilter implements Filter {
     private static final String FORMATTED_RESPONSE_KEY = "formattedResponse";
 
     /** Serializers */
-    private static final ObjectMapper jsonMapper = new ObjectMapper();
-    private static final XmlMapper xmlMapper = new XmlMapper();
+    private static final ObjectMapper jsonMapper = JsonMapper.builder()
+            .enable(SerializationFeature.INDENT_OUTPUT).build();
+    private static final XmlMapper xmlMapper = XmlMapper.builder()
+            .enable(SerializationFeature.INDENT_OUTPUT).build();
 
     /** Available format types */
     public enum FormatType { JSON, XML, JSONP }
-
-    @Override
-    public void init(FilterConfig filterConfig) {
-        jsonMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
-    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -55,32 +52,27 @@ public class ApiFilter implements Filter {
         logger.trace("Serializing response as {}", format);
         Object responseObj = request.getAttribute(RESPONSE_OBJECT_KEY);
 
-        try {
-            if (format == FormatType.XML) {
-                String xml = xmlMapper.writeValueAsString(responseObj);
-                request.setAttribute(FORMATTED_RESPONSE_KEY, xml);
-                response.setContentType("application/xml");
-                response.setContentLength(xml.length());
-            }
-            else if (format == FormatType.JSONP) {
-                String callback = request.getParameter("callback");
-                String json = jsonMapper.writeValueAsString(responseObj);
-                String jsonp = String.format("%s(%s);", callback, json);
-                request.setAttribute(FORMATTED_RESPONSE_KEY, jsonp);
-                response.setContentType("application/javascript");
-                response.setContentLength(jsonp.length());
-            }
-            else {
-                String json = jsonMapper.writeValueAsString(responseObj);
-                request.setAttribute(FORMATTED_RESPONSE_KEY, json);
-                response.setContentType("application/json");
-                response.setContentLength(json.length());
-            }
-            logger.trace("Completed serialization");
+        if (format == FormatType.XML) {
+            String xml = xmlMapper.writeValueAsString(responseObj);
+            request.setAttribute(FORMATTED_RESPONSE_KEY, xml);
+            response.setContentType("application/xml");
+            response.setContentLength(xml.length());
         }
-        catch (JsonProcessingException ex) {
-            logger.error("Failed to serialize response!", ex);
+        else if (format == FormatType.JSONP) {
+            String callback = request.getParameter("callback");
+            String json = jsonMapper.writeValueAsString(responseObj);
+            String jsonp = String.format("%s(%s);", callback, json);
+            request.setAttribute(FORMATTED_RESPONSE_KEY, jsonp);
+            response.setContentType("application/javascript");
+            response.setContentLength(jsonp.length());
         }
+        else {
+            String json = jsonMapper.writeValueAsString(responseObj);
+            request.setAttribute(FORMATTED_RESPONSE_KEY, json);
+            response.setContentType("application/json");
+            response.setContentLength(json.length());
+        }
+        logger.trace("Completed serialization");
     }
 
     /**

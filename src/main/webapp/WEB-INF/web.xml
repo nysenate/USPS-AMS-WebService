@@ -20,7 +20,7 @@
     <listener>
         <description>Context initialization and shutdown</description>
         <display-name>NYSenateContextListener</display-name>
-        <listener-class>gov.nysenate.util.listener.NYSenateContextListener</listener-class>
+        <listener-class>gov.nysenate.ams.util.NYSenateContextListener</listener-class>
     </listener>
 
     <context-param>

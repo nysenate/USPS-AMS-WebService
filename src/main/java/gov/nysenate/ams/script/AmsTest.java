@@ -1,14 +1,14 @@
 package gov.nysenate.ams.script;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.nysenate.ams.dao.AmsNativeDao;
 import gov.nysenate.ams.model.Address;
 import gov.nysenate.ams.model.AddressInquiryResult;
 import gov.nysenate.ams.model.AmsSettings;
 import gov.nysenate.ams.util.Application;
-import gov.nysenate.util.Config;
+import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import tools.jackson.databind.ObjectMapper;
 
 public class AmsTest {
     private static final Logger logger = LoggerFactory.getLogger(AmsTest.class);
@@ -21,7 +21,7 @@ public class AmsTest {
         }
         logger.info("Library Path: {}", System.getProperty("java.library.path"));
 
-        Config config = Application.getConfig();
+        PropertiesConfiguration config = Application.getConfig();
         var amsNativeDao = new AmsNativeDao();
         AmsSettings amsSettings = AmsSettings.fromConfig(config);
         amsNativeDao.loadAmsLibrary("amsnative");

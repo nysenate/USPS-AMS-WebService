@@ -1,6 +1,6 @@
 package gov.nysenate.ams.model;
 
-import gov.nysenate.util.Config;
+import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.lang3.StringUtils;
 
 public record AmsSettings(String systemPath, String address1Path, String addrIndexPath, String cityStatePath,
@@ -9,19 +9,19 @@ public record AmsSettings(String systemPath, String address1Path, String addrInd
                           boolean elotEnabled, boolean ewsEnabled, boolean suiteLinkEnabled,
                           boolean abrstEnabled, boolean systemEnabled) {
 
-    public static AmsSettings fromConfig(Config config) {
-        String systemPath = config.getValue("ams.cfg.system.path");
-        String address1Path = config.getValue("ams.cfg.address1.path");
-        String addrIndexPath = config.getValue("ams.cfg.addrIndex.path");
-        String cityStatePath = config.getValue("ams.cfg.cityState.path");
-        String crossRefPath = config.getValue("ams.cfg.crossRef.path");
-        String elotPath = config.getValue("ams.cfg.elot.path");
-        String elotIndexPath = config.getValue("ams.cfg.elotIndex.path");
-        String lacsLinkPath = config.getValue("ams.cfg.lacsLink.path");
-        String dpvPath = config.getValue("ams.cfg.dpv.path");
-        String fnsPath = config.getValue("ams.cfg.fns.path");
-        String suiteLinkPath = config.getValue("ams.cfg.suiteLink.path");
-        String abrstPath = config.getValue("ams.cfg.abrst.path");
+    public static AmsSettings fromConfig(PropertiesConfiguration config) {
+        String systemPath = config.getString("ams.cfg.system.path");
+        String address1Path = config.getString("ams.cfg.address1.path");
+        String addrIndexPath = config.getString("ams.cfg.addrIndex.path");
+        String cityStatePath = config.getString("ams.cfg.cityState.path");
+        String crossRefPath = config.getString("ams.cfg.crossRef.path");
+        String elotPath = config.getString("ams.cfg.elot.path");
+        String elotIndexPath = config.getString("ams.cfg.elotIndex.path");
+        String lacsLinkPath = config.getString("ams.cfg.lacsLink.path");
+        String dpvPath = config.getString("ams.cfg.dpv.path");
+        String fnsPath = config.getString("ams.cfg.fns.path");
+        String suiteLinkPath = config.getString("ams.cfg.suiteLink.path");
+        String abrstPath = config.getString("ams.cfg.abrst.path");
 
         boolean elotEnabled = getFlag(config, "ams.cfg.elot.enabled");
         boolean ewsEnabled = getFlag(config, "ams.cfg.ews.enabled");
@@ -33,8 +33,8 @@ public record AmsSettings(String systemPath, String address1Path, String addrInd
                 elotEnabled, ewsEnabled, suiteLinkEnabled, abrstEnabled, systemEnabled);
     }
 
-    private static boolean getFlag(Config config, String field) {
-        return Boolean.parseBoolean(config.getValue(field));
+    private static boolean getFlag(PropertiesConfiguration config, String field) {
+        return Boolean.parseBoolean(config.getString(field));
     }
 
     public boolean pathsSet() {
