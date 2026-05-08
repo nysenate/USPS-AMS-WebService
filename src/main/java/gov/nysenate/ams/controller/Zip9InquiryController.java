@@ -6,13 +6,7 @@ import gov.nysenate.ams.client.response.BaseResponse;
 import gov.nysenate.ams.model.AddressInquiryResult;
 import org.apache.commons.lang3.StringUtils;
 
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Zip9InquiryController extends BaseApiController<String> {
     @Override

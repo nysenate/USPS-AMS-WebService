@@ -5,19 +5,8 @@ import gov.nysenate.ams.client.response.AddressInquiryResponse;
 import gov.nysenate.ams.client.response.BaseResponse;
 import gov.nysenate.ams.model.Address;
 import gov.nysenate.ams.model.AddressInquiryResult;
-import gov.nysenate.ams.provider.AmsNativeProvider;
-import gov.nysenate.ams.util.Application;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Servlet to handle address validation requests.
