@@ -15,13 +15,14 @@ public class AmsTest {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public static void main(String[] args) {
-        if (!Application.bootstrap()) {
+        var app = new Application();
+        if (!app.bootstrap()) {
             logger.error("Application failed to start!");
             return;
         }
         logger.info("Library Path: {}", System.getProperty("java.library.path"));
 
-        PropertiesConfiguration config = Application.getConfig();
+        PropertiesConfiguration config = app.getConfig();
         var amsNativeDao = new AmsNativeDao();
         AmsSettings amsSettings = AmsSettings.fromConfig(config);
         amsNativeDao.loadAmsLibrary("amsnative");

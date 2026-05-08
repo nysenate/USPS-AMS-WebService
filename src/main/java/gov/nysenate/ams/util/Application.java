@@ -2,25 +2,47 @@ package gov.nysenate.ams.util;
 
 import gov.nysenate.ams.model.AmsSettings;
 import gov.nysenate.ams.provider.AmsNativeProvider;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.annotation.WebListener;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
-public final class Application {
+@WebListener
+public final class Application implements ServletContextListener {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     private static final String DEFAULT_PROPERTY_FILENAME = "app.properties";
 
-    private static PropertiesConfiguration config;
-    private static AmsNativeProvider amsNativeProvider;
+    public static final String CONTEXT_ATTRIBUTE = "ams";
 
-    private Application() {}
+    private PropertiesConfiguration config;
+    private AmsNativeProvider amsNativeProvider;
 
-    public static boolean bootstrap() {
+    public Application() {}
+
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
+        boolean ok = bootstrap();
+        sce.getServletContext().setAttribute("init", ok);
+        sce.getServletContext().setAttribute(CONTEXT_ATTRIBUTE, this);
+        logger.info("AMS application bootstrap: {}", ok);
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+        logger.info("Shutting down AMS application");
+        if (amsNativeProvider != null && amsNativeProvider.shutDown()) {
+            logger.info("Closed the AMS instance.");
+        }
+    }
+
+    public boolean bootstrap() {
         try {
-            config = new Configurations().properties(DEFAULT_PROPERTY_FILENAME);
+            this.config = new Configurations().properties(DEFAULT_PROPERTY_FILENAME);
         } catch (ConfigurationException e) {
             logger.error("Failed to pull in properties!");
             return false;
@@ -32,27 +54,15 @@ public final class Application {
         }
 
         String libraryName = config.getString("shared.library.name", "amsnative");
-        /* Set up the native AMS provider. */
-        amsNativeProvider = new AmsNativeProvider(libraryName, amsSettings);
+        this.amsNativeProvider = new AmsNativeProvider(libraryName, amsSettings);
         return amsNativeProvider.load();
     }
 
-    @SuppressWarnings("unused")
-    // This method is somehow called during shutdown.
-    public static boolean shutdown() {
-        logger.info("Shutting down AMS application");
-        if (amsNativeProvider != null && amsNativeProvider.shutDown()) {
-            logger.info("Closed the AMS instance.");
-            return true;
-        }
-        return false;
-    }
-
-    public static PropertiesConfiguration getConfig() {
+    public PropertiesConfiguration getConfig() {
         return config;
     }
 
-    public static AmsNativeProvider getAmsNativeProvider() {
+    public AmsNativeProvider getAmsNativeProvider() {
         return amsNativeProvider;
     }
 }

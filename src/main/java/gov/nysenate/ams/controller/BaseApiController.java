@@ -52,7 +52,8 @@ public abstract class BaseApiController<InputType> extends HttpServlet {
     }
 
     public void init(ServletConfig config) {
-        this.amsNativeProvider = Application.getAmsNativeProvider();
+        Application app = (Application) config.getServletContext().getAttribute(Application.CONTEXT_ATTRIBUTE);
+        this.amsNativeProvider = app.getAmsNativeProvider();
     }
 
     protected abstract InputType getInputFromParams(HttpServletRequest request);

@@ -16,18 +16,6 @@
         <url-pattern>/api/*</url-pattern>
     </filter-mapping>
 
-    <!-- Listeners -->
-    <listener>
-        <description>Context initialization and shutdown</description>
-        <display-name>NYSenateContextListener</display-name>
-        <listener-class>gov.nysenate.ams.util.NYSenateContextListener</listener-class>
-    </listener>
-
-    <context-param>
-        <param-name>Application</param-name>
-        <param-value>gov.nysenate.ams.util.Application</param-value>
-    </context-param>
-
     <!-- Api Controller -->
     <servlet>
         <display-name>AddressValidateController</display-name>
