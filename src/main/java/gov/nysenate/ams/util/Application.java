@@ -7,31 +7,29 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
-public class Application {
+public final class Application {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     private static final String DEFAULT_PROPERTY_FILENAME = "app.properties";
 
-    private Config config;
-    private AmsSettings amsSettings;
-    private AmsNativeProvider amsNativeProvider;
+    private static Config config;
+    private static AmsNativeProvider amsNativeProvider;
 
-    /** Singleton instance */
-    private static final Application INSTANCE = new Application();
     private Application() {}
 
     public static boolean bootstrap() {
         try {
-            INSTANCE.config = new Config(DEFAULT_PROPERTY_FILENAME);
-            INSTANCE.amsSettings = AmsSettings.fromConfig(INSTANCE.config);
-            if (!INSTANCE.amsSettings.pathsSet()) {
+            config = new Config(DEFAULT_PROPERTY_FILENAME);
+            AmsSettings amsSettings = AmsSettings.fromConfig(config);
+            if (!amsSettings.pathsSet()) {
                 logger.error("Did not pull in all file paths from {}!", DEFAULT_PROPERTY_FILENAME);
                 return false;
             }
 
+            String libraryName = config.getValue("shared.library.name", "amsnative");
             /* Set up the native AMS provider. */
-            INSTANCE.amsNativeProvider = new AmsNativeProvider(INSTANCE.config, INSTANCE.amsSettings);
-            return INSTANCE.amsNativeProvider.load();
+            amsNativeProvider = new AmsNativeProvider(libraryName, amsSettings);
+            return amsNativeProvider.load();
         }
         catch (ConfigurationException ex) {
             logger.error("Failed to load configuration.", ex);
@@ -43,7 +41,7 @@ public class Application {
     // This method is somehow called during shutdown.
     public static boolean shutdown() {
         logger.info("Shutting down AMS application");
-        if (INSTANCE.amsNativeProvider != null && INSTANCE.amsNativeProvider.shutDown()) {
+        if (amsNativeProvider != null && amsNativeProvider.shutDown()) {
             logger.info("Closed the AMS instance.");
             return true;
         }
@@ -51,10 +49,10 @@ public class Application {
     }
 
     public static Config getConfig() {
-        return INSTANCE.config;
+        return config;
     }
 
     public static AmsNativeProvider getAmsNativeProvider() {
-        return INSTANCE.amsNativeProvider;
+        return amsNativeProvider;
     }
 }

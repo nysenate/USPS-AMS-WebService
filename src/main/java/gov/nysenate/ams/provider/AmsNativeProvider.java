@@ -2,7 +2,6 @@ package gov.nysenate.ams.provider;
 
 import gov.nysenate.ams.dao.AmsNativeDao;
 import gov.nysenate.ams.model.*;
-import gov.nysenate.util.Config;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
@@ -12,15 +11,14 @@ import org.slf4j.Logger;
  */
 public class AmsNativeProvider {
     private static final Logger logger = LoggerFactory.getLogger(AmsNativeProvider.class);
-    private final AmsNativeDao amsNativeDao;
-    private final Config config;
+    private final AmsNativeDao amsNativeDao = new AmsNativeDao();
+    private final String libraryName;
     private final AmsSettings amsSettings;
 
     private static boolean LIBRARY_LOADED = false;
 
-    public AmsNativeProvider(Config config, AmsSettings amsSettings) {
-        this.amsNativeDao = new AmsNativeDao();
-        this.config = config;
+    public AmsNativeProvider(String libraryName, AmsSettings amsSettings) {
+        this.libraryName = libraryName;
         this.amsSettings = amsSettings;
     }
 
@@ -29,7 +27,6 @@ public class AmsNativeProvider {
      * @return true if all necessary dependencies were loaded, false otherwise.
      */
     public boolean load() {
-        String libraryName = config.getValue("shared.library.name", "amsnative");
         if (!LIBRARY_LOADED) {
             LIBRARY_LOADED = amsNativeDao.loadAmsLibrary(libraryName);
         }
