@@ -6,7 +6,7 @@ A Web Service that exposes the functionality of the USPS Address Matching System
 Prerequisites
 -------------
 
-1. Linux, JDK 17, Tomcat 9, Maven, GCC Compiler.
+1. Linux, JDK 21, Tomcat 11, Maven, GCC Compiler.
 
 2. Obtain the five data folders from the USPS AMS disk
     * ams_comm
@@ -36,20 +36,18 @@ Setup
 
 2. Place the library files in */opt/usps_ams*.
 
-3. Edit the ldconf (/etc/ld.so.conf) and add an entry for */opt/usps_ams*.
+3. Edit the /etc/ld.so.conf and add the line */opt/usps_ams*. Run *sudo ldconfig* to apply this change.
 
 4. Navigate to your src/main/c directory and run *make* to obtain *libamsnative.so*. If you
    are running into problems, edit the Makefile and ensure that the java paths are set correctly.
 
 5. Tomcat must be able to load the *amsnative* shared library.
-The *java.library.path* environment variable contains a listing of the search directories.
-Either modify your Tomcat startup and set -Djava.library.path to the location of *libamsnative.so* or place
-*libamsnative.so* into one of the default library folders that Tomcat looks in (e.g. /usr/lib/).
+Place *libamsnative.so* into one of the default library folders that Tomcat looks in (e.g. /usr/lib/).
 
 6. Create app.properties in /src/main/resources using app.example.properties as a template.
 
-    * ams.cfg.system.path should point to the directory where the z4cxlog.dat file is located (/opt/usps_ams).
-    * If you have stored the ams data folders in an alternate location adjust the other file paths accordingly.
+    * ams.cfg.system.path should point to the directory where the z4cxlog.dat file is located.
+    * If you have stored the AMS data folders in an alternate location adjust the other file paths accordingly.
     
 Finally, perform *mvn compile war:war* and deploy .war to Tomcat.
 
